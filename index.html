@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Fact Post Maker</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            color: #111;
+        }
+
+        header {
+            background: #111;
+            color: white;
+            padding: 18px 20px;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+        }
+
+        h1 {
+            margin-top: 0;
+        }
+
+        h2 {
+            margin-top: 0;
+        }
+
+        label {
+            display: block;
+            margin-top: 18px;
+            margin-bottom: 7px;
+            font-weight: bold;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 13px;
+            border-radius: 9px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        button {
+            background: #111;
+            color: white;
+            border: none;
+            cursor: pointer;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        button:hover {
+            opacity: 0.9;
+        }
+
+        .preview {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        #canvas {
+            width: 100%;
+            max-width: 500px;
+            background: white;
+            border: 1px solid #ddd;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .status {
+            padding: 12px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
+
+        @media (max-width: 700px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                margin: 10px auto;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    AI Fact Post Maker
+</header>
+
+<div class="container">
+
+    <div class="card">
+
+        <h1>Brand Setup</h1>
+
+        <p>
+            Upload your font and watermark once.
+            These settings will later be saved and automatically used for every post.
+        </p>
+
+        <label>Upload Your Font</label>
+        <input
+            type="file"
+            id="fontUpload"
+            accept=".ttf,.otf,.woff,.woff2"
+        >
+
+        <div id="fontStatus" class="status">
+            No font uploaded yet.
+        </div>
+
+
+        <label>Upload Watermark PNG</label>
+        <input
+            type="file"
+            id="watermarkUpload"
+            accept="image/png"
+        >
+
+        <div id="watermarkStatus" class="status">
+            No watermark uploaded yet.
+        </div>
+
+
+        <div class="row">
+
+            <div>
+                <label>Image Size</label>
+
+                <select id="imageSize">
+
+                    <option value="1080x1080">
+                        Instagram Square — 1080 × 1080
+                    </option>
+
+                    <option value="1080x1350">
+                        Instagram Portrait — 1080 × 1350
+                    </option>
+
+                    <option value="1080x566">
+                        Instagram Landscape — 1080 × 566
+                    </option>
+
+                    <option value="1080x1920">
+                        Story / Reel — 1080 × 1920
+                    </option>
+
+                    <option value="custom">
+                        Custom
+                    </option>
+
+                </select>
+            </div>
+
+
+            <div>
+                <label>Watermark Position</label>
+
+                <select id="watermarkPosition">
+
+                    <option value="bottom-right">
+                        Bottom Right
+                    </option>
+
+                    <option value="bottom-left">
+                        Bottom Left
+                    </option>
+
+                    <option value="top-right">
+                        Top Right
+                    </option>
+
+                    <option value="top-left">
+                        Top Left
+                    </option>
+
+                </select>
+            </div>
+
+        </div>
+
+
+        <div class="row">
+
+            <div>
+
+                <label>Watermark Size</label>
+
+                <select id="watermarkSize">
+
+                    <option value="small">Small</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="large">Large</option>
+
+                </select>
+
+            </div>
+
+
+            <div>
+
+                <label>Watermark Opacity</label>
+
+                <input
+                    type="range"
+                    id="watermarkOpacity"
+                    min="10"
+                    max="100"
+                    value="80"
+                >
+
+            </div>
+
+        </div>
+
+
+        <h2 style="margin-top:30px;">
+            Carousel Swipe Button
+        </h2>
+
+        <label>
+            Swipe Button
+        </label>
+
+        <select id="swipeEnabled">
+
+            <option value="off">
+                OFF
+            </option>
+
+            <option value="on">
+                ON
+            </option>
+
+        </select>
+
+
+        <label>
+            Swipe Button Position
+        </label>
+
+        <select id="swipePosition">
+
+            <option value="top-right">
+                Top Right
+            </option>
+
+            <option value="top-left">
+                Top Left
+            </option>
+
+        </select>
+
+
+        <button onclick="saveSettings()">
+            SAVE BRAND SETTINGS
+        </button>
+
+        <div id="saveStatus" class="status">
+            Settings haven't been saved yet.
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>Create Post</h2>
+
+        <p>
+            Upload a reference image to start creating your post.
+        </p>
+
+        <label>
+            Reference Image
+        </label>
+
+        <input
+            type="file"
+            id="referenceUpload"
+            accept="image/*"
+        >
+
+        <div class="preview">
+
+            <canvas
+                id="canvas"
+                width="1080"
+                height="1080">
+            </canvas>
+
+        </div>
+
+    </div>
+
+
+    <div class="card">
+
+        <h2>Image Replacement</h2>
+
+        <p>
+            Generate a different image using AI.
+            We will connect the AI system in the next stage.
+        </p>
+
+        <label>
+            Image Prompt
+        </label>
+
+        <input
+            type="text"
+            id="imagePrompt"
+            placeholder="Example: realistic Indian farmer standing in a wheat field"
+        >
+
+        <button onclick="generateImage()">
+            ✨ Generate / Change Image
+        </button>
+
+        <div id="aiStatus" class="status">
+            AI image generation will be connected soon.
+        </div>
+
+    </div>
+
+</div>
+
+
+<script>
+
+let watermarkImage = null;
+let referenceImage = null;
+
+
+/* FONT UPLOAD */
+
+document
+    .getElementById("fontUpload")
+    .addEventListener("change", function(event) {
+
+        const file = event.target.files[0];
+
+        if (!file) return;
+
+        document.getElementById("fontStatus").innerText =
+            "Font selected: " + file.name;
+
+    });
+
+
+/* WATERMARK UPLOAD */
+
+document
+    .getElementById("watermarkUpload")
+    .addEventListener("change", function(event) {
+
+        const file = event.target.files[0];
+
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+
+            watermarkImage = new Image();
+
+            watermarkImage.onload = function() {
+
+                document.getElementById("watermarkStatus").innerText =
+                    "Watermark selected: " + file.name;
+
+                drawCanvas();
+
+            };
+
+            watermarkImage.src = e.target.result;
+
+        };
+
+        reader.readAsDataURL(file);
+
+    });
+
+
+/* REFERENCE IMAGE */
+
+document
+    .getElementById("referenceUpload")
+    .addEventListener("change", function(event) {
+
+        const file = event.target.files[0];
+
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = function(e) {
+
+            referenceImage = new Image();
+
+            referenceImage.onload = function() {
+
+                drawCanvas();
+
+            };
+
+            referenceImage.src = e.target.result;
+
+        };
+
+        reader.readAsDataURL(file);
+
+    });
+
+
+/* SAVE SETTINGS */
+
+function saveSettings() {
+
+    const settings = {
+
+        imageSize:
+            document.getElementById("imageSize").value,
+
+        watermarkPosition:
+            document.getElementById("watermarkPosition").value,
+
+        watermarkSize:
+            document.getElementById("watermarkSize").value,
+
+        watermarkOpacity:
+            document.getElementById("watermarkOpacity").value,
+
+        swipeEnabled:
+            document.getElementById("swipeEnabled").value,
+
+        swipePosition:
+            document.getElementById("swipePosition").value
+
+    };
+
+
+    localStorage.setItem(
+        "brandSettings",
+        JSON.stringify(settings)
+    );
+
+
+    document.getElementById("saveStatus").innerText =
+        "✓ Brand settings saved on this device.";
+
+}
+
+
+/* LOAD SETTINGS */
+
+function loadSettings() {
+
+    const saved =
+        localStorage.getItem("brandSettings");
+
+    if (!saved) return;
+
+    const settings =
+        JSON.parse(saved);
+
+
+    document.getElementById("imageSize").value =
+        settings.imageSize;
+
+    document.getElementById("watermarkPosition").value =
+        settings.watermarkPosition;
+
+    document.getElementById("watermarkSize").value =
+        settings.watermarkSize;
+
+    document.getElementById("watermarkOpacity").value =
+        settings.watermarkOpacity;
+
+    document.getElementById("swipeEnabled").value =
+        settings.swipeEnabled;
+
+    document.getElementById("swipePosition").value =
+        settings.swipePosition;
+
+}
+
+
+/* DRAW CANVAS */
+
+function drawCanvas() {
+
+    const canvas =
+        document.getElementById("canvas");
+
+    const ctx =
+        canvas.getContext("2d");
+
+
+    ctx.clearRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    ctx.fillStyle = "#ffffff";
+
+    ctx.fillRect(
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    if (referenceImage) {
+
+        ctx.drawImage(
+            referenceImage,
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+    }
+
+
+    /* WATERMARK */
+
+    if (watermarkImage) {
+
+        const position =
+            document.getElementById("watermarkPosition").value;
+
+        const size =
+            document.getElementById("watermarkSize").value;
+
+
+        let width = 120;
+
+
+        if (size === "small") {
+            width = 80;
+        }
+
+        if (size === "large") {
+            width = 180;
+        }
+
+
+        const ratio =
+            watermarkImage.height /
+            watermarkImage.width;
+
+        const height =
+            width * ratio;
+
+
+        const margin = 30;
+
+        let x = 0;
+        let y = 0;
+
+
+        if (position === "bottom-right") {
+
+            x = canvas.width - width - margin;
+            y = canvas.height - height - margin;
+
+        }
+
+        if (position === "bottom-left") {
+
+            x = margin;
+            y = canvas.height - height - margin;
+
+        }
+
+        if (position === "top-right") {
+
+            x = canvas.width - width - margin;
+            y = margin;
+
+        }
+
+        if (position === "top-left") {
+
+            x = margin;
+            y = margin;
+
+        }
+
+
+        ctx.globalAlpha =
+            document.getElementById("watermarkOpacity").value / 100;
+
+
+        ctx.drawImage(
+            watermarkImage,
+            x,
+            y,
+            width,
+            height
+        );
+
+
+        ctx.globalAlpha = 1;
+
+    }
+
+
+    /* SWIPE BUTTON */
+
+    const swipe =
+        document.getElementById("swipeEnabled").value;
+
+    if (swipe === "on") {
+
+        const position =
+            document.getElementById("swipePosition").value;
+
+        ctx.font = "bold 55px Arial";
+
+        ctx.fillStyle = "white";
+
+        let x;
+        let y = 70;
+
+
+        if (position === "top-right") {
+
+            x = canvas.width - 100;
+
+        } else {
+
+            x = 45;
+
+        }
+
+
+        ctx.fillText(
+            "▶",
+            x,
+            y
+        );
+
+    }
+
+}
+
+
+/* AI IMAGE PLACEHOLDER */
+
+function generateImage() {
+
+    const prompt =
+        document.getElementById("imagePrompt").value;
+
+
+    if (!prompt) {
+
+        document.getElementById("aiStatus").innerText =
+            "Please enter an image prompt first.";
+
+        return;
+
+    }
+
+
+    document.getElementById("aiStatus").innerText =
+        "AI connection will be added in the next stage.";
+
+}
+
+
+/* UPDATE PREVIEW WHEN SETTINGS CHANGE */
+
+document
+    .getElementById("watermarkPosition")
+    .addEventListener("change", drawCanvas);
+
+document
+    .getElementById("watermarkSize")
+    .addEventListener("change", drawCanvas);
+
+document
+    .getElementById("watermarkOpacity")
+    .addEventListener("input", drawCanvas);
+
+document
+    .getElementById("swipeEnabled")
+    .addEventListener("change", drawCanvas);
+
+document
+    .getElementById("swipePosition")
+    .addEventListener("change", drawCanvas);
+
+
+/* START */
+
+loadSettings();
+
+drawCanvas();
+
+</script>
+
+</body>
+</html>
