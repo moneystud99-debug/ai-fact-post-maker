@@ -1,241 +1,488 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>AI Post Maker</title>
 
+
     <style>
+
         * {
             box-sizing: border-box;
         }
 
+
         body {
+
             margin: 0;
-            font-family: Arial, sans-serif;
+
+            font-family:
+                Arial,
+                sans-serif;
+
             background: #f5f5f5;
+
             color: #111;
+
         }
+
 
         header {
+
             background: #111;
+
             color: white;
+
             padding: 18px 20px;
-            font-size: 22px;
+
+            font-size: 24px;
+
             font-weight: bold;
+
         }
+
 
         .container {
+
             max-width: 1100px;
+
             margin: 30px auto;
+
             padding: 20px;
+
         }
+
 
         .card {
+
             background: white;
+
             border-radius: 16px;
+
             padding: 25px;
+
             margin-bottom: 20px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.06);
+
+            box-shadow:
+                0 5px 20px
+                rgba(0,0,0,0.06);
+
         }
+
 
         h1 {
+
             margin-top: 0;
+
         }
+
 
         h2 {
+
             margin-top: 0;
+
         }
 
+
         label {
+
             display: block;
+
             margin-top: 18px;
+
             margin-bottom: 7px;
+
             font-weight: bold;
+
         }
+
 
         input,
         select,
         button {
+
             width: 100%;
+
             padding: 13px;
+
             border-radius: 9px;
+
             border: 1px solid #ccc;
+
             font-size: 16px;
+
         }
+
 
         button {
+
             background: #111;
+
             color: white;
+
             border: none;
+
             cursor: pointer;
+
             margin-top: 15px;
+
             font-weight: bold;
+
         }
+
 
         button:hover {
+
             opacity: 0.9;
+
         }
+
 
         .preview {
+
             margin-top: 20px;
+
             display: flex;
+
             justify-content: center;
+
         }
+
 
         #canvas {
+
             width: 100%;
+
             max-width: 500px;
+
             background: white;
+
             border: 1px solid #ddd;
+
         }
+
 
         .row {
+
             display: grid;
-            grid-template-columns: 1fr 1fr;
+
+            grid-template-columns:
+                1fr 1fr;
+
             gap: 15px;
+
         }
+
 
         .status {
+
             padding: 12px;
+
             background: #f0f0f0;
+
             border-radius: 8px;
+
             margin-top: 15px;
+
         }
+
+
+        .small-text {
+
+            color: #666;
+
+            font-size: 14px;
+
+        }
+
+
+        .download-button {
+
+            background: #16803c;
+
+        }
+
 
         @media (max-width: 700px) {
+
             .row {
+
                 grid-template-columns: 1fr;
+
             }
 
+
             .container {
+
                 margin: 10px auto;
+
                 padding: 12px;
+
             }
+
         }
+
     </style>
+
 </head>
+
 
 <body>
 
+
 <header>
+
     AI Post Maker
+
 </header>
 
+
+
 <div class="container">
+
+
+
+    <!-- BRAND SETTINGS -->
 
     <div class="card">
 
         <h1>Brand Setup</h1>
 
-        <p>
+        <p class="small-text">
+
             Upload your font and watermark once.
-            These settings will later be saved and automatically used for every post.
+            These settings will be used automatically
+            when creating your posts.
+
         </p>
 
-        <label>Upload Your Font</label>
+
+
+        <!-- FONT -->
+
+        <label>
+
+            Your Font
+
+        </label>
+
         <input
             type="file"
             id="fontUpload"
             accept=".ttf,.otf,.woff,.woff2"
         >
 
-        <div id="fontStatus" class="status">
+        <div
+            id="fontStatus"
+            class="status"
+        >
+
             No font uploaded yet.
+
         </div>
 
 
-        <label>Upload Watermark PNG</label>
+
+        <!-- WATERMARK -->
+
+        <label>
+
+            Watermark PNG
+
+        </label>
+
         <input
             type="file"
             id="watermarkUpload"
             accept="image/png"
         >
 
-        <div id="watermarkStatus" class="status">
+        <div
+            id="watermarkStatus"
+            class="status"
+        >
+
             No watermark uploaded yet.
+
         </div>
 
 
+
+        <!-- SIZE + POSITION -->
+
         <div class="row">
 
+
             <div>
-                <label>Image Size</label>
+
+                <label>
+
+                    Image Size
+
+                </label>
 
                 <select id="imageSize">
 
+
                     <option value="1080x1080">
-                        Instagram Square — 1080 × 1080
+
+                        Instagram Square —
+                        1080 × 1080
+
                     </option>
+
 
                     <option value="1080x1350">
-                        Instagram Portrait — 1080 × 1350
+
+                        Instagram Portrait —
+                        1080 × 1350
+
                     </option>
+
 
                     <option value="1080x566">
-                        Instagram Landscape — 1080 × 566
+
+                        Instagram Landscape —
+                        1080 × 566
+
                     </option>
+
 
                     <option value="1080x1920">
-                        Story / Reel — 1080 × 1920
+
+                        Story / Reel —
+                        1080 × 1920
+
                     </option>
+
 
                     <option value="custom">
+
                         Custom
+
                     </option>
 
+
                 </select>
+
             </div>
+
 
 
             <div>
-                <label>Watermark Position</label>
 
-                <select id="watermarkPosition">
+                <label>
+
+                    Watermark Position
+
+                </label>
+
+
+                <select
+                    id="watermarkPosition"
+                >
 
                     <option value="bottom-right">
+
                         Bottom Right
+
                     </option>
+
 
                     <option value="bottom-left">
+
                         Bottom Left
+
                     </option>
+
 
                     <option value="top-right">
+
                         Top Right
+
                     </option>
+
 
                     <option value="top-left">
+
                         Top Left
+
                     </option>
 
+
                 </select>
+
             </div>
+
 
         </div>
 
 
+
+        <!-- WATERMARK SIZE -->
+
         <div class="row">
+
 
             <div>
 
-                <label>Watermark Size</label>
+                <label>
 
-                <select id="watermarkSize">
+                    Watermark Size
 
-                    <option value="small">Small</option>
-                    <option value="medium" selected>Medium</option>
-                    <option value="large">Large</option>
+                </label>
+
+
+                <select
+                    id="watermarkSize"
+                >
+
+                    <option value="small">
+
+                        Small
+
+                    </option>
+
+
+                    <option
+                        value="medium"
+                        selected
+                    >
+
+                        Medium
+
+                    </option>
+
+
+                    <option value="large">
+
+                        Large
+
+                    </option>
+
 
                 </select>
 
             </div>
 
 
+
             <div>
 
-                <label>Watermark Opacity</label>
+                <label>
+
+                    Watermark Opacity
+
+                </label>
+
 
                 <input
                     type="range"
@@ -247,69 +494,128 @@
 
             </div>
 
+
         </div>
 
 
+
+        <!-- CAROUSEL -->
+
         <h2 style="margin-top:30px;">
-            Carousel Swipe Button
+
+            Carousel / Swipe Button
+
         </h2>
 
+
         <label>
+
             Swipe Button
+
         </label>
+
 
         <select id="swipeEnabled">
 
+
             <option value="off">
+
                 OFF
+
             </option>
+
 
             <option value="on">
+
                 ON
+
             </option>
 
+
         </select>
+
 
 
         <label>
+
             Swipe Button Position
+
         </label>
+
 
         <select id="swipePosition">
 
+
             <option value="top-right">
+
                 Top Right
+
             </option>
 
+
             <option value="top-left">
+
                 Top Left
+
             </option>
+
 
         </select>
 
 
-        <button onclick="saveSettings()">
+
+        <button
+            onclick="saveSettings()"
+        >
+
             SAVE BRAND SETTINGS
+
         </button>
 
-        <div id="saveStatus" class="status">
+
+        <div
+            id="saveStatus"
+            class="status"
+        >
+
             Settings haven't been saved yet.
+
         </div>
+
 
     </div>
 
 
+
+    <!-- CREATE POST -->
+
     <div class="card">
 
-        <h2>Create Post</h2>
 
-        <p>
-            Upload a reference image to start creating your post.
+        <h2>
+
+            Create Post
+
+        </h2>
+
+
+        <p class="small-text">
+
+            Upload a reference image.
+
+            Your saved settings will automatically
+            be applied to the preview.
+
         </p>
 
+
+
         <label>
+
             Reference Image
+
         </label>
+
 
         <input
             type="file"
@@ -317,273 +623,813 @@
             accept="image/*"
         >
 
+
+
         <div class="preview">
+
 
             <canvas
                 id="canvas"
                 width="1080"
-                height="1080">
+                height="1080"
+            >
+
             </canvas>
 
+
         </div>
+
+
+        <button
+            class="download-button"
+            onclick="downloadPost()"
+        >
+
+            DOWNLOAD POST
+
+        </button>
+
 
     </div>
 
 
+
+    <!-- IMAGE REPLACEMENT -->
+
     <div class="card">
 
-        <h2>Image Replacement</h2>
 
-        <p>
-            Generate a different image using AI.
-            We will connect the AI system in the next stage.
+        <h2>
+
+            🔄 Change Image
+
+        </h2>
+
+
+        <p class="small-text">
+
+            Write a prompt describing the new image
+            you want. AI image generation will be
+            connected later.
+
         </p>
 
+
         <label>
+
             Image Prompt
+
         </label>
+
 
         <input
             type="text"
             id="imagePrompt"
-            placeholder="Example: realistic Indian farmer standing in a wheat field"
+            placeholder="Example: realistic Indian farmer standing in a wheat field at sunrise"
         >
 
-        <button onclick="generateImage()">
-            ✨ Generate / Change Image
+
+        <button
+            onclick="generateImage()"
+        >
+
+            ✨ GENERATE / CHANGE IMAGE
+
         </button>
 
-        <div id="aiStatus" class="status">
-            AI image generation will be connected soon.
+
+        <div
+            id="aiStatus"
+            class="status"
+        >
+
+            AI image generation will be connected
+            in the next stage.
+
         </div>
 
+
     </div>
+
 
 </div>
 
 
+
 <script>
 
+
+/* =====================================================
+   GLOBAL VARIABLES
+===================================================== */
+
+
 let watermarkImage = null;
+
 let referenceImage = null;
 
+let uploadedFont = null;
 
-/* FONT UPLOAD */
+let uploadedFontName = "CustomFont";
+
+
+
+/* =====================================================
+   FONT UPLOAD
+===================================================== */
+
 
 document
     .getElementById("fontUpload")
-    .addEventListener("change", function(event) {
-
-        const file = event.target.files[0];
-
-        if (!file) return;
-
-        document.getElementById("fontStatus").innerText =
-            "Font selected: " + file.name;
-
-    });
+    .addEventListener(
+        "change",
+        async function(event) {
 
 
-/* WATERMARK UPLOAD */
+            const file =
+                event.target.files[0];
+
+
+            if (!file) {
+
+                return;
+
+            }
+
+
+            uploadedFontName =
+                "UploadedFont";
+
+
+            const fontData =
+                await file.arrayBuffer();
+
+
+            uploadedFont =
+                new FontFace(
+                    uploadedFontName,
+                    fontData
+                );
+
+
+            try {
+
+
+                await uploadedFont.load();
+
+
+                document.fonts.add(
+                    uploadedFont
+                );
+
+
+                document
+                    .getElementById(
+                        "fontStatus"
+                    )
+                    .innerText =
+                    "✓ Font loaded: " +
+                    file.name;
+
+
+                drawCanvas();
+
+
+            } catch (error) {
+
+
+                document
+                    .getElementById(
+                        "fontStatus"
+                    )
+                    .innerText =
+                    "❌ Could not load this font.";
+
+
+                console.error(error);
+
+
+            }
+
+        }
+    );
+
+
+
+/* =====================================================
+   WATERMARK UPLOAD
+===================================================== */
+
 
 document
     .getElementById("watermarkUpload")
-    .addEventListener("change", function(event) {
-
-        const file = event.target.files[0];
-
-        if (!file) return;
-
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-
-            watermarkImage = new Image();
-
-            watermarkImage.onload = function() {
-
-                document.getElementById("watermarkStatus").innerText =
-                    "Watermark selected: " + file.name;
-
-                drawCanvas();
-
-            };
-
-            watermarkImage.src = e.target.result;
-
-        };
-
-        reader.readAsDataURL(file);
-
-    });
+    .addEventListener(
+        "change",
+        function(event) {
 
 
-/* REFERENCE IMAGE */
+            const file =
+                event.target.files[0];
+
+
+            if (!file) {
+
+                return;
+
+            }
+
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload =
+                function(e) {
+
+
+                    watermarkImage =
+                        new Image();
+
+
+                    watermarkImage.onload =
+                        function() {
+
+
+                            document
+                                .getElementById(
+                                    "watermarkStatus"
+                                )
+                                .innerText =
+                                "✓ Watermark loaded: " +
+                                file.name;
+
+
+                            drawCanvas();
+
+
+                        };
+
+
+                    watermarkImage.src =
+                        e.target.result;
+
+
+                };
+
+
+            reader.readAsDataURL(file);
+
+
+        }
+    );
+
+
+
+/* =====================================================
+   REFERENCE IMAGE
+===================================================== */
+
 
 document
     .getElementById("referenceUpload")
-    .addEventListener("change", function(event) {
+    .addEventListener(
+        "change",
+        function(event) {
 
-        const file = event.target.files[0];
 
-        if (!file) return;
+            const file =
+                event.target.files[0];
 
-        const reader = new FileReader();
 
-        reader.onload = function(e) {
+            if (!file) {
 
-            referenceImage = new Image();
+                return;
 
-            referenceImage.onload = function() {
+            }
 
-                drawCanvas();
 
-            };
+            const reader =
+                new FileReader();
 
-            referenceImage.src = e.target.result;
+
+            reader.onload =
+                function(e) {
+
+
+                    referenceImage =
+                        new Image();
+
+
+                    referenceImage.onload =
+                        function() {
+
+
+                            drawCanvas();
+
+
+                        };
+
+
+                    referenceImage.src =
+                        e.target.result;
+
+
+                };
+
+
+            reader.readAsDataURL(file);
+
+
+        }
+    );
+
+
+
+/* =====================================================
+   GET IMAGE SIZE
+===================================================== */
+
+
+function getCanvasSize() {
+
+
+    const selectedSize =
+        document.getElementById(
+            "imageSize"
+        ).value;
+
+
+    if (
+        selectedSize ===
+        "custom"
+    ) {
+
+
+        return {
+
+            width: 1080,
+
+            height: 1080
 
         };
 
-        reader.readAsDataURL(file);
 
-    });
+    }
 
 
-/* SAVE SETTINGS */
+    const parts =
+        selectedSize.split("x");
+
+
+    return {
+
+        width:
+            parseInt(parts[0]),
+
+        height:
+            parseInt(parts[1])
+
+    };
+
+
+}
+
+
+
+/* =====================================================
+   UPDATE CANVAS SIZE
+===================================================== */
+
+
+function updateCanvasSize() {
+
+
+    const size =
+        getCanvasSize();
+
+
+    const canvas =
+        document.getElementById(
+            "canvas"
+        );
+
+
+    canvas.width =
+        size.width;
+
+
+    canvas.height =
+        size.height;
+
+
+    drawCanvas();
+
+
+}
+
+
+
+/* =====================================================
+   SAVE SETTINGS
+===================================================== */
+
 
 function saveSettings() {
 
+
     const settings = {
 
+
         imageSize:
-            document.getElementById("imageSize").value,
+            document.getElementById(
+                "imageSize"
+            ).value,
+
 
         watermarkPosition:
-            document.getElementById("watermarkPosition").value,
+            document.getElementById(
+                "watermarkPosition"
+            ).value,
+
 
         watermarkSize:
-            document.getElementById("watermarkSize").value,
+            document.getElementById(
+                "watermarkSize"
+            ).value,
+
 
         watermarkOpacity:
-            document.getElementById("watermarkOpacity").value,
+            document.getElementById(
+                "watermarkOpacity"
+            ).value,
+
 
         swipeEnabled:
-            document.getElementById("swipeEnabled").value,
+            document.getElementById(
+                "swipeEnabled"
+            ).value,
+
 
         swipePosition:
-            document.getElementById("swipePosition").value
+            document.getElementById(
+                "swipePosition"
+            ).value
+
 
     };
 
 
     localStorage.setItem(
+
         "brandSettings",
+
         JSON.stringify(settings)
+
     );
 
 
-    document.getElementById("saveStatus").innerText =
+    document
+        .getElementById(
+            "saveStatus"
+        )
+        .innerText =
         "✓ Brand settings saved on this device.";
+
+
+    updateCanvasSize();
+
 
 }
 
 
-/* LOAD SETTINGS */
+
+/* =====================================================
+   LOAD SETTINGS
+===================================================== */
+
 
 function loadSettings() {
 
+
     const saved =
-        localStorage.getItem("brandSettings");
-
-    if (!saved) return;
-
-    const settings =
-        JSON.parse(saved);
-
-
-    document.getElementById("imageSize").value =
-        settings.imageSize;
-
-    document.getElementById("watermarkPosition").value =
-        settings.watermarkPosition;
-
-    document.getElementById("watermarkSize").value =
-        settings.watermarkSize;
-
-    document.getElementById("watermarkOpacity").value =
-        settings.watermarkOpacity;
-
-    document.getElementById("swipeEnabled").value =
-        settings.swipeEnabled;
-
-    document.getElementById("swipePosition").value =
-        settings.swipePosition;
-
-}
-
-
-/* DRAW CANVAS */
-
-function drawCanvas() {
-
-    const canvas =
-        document.getElementById("canvas");
-
-    const ctx =
-        canvas.getContext("2d");
-
-
-    ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-
-    ctx.fillStyle = "#ffffff";
-
-    ctx.fillRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-
-    if (referenceImage) {
-
-        ctx.drawImage(
-            referenceImage,
-            0,
-            0,
-            canvas.width,
-            canvas.height
+        localStorage.getItem(
+            "brandSettings"
         );
+
+
+    if (!saved) {
+
+        return;
 
     }
 
 
+    try {
+
+
+        const settings =
+            JSON.parse(saved);
+
+
+        document
+            .getElementById(
+                "imageSize"
+            )
+            .value =
+            settings.imageSize;
+
+
+        document
+            .getElementById(
+                "watermarkPosition"
+            )
+            .value =
+            settings.watermarkPosition;
+
+
+        document
+            .getElementById(
+                "watermarkSize"
+            )
+            .value =
+            settings.watermarkSize;
+
+
+        document
+            .getElementById(
+                "watermarkOpacity"
+            )
+            .value =
+            settings.watermarkOpacity;
+
+
+        document
+            .getElementById(
+                "swipeEnabled"
+            )
+            .value =
+            settings.swipeEnabled;
+
+
+        document
+            .getElementById(
+                "swipePosition"
+            )
+            .value =
+            settings.swipePosition;
+
+
+    } catch (error) {
+
+
+        console.error(
+            "Could not load settings.",
+            error
+        );
+
+
+    }
+
+
+}
+
+
+
+/* =====================================================
+   DRAW CANVAS
+===================================================== */
+
+
+function drawCanvas() {
+
+
+    const canvas =
+        document.getElementById(
+            "canvas"
+        );
+
+
+    const ctx =
+        canvas.getContext(
+            "2d"
+        );
+
+
+    ctx.clearRect(
+
+        0,
+
+        0,
+
+        canvas.width,
+
+        canvas.height
+
+    );
+
+
+    /* BACKGROUND */
+
+
+    ctx.fillStyle =
+        "#ffffff";
+
+
+    ctx.fillRect(
+
+        0,
+
+        0,
+
+        canvas.width,
+
+        canvas.height
+
+    );
+
+
+
+    /* REFERENCE IMAGE */
+
+
+    if (referenceImage) {
+
+
+        const imageRatio =
+            referenceImage.width /
+            referenceImage.height;
+
+
+        const canvasRatio =
+            canvas.width /
+            canvas.height;
+
+
+        let drawWidth;
+
+        let drawHeight;
+
+        let drawX;
+
+        let drawY;
+
+
+        if (
+            imageRatio >
+            canvasRatio
+        ) {
+
+
+            drawHeight =
+                canvas.height;
+
+
+            drawWidth =
+                drawHeight *
+                imageRatio;
+
+
+            drawX =
+                (
+                    canvas.width -
+                    drawWidth
+                ) / 2;
+
+
+            drawY = 0;
+
+
+        } else {
+
+
+            drawWidth =
+                canvas.width;
+
+
+            drawHeight =
+                drawWidth /
+                imageRatio;
+
+
+            drawX = 0;
+
+
+            drawY =
+                (
+                    canvas.height -
+                    drawHeight
+                ) / 2;
+
+
+        }
+
+
+        ctx.drawImage(
+
+            referenceImage,
+
+            drawX,
+
+            drawY,
+
+            drawWidth,
+
+            drawHeight
+
+        );
+
+
+    }
+
+
+
+    /* HEADLINE */
+
+
+    if (uploadedFont) {
+
+
+        ctx.font =
+            "bold 72px " +
+            uploadedFontName;
+
+
+    } else {
+
+
+        ctx.font =
+            "bold 72px Arial";
+
+
+    }
+
+
+    ctx.fillStyle =
+        "black";
+
+
+    ctx.textAlign =
+        "center";
+
+
+    ctx.fillText(
+
+        "YOUR FACT HEADLINE",
+
+        canvas.width / 2,
+
+        120
+
+    );
+
+
+    ctx.textAlign =
+        "left";
+
+
+
     /* WATERMARK */
+
 
     if (watermarkImage) {
 
+
         const position =
-            document.getElementById("watermarkPosition").value;
+            document
+                .getElementById(
+                    "watermarkPosition"
+                )
+                .value;
+
 
         const size =
-            document.getElementById("watermarkSize").value;
+            document
+                .getElementById(
+                    "watermarkSize"
+                )
+                .value;
 
 
         let width = 120;
 
 
-        if (size === "small") {
+        if (
+            size ===
+            "small"
+        ) {
+
             width = 80;
+
         }
 
-        if (size === "large") {
+
+        if (
+            size ===
+            "large"
+        ) {
+
             width = 180;
+
         }
 
 
@@ -591,157 +1437,390 @@ function drawCanvas() {
             watermarkImage.height /
             watermarkImage.width;
 
+
         const height =
-            width * ratio;
+            width *
+            ratio;
 
 
-        const margin = 30;
+        const margin =
+            30;
+
 
         let x = 0;
+
         let y = 0;
 
 
-        if (position === "bottom-right") {
 
-            x = canvas.width - width - margin;
-            y = canvas.height - height - margin;
+        if (
+            position ===
+            "bottom-right"
+        ) {
+
+
+            x =
+                canvas.width -
+                width -
+                margin;
+
+
+            y =
+                canvas.height -
+                height -
+                margin;
+
+
+        }
+
+
+
+        if (
+            position ===
+            "bottom-left"
+        ) {
+
+
+            x =
+                margin;
+
+
+            y =
+                canvas.height -
+                height -
+                margin;
+
 
         }
 
-        if (position === "bottom-left") {
 
-            x = margin;
-            y = canvas.height - height - margin;
+
+        if (
+            position ===
+            "top-right"
+        ) {
+
+
+            x =
+                canvas.width -
+                width -
+                margin;
+
+
+            y =
+                margin;
+
 
         }
 
-        if (position === "top-right") {
 
-            x = canvas.width - width - margin;
-            y = margin;
+
+        if (
+            position ===
+            "top-left"
+        ) {
+
+
+            x =
+                margin;
+
+
+            y =
+                margin;
+
 
         }
 
-        if (position === "top-left") {
-
-            x = margin;
-            y = margin;
-
-        }
 
 
         ctx.globalAlpha =
-            document.getElementById("watermarkOpacity").value / 100;
+
+            document
+                .getElementById(
+                    "watermarkOpacity"
+                )
+                .value / 100;
+
 
 
         ctx.drawImage(
+
             watermarkImage,
+
             x,
+
             y,
+
             width,
+
             height
+
         );
 
 
-        ctx.globalAlpha = 1;
+        ctx.globalAlpha =
+            1;
+
 
     }
 
 
+
     /* SWIPE BUTTON */
 
-    const swipe =
-        document.getElementById("swipeEnabled").value;
 
-    if (swipe === "on") {
+    const swipe =
+        document
+            .getElementById(
+                "swipeEnabled"
+            )
+            .value;
+
+
+    if (
+        swipe ===
+        "on"
+    ) {
+
 
         const position =
-            document.getElementById("swipePosition").value;
-
-        ctx.font = "bold 55px Arial";
-
-        ctx.fillStyle = "white";
-
-        let x;
-        let y = 70;
+            document
+                .getElementById(
+                    "swipePosition"
+                )
+                .value;
 
 
-        if (position === "top-right") {
+        if (uploadedFont) {
 
-            x = canvas.width - 100;
+
+            ctx.font =
+                "bold 55px " +
+                uploadedFontName;
+
 
         } else {
 
+
+            ctx.font =
+                "bold 55px Arial";
+
+
+        }
+
+
+        ctx.fillStyle =
+            "white";
+
+
+        let x;
+
+
+        const y =
+            70;
+
+
+
+        if (
+            position ===
+            "top-right"
+        ) {
+
+
+            x =
+                canvas.width -
+                100;
+
+
+        } else {
+
+
             x = 45;
+
 
         }
 
 
         ctx.fillText(
+
             "▶",
+
             x,
+
             y
+
         );
 
+
     }
+
 
 }
 
 
-/* AI IMAGE PLACEHOLDER */
+
+/* =====================================================
+   DOWNLOAD POST
+===================================================== */
+
+
+function downloadPost() {
+
+
+    const canvas =
+        document.getElementById(
+            "canvas"
+        );
+
+
+    const link =
+        document.createElement(
+            "a"
+        );
+
+
+    link.download =
+        "ai-post-maker.png";
+
+
+    link.href =
+        canvas.toDataURL(
+            "image/png"
+        );
+
+
+    link.click();
+
+
+}
+
+
+
+/* =====================================================
+   AI IMAGE PLACEHOLDER
+===================================================== */
+
 
 function generateImage() {
 
+
     const prompt =
-        document.getElementById("imagePrompt").value;
+        document
+            .getElementById(
+                "imagePrompt"
+            )
+            .value
+            .trim();
 
 
     if (!prompt) {
 
-        document.getElementById("aiStatus").innerText =
+
+        document
+            .getElementById(
+                "aiStatus"
+            )
+            .innerText =
             "Please enter an image prompt first.";
 
+
         return;
+
 
     }
 
 
-    document.getElementById("aiStatus").innerText =
-        "AI connection will be added in the next stage.";
+    document
+        .getElementById(
+            "aiStatus"
+        )
+        .innerText =
+        "AI image generation will be connected in the next stage.";
+
 
 }
 
 
-/* UPDATE PREVIEW WHEN SETTINGS CHANGE */
+
+/* =====================================================
+   LIVE SETTINGS
+===================================================== */
+
 
 document
-    .getElementById("watermarkPosition")
-    .addEventListener("change", drawCanvas);
+    .getElementById(
+        "imageSize"
+    )
+    .addEventListener(
+        "change",
+        updateCanvasSize
+    );
+
 
 document
-    .getElementById("watermarkSize")
-    .addEventListener("change", drawCanvas);
+    .getElementById(
+        "watermarkPosition"
+    )
+    .addEventListener(
+        "change",
+        drawCanvas
+    );
+
 
 document
-    .getElementById("watermarkOpacity")
-    .addEventListener("input", drawCanvas);
+    .getElementById(
+        "watermarkSize"
+    )
+    .addEventListener(
+        "change",
+        drawCanvas
+    );
+
 
 document
-    .getElementById("swipeEnabled")
-    .addEventListener("change", drawCanvas);
+    .getElementById(
+        "watermarkOpacity"
+    )
+    .addEventListener(
+        "input",
+        drawCanvas
+    );
+
 
 document
-    .getElementById("swipePosition")
-    .addEventListener("change", drawCanvas);
+    .getElementById(
+        "swipeEnabled"
+    )
+    .addEventListener(
+        "change",
+        drawCanvas
+    );
 
 
-/* START */
+document
+    .getElementById(
+        "swipePosition"
+    )
+    .addEventListener(
+        "change",
+        drawCanvas
+    );
+
+
+
+/* =====================================================
+   START APPLICATION
+===================================================== */
+
 
 loadSettings();
 
-drawCanvas();
+updateCanvasSize();
+
 
 </script>
 
+
 </body>
+
 </html>
