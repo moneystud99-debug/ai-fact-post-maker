@@ -3,213 +3,248 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="theme-color" content="#111827">
 <title>AI Post Maker</title>
 
 <style>
-*{
-  box-sizing:border-box;
+* {
+  box-sizing: border-box;
 }
 
-body{
-  margin:0;
-  font-family:Arial,sans-serif;
-  background:#f4f5f7;
-  color:#111;
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f3f4f6;
+  color: #111827;
 }
 
-header{
-  background:#111;
-  color:white;
-  padding:18px 20px;
-  font-size:22px;
-  font-weight:700;
+header {
+  background: #111827;
+  color: white;
+  padding: 18px 16px;
+  text-align: center;
 }
 
-.container{
-  max-width:1100px;
-  margin:auto;
-  padding:20px;
+header h1 {
+  margin: 0;
+  font-size: 25px;
 }
 
-.card{
-  background:white;
-  border-radius:16px;
-  padding:20px;
-  margin-bottom:20px;
-  box-shadow:0 5px 20px rgba(0,0,0,.07);
+header p {
+  margin: 6px 0 0;
+  color: #cbd5e1;
+  font-size: 14px;
 }
 
-h2{
-  margin-top:0;
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 15px;
 }
 
-h3{
-  margin-bottom:8px;
+.grid {
+  display: grid;
+  grid-template-columns: 390px 1fr;
+  gap: 18px;
 }
 
-label{
-  display:block;
-  font-weight:600;
-  margin-top:15px;
-  margin-bottom:6px;
+.card {
+  background: white;
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 18px;
+  box-shadow: 0 3px 15px rgba(0,0,0,.07);
 }
 
-input,
+.card h2 {
+  margin-top: 0;
+  font-size: 19px;
+}
+
+label {
+  display: block;
+  font-weight: 600;
+  margin-top: 13px;
+  margin-bottom: 6px;
+}
+
+input[type="text"],
+input[type="number"],
 select,
-button,
-textarea{
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #ccc;
-  font-size:15px;
+textarea {
+  width: 100%;
+  border: 1px solid #d1d5db;
+  border-radius: 10px;
+  padding: 11px;
+  font-size: 15px;
+  background: white;
 }
 
-textarea{
-  min-height:90px;
-  resize:vertical;
+textarea {
+  min-height: 90px;
+  resize: vertical;
 }
 
-button{
-  background:#111;
-  color:white;
-  border:none;
-  cursor:pointer;
-  font-weight:700;
-  margin-top:12px;
+input[type="range"] {
+  width: 100%;
 }
 
-button:hover{
-  opacity:.9;
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 11px 15px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 700;
+  background: #111827;
+  color: white;
+  margin-top: 8px;
 }
 
-.secondary{
-  background:#e9e9e9;
-  color:#111;
+button:hover {
+  opacity: .9;
 }
 
-.ai-button{
-  background:#6c3cff;
+button.secondary {
+  background: #e5e7eb;
+  color: #111827;
 }
 
-.row{
-  display:grid;
-  grid-template-columns:repeat(2,1fr);
-  gap:15px;
+button.ai {
+  background: #7c3aed;
 }
 
-.row3{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:15px;
+button.success {
+  background: #059669;
 }
 
-.preview-area{
-  text-align:center;
+button.full {
+  width: 100%;
 }
 
-canvas{
-  max-width:100%;
-  height:auto;
-  border-radius:10px;
-  background:#ddd;
-  box-shadow:0 5px 25px rgba(0,0,0,.15);
+.small {
+  font-size: 12px;
+  color: #6b7280;
 }
 
-.small{
-  font-size:13px;
-  color:#666;
-  margin-top:5px;
+.status {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 9px;
+  font-size: 13px;
+  display: none;
 }
 
-.status{
-  background:#f0f0f0;
-  padding:10px;
-  border-radius:10px;
-  margin-top:10px;
-  font-size:13px;
+.status.info {
+  display: block;
+  background: #eff6ff;
+  color: #1d4ed8;
 }
 
-.analysis-box{
-  background:#f7f5ff;
-  border:1px solid #ddd3ff;
-  border-radius:12px;
-  padding:15px;
-  margin-top:15px;
+.status.success {
+  display: block;
+  background: #ecfdf5;
+  color: #047857;
 }
 
-.analysis-item{
-  background:white;
-  border-radius:10px;
-  padding:12px;
-  margin-top:8px;
-  border:1px solid #eee;
+.status.error {
+  display: block;
+  background: #fef2f2;
+  color: #b91c1c;
 }
 
-.analysis-label{
-  font-size:12px;
-  color:#666;
-  margin-bottom:4px;
+.preview-box {
+  background: #e5e7eb;
+  border-radius: 14px;
+  padding: 15px;
+  text-align: center;
 }
 
-.analysis-value{
-  font-weight:600;
+#canvas {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 5px 25px rgba(0,0,0,.15);
 }
 
-.badge{
-  display:inline-block;
-  padding:6px 10px;
-  border-radius:20px;
-  background:#eee;
-  font-size:12px;
-  margin:3px;
+.reference-preview {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  background: #f3f4f6;
+  border-radius: 10px;
+  margin-top: 10px;
+  display: none;
 }
 
-.warning{
-  background:#fff4d6;
-  border:1px solid #f0d27a;
-  padding:12px;
-  border-radius:10px;
-  font-size:13px;
-  margin-top:12px;
+.analysis {
+  margin-top: 12px;
+  padding: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  display: none;
 }
 
-.success{
-  background:#e8f8ed;
-  border:1px solid #a8d8b5;
-  padding:12px;
-  border-radius:10px;
-  font-size:13px;
-  margin-top:12px;
+.analysis pre {
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 12px;
+  max-height: 500px;
+  overflow: auto;
 }
 
-.reference-preview{
-  width:100%;
-  max-height:500px;
-  object-fit:contain;
-  background:#eee;
-  border-radius:12px;
-  margin-top:15px;
-  display:none;
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
 }
 
-.hidden{
-  display:none !important;
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
 }
 
-@media(max-width:700px){
-  .row,
-  .row3{
-    grid-template-columns:1fr;
-  }
+.checkbox-row label {
+  margin: 0;
+}
 
-  .container{
-    padding:12px;
-  }
+.swatch {
+  width: 45px;
+  height: 35px;
+  padding: 2px;
+}
 
-  .card{
-    padding:15px;
+.file-name {
+  font-size: 12px;
+  color: #4b5563;
+  margin-top: 6px;
+  word-break: break-word;
+}
+
+.badge {
+  display: inline-block;
+  background: #ede9fe;
+  color: #6d28d9;
+  border-radius: 999px;
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  margin: 3px;
+}
+
+hr {
+  border: 0;
+  border-top: 1px solid #e5e7eb;
+  margin: 18px 0;
+}
+
+@media(max-width: 850px) {
+  .grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>
@@ -218,866 +253,1468 @@ canvas{
 <body>
 
 <header>
-  AI Post Maker
+  <h1>AI Post Maker</h1>
+  <p>Create Instagram-ready posts using your own branding</p>
 </header>
 
 <div class="container">
 
+<div class="grid">
 
-<!-- =========================
-     BRAND SETUP
-========================= -->
+<!-- LEFT SIDE -->
+<div>
 
+<!-- BRAND -->
 <div class="card">
-
-<h2>Brand Setup</h2>
+<h2>🎨 Brand Setup</h2>
 
 <label>Upload Your Font</label>
+<input type="file" id="fontInput" accept=".ttf,.otf,.woff,.woff2">
+<div id="fontName" class="file-name">No font selected</div>
 
-<input
-  type="file"
-  id="fontInput"
-  accept=".ttf,.otf,.woff,.woff2"
->
-
-<div class="small">
-Your uploaded font will be used for your new text.
-</div>
-
-
-<label>Upload Watermark PNG</label>
-
-<input
-  type="file"
-  id="watermarkInput"
-  accept="image/png"
->
-
+<label>Watermark PNG</label>
+<input type="file" id="watermarkInput" accept="image/png">
+<div id="watermarkName" class="file-name">No watermark selected</div>
 
 <div class="row">
-
 <div>
-
 <label>Watermark Position</label>
-
 <select id="watermarkPosition">
-
 <option value="top-left">Top Left</option>
-<option value="top-right">Top Right</option>
+<option value="top-right" selected>Top Right</option>
 <option value="bottom-left">Bottom Left</option>
 <option value="bottom-right">Bottom Right</option>
-
 </select>
-
 </div>
-
 
 <div>
-
 <label>Watermark Size</label>
-
-<input
-  type="range"
-  id="watermarkSize"
-  min="30"
-  max="500"
-  value="150"
->
-
-<div class="small">
-<span id="watermarkSizeValue">150</span> px
+<input type="number" id="watermarkSize" value="120" min="20" max="800">
 </div>
-
 </div>
-
-</div>
-
 
 <label>Watermark Opacity</label>
+<input type="range" id="watermarkOpacity" min="0" max="100" value="100">
+<div class="small"><span id="watermarkOpacityValue">100</span>%</div>
 
-<input
-  type="range"
-  id="watermarkOpacity"
-  min="0"
-  max="100"
-  value="100"
->
-
-<div class="small">
-<span id="watermarkOpacityValue">100</span>%
-</div>
-
+<button class="success full" id="saveSettingsButton">
+Save Brand Settings
+</button>
 </div>
 
 
-<!-- =========================
-     IMAGE SIZE
-========================= -->
-
+<!-- IMAGE SIZE -->
 <div class="card">
+<h2>📐 Image Size</h2>
 
-<h2>Image Size</h2>
-
-<label>Instagram Format</label>
-
+<label>Instagram Size</label>
 <select id="imageSize">
-
-<option value="1080x1080">
-Square — 1080 × 1080
-</option>
-
-<option value="1080x1350">
-Portrait — 1080 × 1350
-</option>
-
-<option value="1080x566">
-Landscape — 1080 × 566
-</option>
-
-<option value="1080x1920">
-Story / Reel — 1080 × 1920
-</option>
-
-<option value="custom">
-Custom
-</option>
-
+<option value="1080x1080">Square — 1080 × 1080</option>
+<option value="1080x1350">Portrait — 1080 × 1350</option>
+<option value="1080x566">Landscape — 1080 × 566</option>
+<option value="1080x1920">Story / Reel — 1080 × 1920</option>
+<option value="custom">Custom</option>
 </select>
 
-
-<div
-  id="customSize"
-  class="row"
-  style="display:none;"
->
-
+<div id="customSizeBox" style="display:none;">
+<div class="row">
 <div>
-
 <label>Width</label>
-
-<input
-  type="number"
-  id="customWidth"
-  value="1080"
-  min="100"
-  max="5000"
->
-
+<input type="number" id="customWidth" value="1080">
 </div>
-
 
 <div>
-
 <label>Height</label>
-
-<input
-  type="number"
-  id="customHeight"
-  value="1080"
-  min="100"
-  max="5000"
->
-
+<input type="number" id="customHeight" value="1080">
 </div>
-
 </div>
-
+</div>
 </div>
 
 
-<!-- =========================
-     STEP 6A REFERENCE ANALYZER
-========================= -->
-
+<!-- REFERENCE -->
 <div class="card">
-
-<h2>🔍 Reference Post Analyzer</h2>
+<h2>🤖 Reference Instagram Post</h2>
 
 <p class="small">
-Upload the Instagram post whose design you want to recreate.
-The analyzer will inspect the image and prepare the layout information
-for the AI stage.
+Upload an Instagram post. AI will study its layout, text areas, image area,
+alignment, colors and composition.
 </p>
 
+<input type="file" id="referenceInput" accept="image/*">
 
-<label>Upload Reference Post</label>
+<img id="referencePreview" class="reference-preview">
 
-<input
-  type="file"
-  id="referenceInput"
-  accept="image/*"
->
-
-
-<img
-  id="referencePreview"
-  class="reference-preview"
-  alt="Reference preview"
->
-
-
-<div
-  id="referenceInfo"
-  class="status"
->
-No reference image uploaded.
-</div>
-
-
-<button
-  id="analyzeButton"
-  class="ai-button"
->
-🔍 Analyze Reference Layout
+<button class="ai full" id="analyzeButton">
+✨ Analyze Reference Layout with AI
 </button>
 
+<div id="analysisStatus" class="status"></div>
 
-<div
-  id="analysisResult"
-  class="analysis-box hidden"
->
+<div id="analysisResult" class="analysis">
 
-<h3>Reference Analysis</h3>
+<strong>AI Analysis</strong>
 
-<div class="analysis-item">
+<div id="analysisTags"></div>
 
-<div class="analysis-label">
-Image Size
+<hr>
+
+<div>
+<strong>Overall Layout:</strong>
+<div id="analysisLayout"></div>
 </div>
 
-<div
-  id="analysisDimensions"
-  class="analysis-value"
->
--
+<br>
+
+<div>
+<strong>Aspect Ratio:</strong>
+<div id="analysisDimensions"></div>
 </div>
 
+<br>
+
+<div>
+<strong>Text Position:</strong>
+<div id="analysisTextPosition"></div>
 </div>
 
+<br>
 
-<div class="analysis-item">
-
-<div class="analysis-label">
-Detected Layout
+<div>
+<strong>Alignment:</strong>
+<div id="analysisAlignment"></div>
 </div>
 
-<div
-  id="analysisLayout"
-  class="analysis-value"
->
--
+<br>
+
+<div>
+<strong>Main Image Area:</strong>
+<div id="analysisImageArea"></div>
 </div>
 
+<br>
+
+<div>
+<strong>Overlay:</strong>
+<div id="analysisOverlay"></div>
 </div>
 
+<hr>
 
-<div class="analysis-item">
-
-<div class="analysis-label">
-Text Position
-</div>
-
-<div
-  id="analysisTextPosition"
-  class="analysis-value"
->
--
-</div>
+<strong>Raw AI Response</strong>
+<pre id="rawAnalysis"></pre>
 
 </div>
-
-
-<div class="analysis-item">
-
-<div class="analysis-label">
-Likely Text Alignment
-</div>
-
-<div
-  id="analysisAlignment"
-  class="analysis-value"
->
--
-</div>
-
 </div>
 
 
-<div class="analysis-item">
-
-<div class="analysis-label">
-Image Area
-</div>
-
-<div
-  id="analysisImageArea"
-  class="analysis-value"
->
--
-</div>
-
-</div>
-
-
-<div class="analysis-item">
-
-<div class="analysis-label">
-Background / Overlay
-</div>
-
-<div
-  id="analysisOverlay"
-  class="analysis-value"
->
--
-</div>
-
-</div>
-
-
-<div class="analysis-item">
-
-<div class="analysis-label">
-Detected Text Area
-</div>
-
-<div
-  id="analysisTextArea"
-  class="analysis-value"
->
--
-</div>
-
-</div>
-
-
-<div class="analysis-item">
-
-<div class="analysis-label">
-Design Characteristics
-</div>
-
-<div id="analysisTags">
-</div>
-
-</div>
-
-
-<div class="success">
-Reference layout prepared. The next AI step will use this information
-to detect the original text and prepare the image for replacement.
-</div>
-
-</div>
-
-
-<div class="warning">
-
-⚠️ Step 6A is a local layout-analysis framework.
-Actual AI vision analysis will be connected in the next step.
-
-</div>
-
-</div>
-
-
-<!-- =========================
-     IMAGE SOURCE
-========================= -->
-
+<!-- IMAGE SOURCE -->
 <div class="card">
-
 <h2>🖼️ Image Source</h2>
 
-<p class="small">
-Choose how you want the main image for your post.
-</p>
+<input type="file" id="galleryInput" accept="image/*" hidden>
 
-
-<div class="row3">
-
-<div>
-
-<button
-  id="galleryButton"
-  class="secondary"
->
-📱 Gallery
+<button class="secondary full" id="galleryButton">
+📱 Upload From Gallery
 </button>
 
-</div>
-
-
-<div>
-
-<button
-  id="aiImageButton"
-  class="ai-button"
->
-🤖 AI Automatic
+<button class="ai full" id="aiImageButton">
+✨ AI Automatic Image
 </button>
 
-</div>
-
-
-<div>
-
-<button
-  id="promptImageButton"
-  class="ai-button"
->
-✍️ AI Prompt
+<button class="ai full" id="promptImageButton">
+✍️ Generate From Prompt
 </button>
 
-</div>
+<label>Describe Your Image</label>
+<textarea id="imagePrompt"
+placeholder="Example: A realistic Indian farmer standing in a wheat field at sunrise"></textarea>
 
-</div>
-
-
-<input
-  type="file"
-  id="galleryInput"
-  accept="image/*"
-  class="hidden"
->
-
-
-<label>
-AI Image Prompt
-</label>
-
-<textarea
-  id="imagePrompt"
-  placeholder="Example: A realistic Indian farmer standing in a wheat field at sunrise..."
-></textarea>
-
-
-<button
-  id="generatePromptButton"
-  class="ai-button"
->
+<button class="ai full" id="generatePromptButton">
 Generate Image From Prompt
 </button>
 
-
-<button
-  id="changeImageButton"
-  class="secondary"
->
+<button class="secondary full" id="changeImageButton">
 🔄 Change Image
 </button>
 
-
-<div
-  id="imageSourceStatus"
-  class="status"
->
-No image source selected.
-</div>
-
+<div id="imageStatus" class="status"></div>
 </div>
 
 
-<!-- =========================
-     POST TEXT
-========================= -->
-
+<!-- TEXT -->
 <div class="card">
-
-<h2>Post Text</h2>
+<h2>✍️ Post Text</h2>
 
 <label>Headline</label>
-
-<textarea
-  id="headline"
-  placeholder="Enter your headline..."
->YOUR FACT HEADLINE</textarea>
-
+<textarea id="headline"
+placeholder="Enter your main headline"></textarea>
 
 <label>Supporting Text</label>
-
-<textarea
-  id="subtitle"
-  placeholder="Enter supporting text..."
->Write your supporting text here.</textarea>
-
+<textarea id="supportingText"
+placeholder="Enter supporting text"></textarea>
 
 <div class="row">
 
 <div>
-
 <label>Headline Size</label>
-
-<input
-  type="range"
-  id="headlineSize"
-  min="30"
-  max="180"
-  value="80"
->
-
-<div class="small">
-<span id="headlineSizeValue">80</span> px
+<input type="number" id="headlineSize" value="70" min="10" max="300">
 </div>
-
-</div>
-
 
 <div>
-
 <label>Text Alignment</label>
-
 <select id="textAlign">
-
 <option value="left">Left</option>
-<option value="center">Center</option>
+<option value="center" selected>Center</option>
 <option value="right">Right</option>
+</select>
+</div>
 
+</div>
+</div>
+
+
+<!-- CAROUSEL -->
+<div class="card">
+<h2>👉 Carousel / Swipe</h2>
+
+<div class="checkbox-row">
+<input type="checkbox" id="carouselEnabled">
+<label for="carouselEnabled">Show Swipe Button</label>
+</div>
+
+<label>Swipe Position</label>
+<select id="carouselPosition">
+<option value="top-left">Top Left</option>
+<option value="top-right" selected>Top Right</option>
 </select>
 
+<label>Swipe Text</label>
+<input type="text" id="carouselText" value="SWIPE →">
+
+</div>
+
+
+<!-- SAVE -->
+<div class="card">
+<button class="success full" id="saveAllButton">
+💾 Save Settings
+</button>
+
+<button class="secondary full" id="resetButton">
+Reset Settings
+</button>
 </div>
 
 </div>
 
-</div>
 
-
-<!-- =========================
-     CAROUSEL
-========================= -->
+<!-- RIGHT SIDE -->
+<div>
 
 <div class="card">
+<h2>👀 Live Preview</h2>
 
-<h2>Carousel / Swipe Button</h2>
-
-<label>Show Swipe Button</label>
-
-<select id="carouselEnabled">
-
-<option value="false">
-OFF
-</option>
-
-<option value="true">
-ON
-</option>
-
-</select>
-
-
-<label>Swipe Button Position</label>
-
-<select id="carouselPosition">
-
-<option value="top-left">
-Top Left
-</option>
-
-<option value="top-right">
-Top Right
-</option>
-
-</select>
-
+<div class="preview-box">
+<canvas id="canvas"></canvas>
 </div>
 
+<br>
 
-<!-- =========================
-     PREVIEW
-========================= -->
-
-<div class="card preview-area">
-
-<h2>Live Preview</h2>
-
-<canvas
-  id="canvas"
-  width="1080"
-  height="1080"
-></canvas>
-
-
-<button id="downloadButton">
-Download PNG
+<button class="success full" id="downloadButton">
+⬇️ Download PNG
 </button>
 
+<div id="mainStatus" class="status"></div>
 
-<button
-  id="saveSettingsButton"
-  class="secondary"
->
-Save Settings
-</button>
-
-
-<div
-  id="status"
-  class="status"
->
-Ready
 </div>
 
 </div>
 
-
+</div>
 </div>
 
 
 <script>
 
-/* =====================================================
-   GLOBAL VARIABLES
-===================================================== */
+/* =========================================================
+   AI POST MAKER
+   ========================================================= */
 
-let canvas =
-  document.getElementById("canvas");
+const FUNCTION_URL =
+"https://zflphadtukkvvlbrzace.supabase.co/functions/v1/analyze-reference";
 
-let ctx =
-  canvas.getContext("2d");
+
+/* =========================================================
+   ELEMENTS
+   ========================================================= */
+
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+const referenceInput = document.getElementById("referenceInput");
+const referencePreview = document.getElementById("referencePreview");
+const analyzeButton = document.getElementById("analyzeButton");
+
+const analysisResult = document.getElementById("analysisResult");
+const analysisStatus = document.getElementById("analysisStatus");
+
+const galleryInput = document.getElementById("galleryInput");
 
 let referenceImage = null;
-
+let currentImage = null;
 let watermarkImage = null;
+let customFontName = "Arial";
 
-let customFontFamily = "Arial";
-
-
-/* =====================================================
-   ELEMENTS
-===================================================== */
-
-const fontInput =
-  document.getElementById("fontInput");
-
-const watermarkInput =
-  document.getElementById("watermarkInput");
-
-const referenceInput =
-  document.getElementById("referenceInput");
-
-const referencePreview =
-  document.getElementById("referencePreview");
-
-const imageSize =
-  document.getElementById("imageSize");
-
-const customSize =
-  document.getElementById("customSize");
-
-const customWidth =
-  document.getElementById("customWidth");
-
-const customHeight =
-  document.getElementById("customHeight");
-
-const watermarkPosition =
-  document.getElementById("watermarkPosition");
-
-const watermarkSize =
-  document.getElementById("watermarkSize");
-
-const watermarkOpacity =
-  document.getElementById("watermarkOpacity");
-
-const carouselEnabled =
-  document.getElementById("carouselEnabled");
-
-const carouselPosition =
-  document.getElementById("carouselPosition");
-
-const headline =
-  document.getElementById("headline");
-
-const subtitle =
-  document.getElementById("subtitle");
-
-const headlineSize =
-  document.getElementById("headlineSize");
-
-const textAlign =
-  document.getElementById("textAlign");
-
-const galleryInput =
-  document.getElementById("galleryInput");
-
-const imagePrompt =
-  document.getElementById("imagePrompt");
+let aiAnalysis = null;
 
 
-/* =====================================================
-   CANVAS SIZE
-===================================================== */
+/* =========================================================
+   DEFAULT SETTINGS
+   ========================================================= */
 
-function getCanvasSize(){
+const defaultSettings = {
+  imageSize: "1080x1080",
+  customWidth: 1080,
+  customHeight: 1080,
 
-  if(imageSize.value === "custom"){
+  watermarkPosition: "top-right",
+  watermarkSize: 120,
+  watermarkOpacity: 100,
+
+  headlineSize: 70,
+  textAlign: "center",
+
+  carouselEnabled: false,
+  carouselPosition: "top-right",
+  carouselText: "SWIPE →"
+};
+
+
+/* =========================================================
+   HELPERS
+   ========================================================= */
+
+function showStatus(element, message, type = "info") {
+
+  element.className = "status " + type;
+  element.textContent = message;
+}
+
+
+function hideStatus(element) {
+  element.className = "status";
+  element.textContent = "";
+}
+
+
+function getCanvasSize() {
+
+  const value = document.getElementById("imageSize").value;
+
+  if (value === "custom") {
 
     return {
-      width:
-        parseInt(customWidth.value) || 1080,
-
-      height:
-        parseInt(customHeight.value) || 1080
+      width: Number(document.getElementById("customWidth").value) || 1080,
+      height: Number(document.getElementById("customHeight").value) || 1080
     };
 
   }
 
-  const parts =
-    imageSize.value.split("x");
+  const parts = value.split("x");
 
   return {
-    width:
-      parseInt(parts[0]),
-
-    height:
-      parseInt(parts[1])
+    width: Number(parts[0]),
+    height: Number(parts[1])
   };
 }
 
 
-function updateCanvasSize(){
+/* =========================================================
+   FONT UPLOAD
+   ========================================================= */
 
-  const size =
-    getCanvasSize();
+document.getElementById("fontInput").addEventListener("change", async function() {
 
-  canvas.width =
-    size.width;
+  const file = this.files[0];
 
-  canvas.height =
-    size.height;
+  if (!file) return;
+
+  customFontName = "CustomFont";
+
+  document.getElementById("fontName").textContent =
+    file.name;
+
+  try {
+
+    const fontData = await file.arrayBuffer();
+
+    const fontFace = new FontFace(
+      customFontName,
+      fontData
+    );
+
+    await fontFace.load();
+
+    document.fonts.add(fontFace);
+
+    drawCanvas();
+
+  } catch(error) {
+
+    console.error(error);
+
+    alert(
+      "The font could not be loaded. Try a TTF or OTF font."
+    );
+  }
+});
+
+
+/* =========================================================
+   WATERMARK
+   ========================================================= */
+
+document.getElementById("watermarkInput").addEventListener("change", function() {
+
+  const file = this.files[0];
+
+  if (!file) return;
+
+  document.getElementById("watermarkName").textContent =
+    file.name;
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+
+    watermarkImage = new Image();
+
+    watermarkImage.onload = function() {
+      drawCanvas();
+    };
+
+    watermarkImage.src = e.target.result;
+  };
+
+  reader.readAsDataURL(file);
+});
+
+
+/* =========================================================
+   REFERENCE IMAGE
+   ========================================================= */
+
+referenceInput.addEventListener("change", function() {
+
+  const file = this.files[0];
+
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+
+    referencePreview.src = e.target.result;
+    referencePreview.style.display = "block";
+
+    referenceImage = new Image();
+
+    referenceImage.onload = function() {
+
+      currentImage = referenceImage;
+
+      drawCanvas();
+
+    };
+
+    referenceImage.src = e.target.result;
+  };
+
+  reader.readAsDataURL(file);
+});
+
+
+/* =========================================================
+   GALLERY IMAGE
+   ========================================================= */
+
+document.getElementById("galleryButton").addEventListener("click", function() {
+  galleryInput.click();
+});
+
+
+galleryInput.addEventListener("change", function() {
+
+  const file = this.files[0];
+
+  if (!file) return;
+
+  const reader = new FileReader();
+
+  reader.onload = function(e) {
+
+    const img = new Image();
+
+    img.onload = function() {
+
+      currentImage = img;
+
+      showStatus(
+        document.getElementById("imageStatus"),
+        "Gallery image loaded.",
+        "success"
+      );
+
+      drawCanvas();
+    };
+
+    img.src = e.target.result;
+  };
+
+  reader.readAsDataURL(file);
+});
+
+
+/* =========================================================
+   RESIZE IMAGE BEFORE AI
+   ========================================================= */
+
+function resizeImageForAI(file, maxSize = 1600) {
+
+  return new Promise((resolve, reject) => {
+
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+
+      const img = new Image();
+
+      img.onload = function() {
+
+        let width = img.width;
+        let height = img.height;
+
+        if (width > maxSize || height > maxSize) {
+
+          const scale =
+            Math.min(maxSize / width, maxSize / height);
+
+          width = Math.round(width * scale);
+          height = Math.round(height * scale);
+        }
+
+        const tempCanvas =
+          document.createElement("canvas");
+
+        tempCanvas.width = width;
+        tempCanvas.height = height;
+
+        const tempCtx =
+          tempCanvas.getContext("2d");
+
+        tempCtx.drawImage(
+          img,
+          0,
+          0,
+          width,
+          height
+        );
+
+        resolve(
+          tempCanvas.toDataURL(
+            "image/jpeg",
+            0.85
+          )
+        );
+      };
+
+      img.onerror = reject;
+
+      img.src = event.target.result;
+    };
+
+    reader.onerror = reject;
+
+    reader.readAsDataURL(file);
+  });
+}
+
+
+/* =========================================================
+   EXTRACT AI TEXT
+   ========================================================= */
+
+function extractResponseText(data) {
+
+  if (!data) return "";
+
+  if (typeof data.output_text === "string") {
+    return data.output_text;
+  }
+
+  if (Array.isArray(data.output)) {
+
+    let result = "";
+
+    for (const item of data.output) {
+
+      if (!item.content) continue;
+
+      for (const content of item.content) {
+
+        if (typeof content.text === "string") {
+          result += content.text;
+        }
+      }
+    }
+
+    if (result) return result;
+  }
+
+  if (data.response) {
+    return extractResponseText(data.response);
+  }
+
+  return "";
+}
+
+
+/* =========================================================
+   PARSE JSON FROM AI
+   ========================================================= */
+
+function parseAIJSON(text) {
+
+  if (!text) return null;
+
+  let cleaned = text.trim();
+
+  cleaned = cleaned
+    .replace(/^```json/i, "")
+    .replace(/^```/i, "")
+    .replace(/```$/i, "")
+    .trim();
+
+  try {
+    return JSON.parse(cleaned);
+  } catch(e) {
+
+    const start = cleaned.indexOf("{");
+    const end = cleaned.lastIndexOf("}");
+
+    if (start !== -1 && end !== -1) {
+
+      try {
+
+        return JSON.parse(
+          cleaned.substring(start, end + 1)
+        );
+
+      } catch(error) {
+        return null;
+      }
+    }
+
+    return null;
+  }
+}
+
+
+/* =========================================================
+   AI ANALYSIS
+   ========================================================= */
+
+analyzeButton.addEventListener("click", async function() {
+
+  const file = referenceInput.files[0];
+
+  if (!file) {
+
+    showStatus(
+      analysisStatus,
+      "Please upload a reference post first.",
+      "error"
+    );
+
+    return;
+  }
+
+  analyzeButton.disabled = true;
+
+  analyzeButton.textContent =
+    "⏳ AI is analyzing...";
+
+  showStatus(
+    analysisStatus,
+    "Sending your reference post to AI...",
+    "info"
+  );
+
+  analysisResult.style.display = "none";
+
+  try {
+
+    const imageData =
+      await resizeImageForAI(file);
+
+    const response = await fetch(
+      FUNCTION_URL,
+      {
+        method: "POST",
+
+        headers: {
+          "Content-Type": "application/json"
+        },
+
+        body: JSON.stringify({
+          image: imageData
+        })
+      }
+    );
+
+    const responseText =
+      await response.text();
+
+    let data = null;
+
+    try {
+      data = JSON.parse(responseText);
+    } catch(e) {
+      data = null;
+    }
+
+    if (!response.ok) {
+
+      let errorMessage =
+        "AI function returned an error.";
+
+      if (data && data.error) {
+        errorMessage = data.error;
+      }
+
+      if (responseText && responseText.length < 1000) {
+        errorMessage +=
+          " " + responseText;
+      }
+
+      throw new Error(errorMessage);
+    }
+
+    const aiText =
+      extractResponseText(data);
+
+    if (!aiText) {
+
+      throw new Error(
+        "The AI function responded, but no analysis text was found."
+      );
+    }
+
+    const parsed =
+      parseAIJSON(aiText);
+
+    aiAnalysis = parsed;
+
+    displayAnalysis(
+      parsed,
+      aiText
+    );
+
+    showStatus(
+      analysisStatus,
+      "AI analysis completed successfully.",
+      "success"
+    );
+
+  } catch(error) {
+
+    console.error(error);
+
+    showStatus(
+      analysisStatus,
+      "AI analysis failed: " + error.message,
+      "error"
+    );
+
+  } finally {
+
+    analyzeButton.disabled = false;
+
+    analyzeButton.textContent =
+      "✨ Analyze Reference Layout with AI";
+  }
+
+});
+
+
+/* =========================================================
+   DISPLAY AI ANALYSIS
+   ========================================================= */
+
+function displayAnalysis(data, rawText) {
+
+  analysisResult.style.display = "block";
+
+  const tags =
+    document.getElementById("analysisTags");
+
+  tags.innerHTML = "";
+
+  if (data) {
+
+    const tagsList = [];
+
+    if (data.overall_layout)
+      tagsList.push("Layout detected");
+
+    if (data.text_blocks)
+      tagsList.push(
+        data.text_blocks.length +
+        " text blocks"
+      );
+
+    if (data.main_image_area)
+      tagsList.push("Image area detected");
+
+    if (data.overlay)
+      tagsList.push("Overlay detected");
+
+    tagsList.forEach(tag => {
+
+      const span =
+        document.createElement("span");
+
+      span.className = "badge";
+      span.textContent = tag;
+
+      tags.appendChild(span);
+    });
+
+    document.getElementById("analysisLayout").textContent =
+      formatValue(data.overall_layout);
+
+    document.getElementById("analysisDimensions").textContent =
+      formatValue(data.aspect_ratio);
+
+    document.getElementById("analysisTextPosition").textContent =
+      formatTextBlocks(data.text_blocks);
+
+    document.getElementById("analysisAlignment").textContent =
+      getAlignment(data.text_blocks);
+
+    document.getElementById("analysisImageArea").textContent =
+      formatValue(data.main_image_area);
+
+    document.getElementById("analysisOverlay").textContent =
+      formatValue(data.overlay);
+
+  } else {
+
+    document.getElementById("analysisLayout").textContent =
+      "AI returned text but it was not valid JSON.";
+
+    document.getElementById("analysisDimensions").textContent =
+      "-";
+
+    document.getElementById("analysisTextPosition").textContent =
+      "-";
+
+    document.getElementById("analysisAlignment").textContent =
+      "-";
+
+    document.getElementById("analysisImageArea").textContent =
+      "-";
+
+    document.getElementById("analysisOverlay").textContent =
+      "-";
+  }
+
+  document.getElementById("rawAnalysis").textContent =
+    rawText;
+
+  /*
+   * If AI detected a useful text block,
+   * automatically use its detected text.
+   *
+   * We don't force it because the user may
+   * want to rewrite the text.
+   */
+
+  if (
+    data &&
+    Array.isArray(data.text_blocks) &&
+    data.text_blocks.length > 0
+  ) {
+
+    const first =
+      data.text_blocks[0];
+
+    if (
+      first.text &&
+      !document.getElementById("headline").value.trim()
+    ) {
+
+      document.getElementById("headline").value =
+        first.text;
+    }
+  }
 
   drawCanvas();
 }
 
 
-/* =====================================================
-   COVER IMAGE
-===================================================== */
+function formatValue(value) {
 
-function drawCoverImage(img){
+  if (value === undefined || value === null) {
+    return "Not detected";
+  }
 
-  const cw =
-    canvas.width;
+  if (typeof value === "string") {
+    return value;
+  }
 
-  const ch =
-    canvas.height;
-
-  const iw =
-    img.width;
-
-  const ih =
-    img.height;
-
-  const scale =
-    Math.max(
-      cw / iw,
-      ch / ih
-    );
-
-  const nw =
-    iw * scale;
-
-  const nh =
-    ih * scale;
-
-  const x =
-    (cw - nw) / 2;
-
-  const y =
-    (ch - nh) / 2;
-
-  ctx.drawImage(
-    img,
-    x,
-    y,
-    nw,
-    nh
+  return JSON.stringify(
+    value,
+    null,
+    2
   );
 }
 
 
-/* =====================================================
-   WATERMARK
-===================================================== */
+function formatTextBlocks(blocks) {
 
-function drawWatermark(){
+  if (!Array.isArray(blocks) || blocks.length === 0) {
+    return "No text blocks detected";
+  }
 
-  if(!watermarkImage)
-    return;
+  return blocks.map((block, index) => {
 
-  const size =
-    parseInt(
-      watermarkSize.value
+    const position = [];
+
+    if (block.x !== undefined)
+      position.push("X: " + block.x + "%");
+
+    if (block.y !== undefined)
+      position.push("Y: " + block.y + "%");
+
+    if (block.width !== undefined)
+      position.push("W: " + block.width + "%");
+
+    if (block.height !== undefined)
+      position.push("H: " + block.height + "%");
+
+    return (
+      "Text " +
+      (index + 1) +
+      ": " +
+      (block.text || "") +
+      " — " +
+      position.join(", ")
     );
 
+  }).join("\n");
+}
+
+
+function getAlignment(blocks) {
+
+  if (!Array.isArray(blocks) || !blocks.length) {
+    return "Not detected";
+  }
+
+  return blocks
+    .map(b => b.alignment || "unknown")
+    .join(", ");
+}
+
+
+/* =========================================================
+   IMAGE SOURCE BUTTONS
+   ========================================================= */
+
+document.getElementById("aiImageButton")
+.addEventListener("click", function() {
+
+  showStatus(
+    document.getElementById("imageStatus"),
+    "AI automatic image generation will be connected in the next step.",
+    "info"
+  );
+});
+
+
+document.getElementById("promptImageButton")
+.addEventListener("click", function() {
+
+  document.getElementById("imagePrompt").focus();
+
+});
+
+
+document.getElementById("generatePromptButton")
+.addEventListener("click", function() {
+
+  const prompt =
+    document.getElementById("imagePrompt").value.trim();
+
+  if (!prompt) {
+
+    showStatus(
+      document.getElementById("imageStatus"),
+      "Enter an image description first.",
+      "error"
+    );
+
+    return;
+  }
+
+  showStatus(
+    document.getElementById("imageStatus"),
+    "Image generation will be connected next. Your prompt has been saved in the editor.",
+    "info"
+  );
+});
+
+
+document.getElementById("changeImageButton")
+.addEventListener("click", function() {
+
+  showStatus(
+    document.getElementById("imageStatus"),
+    "Change Image will be connected to AI image generation next.",
+    "info"
+  );
+
+});
+
+
+/* =========================================================
+   SETTINGS
+   ========================================================= */
+
+function collectSettings() {
+
+  return {
+
+    imageSize:
+      document.getElementById("imageSize").value,
+
+    customWidth:
+      Number(document.getElementById("customWidth").value),
+
+    customHeight:
+      Number(document.getElementById("customHeight").value),
+
+    watermarkPosition:
+      document.getElementById("watermarkPosition").value,
+
+    watermarkSize:
+      Number(document.getElementById("watermarkSize").value),
+
+    watermarkOpacity:
+      Number(document.getElementById("watermarkOpacity").value),
+
+    headlineSize:
+      Number(document.getElementById("headlineSize").value),
+
+    textAlign:
+      document.getElementById("textAlign").value,
+
+    carouselEnabled:
+      document.getElementById("carouselEnabled").checked,
+
+    carouselPosition:
+      document.getElementById("carouselPosition").value,
+
+    carouselText:
+      document.getElementById("carouselText").value,
+
+    headline:
+      document.getElementById("headline").value,
+
+    supportingText:
+      document.getElementById("supportingText").value,
+
+    imagePrompt:
+      document.getElementById("imagePrompt").value
+  };
+}
+
+
+function applySettings(settings) {
+
+  if (!settings) return;
+
+  document.getElementById("imageSize").value =
+    settings.imageSize || "1080x1080";
+
+  document.getElementById("customWidth").value =
+    settings.customWidth || 1080;
+
+  document.getElementById("customHeight").value =
+    settings.customHeight || 1080;
+
+  document.getElementById("watermarkPosition").value =
+    settings.watermarkPosition || "top-right";
+
+  document.getElementById("watermarkSize").value =
+    settings.watermarkSize || 120;
+
+  document.getElementById("watermarkOpacity").value =
+    settings.watermarkOpacity ?? 100;
+
+  document.getElementById("headlineSize").value =
+    settings.headlineSize || 70;
+
+  document.getElementById("textAlign").value =
+    settings.textAlign || "center";
+
+  document.getElementById("carouselEnabled").checked =
+    settings.carouselEnabled || false;
+
+  document.getElementById("carouselPosition").value =
+    settings.carouselPosition || "top-right";
+
+  document.getElementById("carouselText").value =
+    settings.carouselText || "SWIPE →";
+
+  document.getElementById("headline").value =
+    settings.headline || "";
+
+  document.getElementById("supportingText").value =
+    settings.supportingText || "";
+
+  document.getElementById("imagePrompt").value =
+    settings.imagePrompt || "";
+
+  updateCustomSizeVisibility();
+  updateOpacityText();
+  drawCanvas();
+}
+
+
+function saveSettings() {
+
+  const settings =
+    collectSettings();
+
+  localStorage.setItem(
+    "aiPostMakerSettings",
+    JSON.stringify(settings)
+  );
+
+  showStatus(
+    document.getElementById("mainStatus"),
+    "Settings saved on this device.",
+    "success"
+  );
+}
+
+
+function loadSettings() {
+
+  try {
+
+    const saved =
+      localStorage.getItem(
+        "aiPostMakerSettings"
+      );
+
+    if (saved) {
+
+      applySettings(
+        JSON.parse(saved)
+      );
+
+      return;
+    }
+
+  } catch(error) {
+    console.error(error);
+  }
+
+  applySettings(defaultSettings);
+}
+
+
+document.getElementById("saveSettingsButton")
+.addEventListener("click", saveSettings);
+
+document.getElementById("saveAllButton")
+.addEventListener("click", saveSettings);
+
+
+document.getElementById("resetButton")
+.addEventListener("click", function() {
+
+  if (!confirm("Reset all saved settings?")) {
+    return;
+  }
+
+  localStorage.removeItem(
+    "aiPostMakerSettings"
+  );
+
+  applySettings(defaultSettings);
+
+});
+
+
+/* =========================================================
+   IMAGE SIZE
+   ========================================================= */
+
+function updateCustomSizeVisibility() {
+
+  const value =
+    document.getElementById("imageSize").value;
+
+  document.getElementById("customSizeBox").style.display =
+    value === "custom"
+      ? "block"
+      : "none";
+}
+
+
+document.getElementById("imageSize")
+.addEventListener("change", function() {
+
+  updateCustomSizeVisibility();
+  drawCanvas();
+
+});
+
+
+/* =========================================================
+   WATERMARK OPACITY
+   ========================================================= */
+
+function updateOpacityText() {
+
+  const value =
+    document.getElementById("watermarkOpacity").value;
+
+  document.getElementById("watermarkOpacityValue")
+    .textContent = value;
+}
+
+
+document.getElementById("watermarkOpacity")
+.addEventListener("input", function() {
+
+  updateOpacityText();
+  drawCanvas();
+
+});
+
+
+/* =========================================================
+   DRAW IMAGE WITH COVER
+   ========================================================= */
+
+function drawCoverImage(
+  image,
+  x,
+  y,
+  width,
+  height
+) {
+
+  if (!image) return;
+
+  const imageRatio =
+    image.width / image.height;
+
+  const boxRatio =
+    width / height;
+
+  let sourceWidth;
+  let sourceHeight;
+  let sourceX;
+  let sourceY;
+
+  if (imageRatio > boxRatio) {
+
+    sourceHeight =
+      image.height;
+
+    sourceWidth =
+      sourceHeight * boxRatio;
+
+    sourceX =
+      (image.width - sourceWidth) / 2;
+
+    sourceY = 0;
+
+  } else {
+
+    sourceWidth =
+      image.width;
+
+    sourceHeight =
+      sourceWidth / boxRatio;
+
+    sourceX = 0;
+
+    sourceY =
+      (image.height - sourceHeight) / 2;
+  }
+
+  ctx.drawImage(
+    image,
+    sourceX,
+    sourceY,
+    sourceWidth,
+    sourceHeight,
+    x,
+    y,
+    width,
+    height
+  );
+}
+
+
+/* =========================================================
+   DRAW TEXT
+   ========================================================= */
+
+function drawTextWithWrap(
+  text,
+  x,
+  y,
+  maxWidth,
+  fontSize,
+  align
+) {
+
+  if (!text) return;
+
+  ctx.font =
+    "700 " +
+    fontSize +
+    "px " +
+    customFontName;
+
+  ctx.textAlign =
+    align;
+
+  ctx.textBaseline =
+    "top";
+
+  const words =
+    text.split(/\s+/);
+
+  const lines = [];
+
+  let line = "";
+
+  for (const word of words) {
+
+    const test =
+      line
+        ? line + " " + word
+        : word;
+
+    if (
+      ctx.measureText(test).width >
+      maxWidth &&
+      line
+    ) {
+
+      lines.push(line);
+
+      line = word;
+
+    } else {
+
+      line = test;
+    }
+  }
+
+  if (line) {
+    lines.push(line);
+  }
+
+  const lineHeight =
+    fontSize * 1.15;
+
+  for (let i = 0; i < lines.length; i++) {
+
+    ctx.fillText(
+      lines[i],
+      x,
+      y + i * lineHeight
+    );
+  }
+
+  return lines.length * lineHeight;
+}
+
+
+/* =========================================================
+   DRAW WATERMARK
+   ========================================================= */
+
+function drawWatermark() {
+
+  if (!watermarkImage) return;
+
+  const size =
+    Number(
+      document.getElementById(
+        "watermarkSize"
+      ).value
+    ) || 120;
+
   const opacity =
-    parseInt(
-      watermarkOpacity.value
+    Number(
+      document.getElementById(
+        "watermarkOpacity"
+      ).value
     ) / 100;
 
-  const ratio =
-    watermarkImage.width /
-    watermarkImage.height;
+  const position =
+    document.getElementById(
+      "watermarkPosition"
+    ).value;
 
-  let w =
-    size;
+  const padding = 30;
 
-  let h =
-    size / ratio;
+  let x = padding;
+  let y = padding;
 
-  const margin =
-    35;
-
-  let x =
-    margin;
-
-  let y =
-    margin;
-
-
-  if(
-    watermarkPosition.value ===
-    "top-right"
-  ){
-
+  if (
+    position === "top-right"
+  ) {
     x =
       canvas.width -
-      w -
-      margin;
-
+      size -
+      padding;
   }
 
+  if (
+    position === "bottom-left"
+  ) {
+    y =
+      canvas.height -
+      size -
+      padding;
+  }
 
-  if(
-    watermarkPosition.value ===
-    "bottom-left"
-  ){
+  if (
+    position === "bottom-right"
+  ) {
+    x =
+      canvas.width -
+      size -
+      padding;
 
     y =
       canvas.height -
-      h -
-      margin;
-
+      size -
+      padding;
   }
-
-
-  if(
-    watermarkPosition.value ===
-    "bottom-right"
-  ){
-
-    x =
-      canvas.width -
-      w -
-      margin;
-
-    y =
-      canvas.height -
-      h -
-      margin;
-
-  }
-
 
   ctx.save();
 
@@ -1088,278 +1725,128 @@ function drawWatermark(){
     watermarkImage,
     x,
     y,
-    w,
-    h
+    size,
+    size
   );
 
   ctx.restore();
 }
 
 
-/* =====================================================
-   SWIPE BUTTON
-===================================================== */
+/* =========================================================
+   DRAW SWIPE BUTTON
+   ========================================================= */
 
-function drawSwipeButton(){
+function drawSwipeButton() {
 
-  if(
-    carouselEnabled.value !==
-    "true"
-  ){
+  const enabled =
+    document.getElementById(
+      "carouselEnabled"
+    ).checked;
 
-    return;
+  if (!enabled) return;
 
-  }
+  const position =
+    document.getElementById(
+      "carouselPosition"
+    ).value;
 
+  const text =
+    document.getElementById(
+      "carouselText"
+    ).value || "SWIPE →";
 
-  const size =
-    65;
-
-  const margin =
-    30;
-
-  let x;
-
-
-  if(
-    carouselPosition.value ===
-    "top-left"
-  ){
-
-    x =
-      margin;
-
-  }else{
-
-    x =
-      canvas.width -
-      size -
-      margin;
-
-  }
-
-
-  const y =
-    margin;
-
+  const fontSize =
+    Math.max(
+      20,
+      canvas.width * 0.025
+    );
 
   ctx.save();
 
-  ctx.fillStyle =
-    "rgba(0,0,0,.65)";
-
-
-  ctx.beginPath();
-
-  ctx.arc(
-    x + size / 2,
-    y + size / 2,
-    size / 2,
-    0,
-    Math.PI * 2
-  );
-
-  ctx.fill();
-
-
-  ctx.fillStyle =
-    "white";
-
   ctx.font =
-    "bold 38px Arial";
-
-  ctx.textAlign =
-    "center";
+    "700 " +
+    fontSize +
+    "px Arial";
 
   ctx.textBaseline =
     "middle";
 
+  const paddingX = 22;
+  const paddingY = 12;
 
-  ctx.fillText(
-    "›",
-    x + size / 2,
-    y + size / 2
-  );
+  const textWidth =
+    ctx.measureText(text).width;
 
+  const boxWidth =
+    textWidth +
+    paddingX * 2;
 
-  ctx.restore();
-}
+  const boxHeight =
+    fontSize +
+    paddingY * 2;
 
+  let x;
 
-/* =====================================================
-   WRAPPED TEXT
-===================================================== */
+  if (position === "top-left") {
 
-function drawWrappedText(
-  text,
-  x,
-  y,
-  maxWidth,
-  lineHeight
-){
+    x = 30;
 
-  const words =
-    text.split(" ");
+  } else {
 
-  let line = "";
-
-  for(
-    let i = 0;
-    i < words.length;
-    i++
-  ){
-
-    const testLine =
-      line +
-      words[i] +
-      " ";
-
-    const metrics =
-      ctx.measureText(
-        testLine
-      );
-
-
-    if(
-      metrics.width >
-      maxWidth &&
-      i > 0
-    ){
-
-      ctx.fillText(
-        line,
-        x,
-        y
-      );
-
-      line =
-        words[i] +
-        " ";
-
-      y +=
-        lineHeight;
-
-    }else{
-
-      line =
-        testLine;
-
-    }
-
+    x =
+      canvas.width -
+      boxWidth -
+      30;
   }
 
+  const y = 30;
 
-  ctx.fillText(
-    line,
+  ctx.fillStyle =
+    "rgba(0,0,0,.72)";
+
+  ctx.beginPath();
+
+  ctx.roundRect(
     x,
-    y
+    y,
+    boxWidth,
+    boxHeight,
+    14
   );
-}
 
-
-/* =====================================================
-   TEXT
-===================================================== */
-
-function drawText(){
-
-  const padding =
-    70;
-
-  const size =
-    parseInt(
-      headlineSize.value
-    );
-
-
-  ctx.save();
+  ctx.fill();
 
   ctx.fillStyle =
     "white";
 
-
-  ctx.font =
-    `bold ${size}px ${customFontFamily}`;
-
-
   ctx.textAlign =
-    textAlign.value;
+    "center";
 
-
-  let x;
-
-
-  if(
-    textAlign.value ===
-    "left"
-  ){
-
-    x =
-      padding;
-
-  }
-
-  else if(
-    textAlign.value ===
-    "right"
-  ){
-
-    x =
-      canvas.width -
-      padding;
-
-  }
-
-  else{
-
-    x =
-      canvas.width / 2;
-
-  }
-
-
-  const y =
-    canvas.height -
-    250;
-
-
-  drawWrappedText(
-    headline.value,
-    x,
-    y,
-    canvas.width -
-      padding * 2,
-    size * 1.15
+  ctx.fillText(
+    text,
+    x + boxWidth / 2,
+    y + boxHeight / 2
   );
-
-
-  ctx.font =
-    `${Math.round(size * .45)}px ${customFontFamily}`;
-
-
-  ctx.globalAlpha =
-    .9;
-
-
-  drawWrappedText(
-    subtitle.value,
-    x,
-    y + size * 1.5,
-    canvas.width -
-      padding * 2,
-    size * .6
-  );
-
 
   ctx.restore();
 }
 
 
-/* =====================================================
-   MAIN CANVAS
-===================================================== */
+/* =========================================================
+   MAIN CANVAS DRAW
+   ========================================================= */
 
-function drawCanvas(){
+function drawCanvas() {
+
+  const size =
+    getCanvasSize();
+
+  canvas.width =
+    size.width;
+
+  canvas.height =
+    size.height;
 
   ctx.clearRect(
     0,
@@ -1368,10 +1855,12 @@ function drawCanvas(){
     canvas.height
   );
 
+  /*
+   * Background
+   */
 
   ctx.fillStyle =
-    "#222";
-
+    "#ffffff";
 
   ctx.fillRect(
     0,
@@ -1381,957 +1870,276 @@ function drawCanvas(){
   );
 
 
-  if(referenceImage){
+  /*
+   * Main image
+   */
+
+  if (currentImage) {
 
     drawCoverImage(
-      referenceImage
+      currentImage,
+      0,
+      0,
+      canvas.width,
+      canvas.height
     );
 
+  } else {
+
+    /*
+     * Placeholder
+     */
+
+    ctx.fillStyle =
+      "#e5e7eb";
+
+    ctx.fillRect(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+    ctx.fillStyle =
+      "#6b7280";
+
+    ctx.font =
+      "600 35px Arial";
+
+    ctx.textAlign =
+      "center";
+
+    ctx.textBaseline =
+      "middle";
+
+    ctx.fillText(
+      "Upload a reference or image",
+      canvas.width / 2,
+      canvas.height / 2
+    );
   }
 
+
+  /*
+   * Dark gradient behind text
+   */
 
   const gradient =
     ctx.createLinearGradient(
       0,
-      canvas.height * .45,
+      canvas.height * 0.45,
       0,
       canvas.height
     );
-
 
   gradient.addColorStop(
     0,
     "rgba(0,0,0,0)"
   );
 
-
   gradient.addColorStop(
     1,
-    "rgba(0,0,0,.85)"
+    "rgba(0,0,0,.72)"
   );
-
 
   ctx.fillStyle =
     gradient;
 
-
   ctx.fillRect(
     0,
-    canvas.height * .4,
+    canvas.height * 0.45,
     canvas.width,
-    canvas.height * .6
+    canvas.height * 0.55
   );
 
 
-  drawText();
+  /*
+   * Text
+   */
+
+  const headline =
+    document.getElementById(
+      "headline"
+    ).value;
+
+  const supporting =
+    document.getElementById(
+      "supportingText"
+    ).value;
+
+  const fontSize =
+    Number(
+      document.getElementById(
+        "headlineSize"
+      ).value
+    ) || 70;
+
+  const align =
+    document.getElementById(
+      "textAlign"
+    ).value;
+
+  let textX;
+
+  if (align === "left") {
+
+    textX = 60;
+
+  } else if (align === "right") {
+
+    textX =
+      canvas.width - 60;
+
+  } else {
+
+    textX =
+      canvas.width / 2;
+  }
+
+  let textY =
+    canvas.height * 0.72;
+
+  ctx.fillStyle =
+    "white";
+
+  drawTextWithWrap(
+    headline,
+    textX,
+    textY,
+    canvas.width - 120,
+    fontSize,
+    align
+  );
+
+  if (supporting) {
+
+    ctx.font =
+      "400 " +
+      Math.round(fontSize * 0.48) +
+      "px " +
+      customFontName;
+
+    ctx.fillStyle =
+      "white";
+
+    const supportY =
+      textY +
+      fontSize * 1.6;
+
+    drawTextWithWrap(
+      supporting,
+      textX,
+      supportY,
+      canvas.width - 120,
+      Math.round(fontSize * 0.48),
+      align
+    );
+  }
+
+
+  /*
+   * Watermark
+   */
 
   drawWatermark();
+
+
+  /*
+   * Swipe button
+   */
 
   drawSwipeButton();
 }
 
 
-/* =====================================================
-   FONT
-===================================================== */
-
-fontInput.addEventListener(
-  "change",
-  async function(){
-
-    const file =
-      fontInput.files[0];
-
-    if(!file)
-      return;
-
-
-    const fontURL =
-      URL.createObjectURL(
-        file
-      );
-
-
-    customFontFamily =
-      "UserUploadedFont";
-
-
-    const font =
-      new FontFace(
-        customFontFamily,
-        `url(${fontURL})`
-      );
-
-
-    try{
-
-      await font.load();
-
-      document.fonts.add(
-        font
-      );
-
-
-      setStatus(
-        "Font loaded successfully."
-      );
-
-
-      drawCanvas();
-
-
-    }catch(error){
-
-      setStatus(
-        "Could not load this font."
-      );
-
-    }
-
-  }
-);
-
-
-/* =====================================================
-   WATERMARK
-===================================================== */
-
-watermarkInput.addEventListener(
-  "change",
-  function(){
-
-    const file =
-      watermarkInput.files[0];
-
-    if(!file)
-      return;
-
-
-    const url =
-      URL.createObjectURL(
-        file
-      );
-
-
-    const img =
-      new Image();
-
-
-    img.onload =
-      function(){
-
-        watermarkImage =
-          img;
-
-
-        setStatus(
-          "Watermark loaded."
-        );
-
-
-        drawCanvas();
-
-      };
-
-
-    img.src =
-      url;
-
-  }
-);
-
-
-/* =====================================================
-   REFERENCE IMAGE
-===================================================== */
-
-referenceInput.addEventListener(
-  "change",
-  function(){
-
-    const file =
-      referenceInput.files[0];
-
-    if(!file)
-      return;
-
-
-    const url =
-      URL.createObjectURL(
-        file
-      );
-
-
-    const img =
-      new Image();
-
-
-    img.onload =
-      function(){
-
-        referenceImage =
-          img;
-
-
-        referencePreview.src =
-          url;
-
-
-        referencePreview.style.display =
-          "block";
-
-
-        document.getElementById(
-          "referenceInfo"
-        ).textContent =
-          `Reference loaded: ${img.width} × ${img.height}px`;
-
-
-        setStatus(
-          "Reference post loaded."
-        );
-
-
-        drawCanvas();
-
-      };
-
-
-    img.src =
-      url;
-
-  }
-);
-
-
-/* =====================================================
-   STEP 6A ANALYZER
-===================================================== */
-
-function analyzeReference(){
-
-  if(!referenceImage){
-
-    alert(
-      "Please upload a reference image first."
-    );
-
-    return;
-
-  }
-
-
-  const width =
-    referenceImage.width;
-
-  const height =
-    referenceImage.height;
-
-
-  const ratio =
-    width / height;
-
-
-  let layout =
-    "Square / balanced layout";
-
-
-  if(ratio > 1.25){
-
-    layout =
-      "Landscape layout";
-
-  }
-
-  else if(ratio < .8){
-
-    layout =
-      "Portrait / vertical layout";
-
-  }
-
-
-  let imageArea =
-    "Full background image";
-
-
-  let textPosition =
-    "Lower section";
-
-
-  let alignment =
-    "Center / mixed";
-
-
-  let overlay =
-    "Dark gradient likely used";
-
-
-  /*
-    This is a preparation layer.
-
-    Actual AI vision will replace
-    these estimates in the next step.
-  */
-
-
-  if(height > width * 1.2){
-
-    textPosition =
-      "Likely lower 30–35%";
-
-    imageArea =
-      "Upper / middle image area";
-
-  }
-
-
-  document.getElementById(
-    "analysisDimensions"
-  ).textContent =
-    `${width} × ${height}px`;
-
-
-  document.getElementById(
-    "analysisLayout"
-  ).textContent =
-    layout;
-
-
-  document.getElementById(
-    "analysisTextPosition"
-  ).textContent =
-    textPosition;
-
-
-  document.getElementById(
-    "analysisAlignment"
-  ).textContent =
-    alignment;
-
-
-  document.getElementById(
-    "analysisImageArea"
-  ).textContent =
-    imageArea;
-
-
-  document.getElementById(
-    "analysisOverlay"
-  ).textContent =
-    overlay;
-
-
-  document.getElementById(
-    "analysisTextArea"
-  ).textContent =
-    "AI text detection will be connected in Step 6B.";
-
-
-  const tags =
-    document.getElementById(
-      "analysisTags"
-    );
-
-
-  tags.innerHTML = "";
-
-
-  const tagList = [
-
-    "Reference image detected",
-
-    "Composition detected",
-
-    "Text region pending AI",
-
-    "Font detection pending AI",
-
-    "Background analysis pending AI"
-
-  ];
-
-
-  tagList.forEach(
-    function(tag){
-
-      const span =
-        document.createElement(
-          "span"
-        );
-
-
-      span.className =
-        "badge";
-
-
-      span.textContent =
-        tag;
-
-
-      tags.appendChild(
-        span
-      );
-
-    }
+/* =========================================================
+   LIVE PREVIEW EVENTS
+   ========================================================= */
+
+[
+  "headline",
+  "supportingText",
+  "headlineSize",
+  "textAlign",
+  "watermarkPosition",
+  "watermarkSize",
+  "carouselEnabled",
+  "carouselPosition",
+  "carouselText",
+  "customWidth",
+  "customHeight"
+].forEach(id => {
+
+  const element =
+    document.getElementById(id);
+
+  if (!element) return;
+
+  element.addEventListener(
+    "input",
+    drawCanvas
   );
 
-
-  document.getElementById(
-    "analysisResult"
-  ).classList.remove(
-    "hidden"
+  element.addEventListener(
+    "change",
+    drawCanvas
   );
+});
 
 
-  setStatus(
-    "Reference layout analyzed. Ready for AI vision connection."
-  );
-
-}
-
-
-document.getElementById(
-  "analyzeButton"
-).addEventListener(
-  "click",
-  analyzeReference
-);
-
-
-/* =====================================================
-   IMAGE SOURCE — GALLERY
-===================================================== */
-
-document.getElementById(
-  "galleryButton"
-).addEventListener(
-  "click",
-  function(){
-
-    galleryInput.click();
-
-  }
-);
-
-
-galleryInput.addEventListener(
-  "change",
-  function(){
-
-    const file =
-      galleryInput.files[0];
-
-    if(!file)
-      return;
-
-
-    const url =
-      URL.createObjectURL(
-        file
-      );
-
-
-    const img =
-      new Image();
-
-
-    img.onload =
-      function(){
-
-        referenceImage =
-          img;
-
-
-        drawCanvas();
-
-
-        document.getElementById(
-          "imageSourceStatus"
-        ).textContent =
-          "Gallery image selected.";
-
-
-        setStatus(
-          "Gallery image loaded."
-        );
-
-      };
-
-
-    img.src =
-      url;
-
-  }
-);
-
-
-/* =====================================================
-   AI IMAGE BUTTONS — PLACEHOLDERS
-===================================================== */
-
-document.getElementById(
-  "aiImageButton"
-).addEventListener(
-  "click",
-  function(){
-
-    document.getElementById(
-      "imageSourceStatus"
-    ).textContent =
-      "AI automatic generation will be connected in the next AI step.";
-
-    setStatus(
-      "AI automatic image generation is not connected yet."
-    );
-
-  }
-);
-
-
-document.getElementById(
-  "promptImageButton"
-).addEventListener(
-  "click",
-  function(){
-
-    imagePrompt.focus();
-
-    document.getElementById(
-      "imageSourceStatus"
-    ).textContent =
-      "Enter your image prompt below.";
-
-  }
-);
-
-
-document.getElementById(
-  "generatePromptButton"
-).addEventListener(
-  "click",
-  function(){
-
-    const prompt =
-      imagePrompt.value.trim();
-
-
-    if(!prompt){
-
-      alert(
-        "Please enter an image prompt first."
-      );
-
-      return;
-
-    }
-
-
-    document.getElementById(
-      "imageSourceStatus"
-    ).textContent =
-      `Prompt saved: ${prompt}`;
-
-
-    setStatus(
-      "AI image generation will be connected in the next step."
-    );
-
-  }
-);
-
-
-document.getElementById(
-  "changeImageButton"
-).addEventListener(
-  "click",
-  function(){
-
-    setStatus(
-      "Change Image will generate a new AI image while keeping your layout."
-    );
-
-  }
-);
-
-
-/* =====================================================
-   IMAGE SIZE
-===================================================== */
-
-imageSize.addEventListener(
-  "change",
-  function(){
-
-    if(
-      imageSize.value ===
-      "custom"
-    ){
-
-      customSize.style.display =
-        "grid";
-
-    }else{
-
-      customSize.style.display =
-        "none";
-
-    }
-
-
-    updateCanvasSize();
-
-  }
-);
-
-
-customWidth.addEventListener(
-  "input",
-  updateCanvasSize
-);
-
-
-customHeight.addEventListener(
-  "input",
-  updateCanvasSize
-);
-
-
-/* =====================================================
-   LIVE CONTROLS
-===================================================== */
-
-watermarkPosition.addEventListener(
-  "change",
-  drawCanvas
-);
-
-
-watermarkSize.addEventListener(
-  "input",
-  function(){
-
-    document.getElementById(
-      "watermarkSizeValue"
-    ).textContent =
-      watermarkSize.value;
-
-
-    drawCanvas();
-
-  }
-);
-
-
-watermarkOpacity.addEventListener(
-  "input",
-  function(){
-
-    document.getElementById(
-      "watermarkOpacityValue"
-    ).textContent =
-      watermarkOpacity.value;
-
-
-    drawCanvas();
-
-  }
-);
-
-
-carouselEnabled.addEventListener(
-  "change",
-  drawCanvas
-);
-
-
-carouselPosition.addEventListener(
-  "change",
-  drawCanvas
-);
-
-
-headline.addEventListener(
-  "input",
-  drawCanvas
-);
-
-
-subtitle.addEventListener(
-  "input",
-  drawCanvas
-);
-
-
-headlineSize.addEventListener(
-  "input",
-  function(){
-
-    document.getElementById(
-      "headlineSizeValue"
-    ).textContent =
-      headlineSize.value;
-
-
-    drawCanvas();
-
-  }
-);
-
-
-textAlign.addEventListener(
-  "change",
-  drawCanvas
-);
-
-
-/* =====================================================
-   SAVE SETTINGS
-===================================================== */
-
-function saveSettings(){
-
-  const settings = {
-
-    imageSize:
-      imageSize.value,
-
-    customWidth:
-      customWidth.value,
-
-    customHeight:
-      customHeight.value,
-
-    watermarkPosition:
-      watermarkPosition.value,
-
-    watermarkSize:
-      watermarkSize.value,
-
-    watermarkOpacity:
-      watermarkOpacity.value,
-
-    carouselEnabled:
-      carouselEnabled.value,
-
-    carouselPosition:
-      carouselPosition.value,
-
-    headlineSize:
-      headlineSize.value,
-
-    textAlign:
-      textAlign.value,
-
-    headline:
-      headline.value,
-
-    subtitle:
-      subtitle.value
-
-  };
-
-
-  localStorage.setItem(
-    "aiPostMakerSettings",
-    JSON.stringify(
-      settings
-    )
-  );
-
-
-  setStatus(
-    "Settings saved on this device."
-  );
-
-}
-
-
-/* =====================================================
-   LOAD SETTINGS
-===================================================== */
-
-function loadSettings(){
-
-  const saved =
-    localStorage.getItem(
-      "aiPostMakerSettings"
-    );
-
-
-  if(!saved)
-    return;
-
-
-  try{
-
-    const s =
-      JSON.parse(saved);
-
-
-    if(s.imageSize)
-      imageSize.value =
-        s.imageSize;
-
-
-    if(s.customWidth)
-      customWidth.value =
-        s.customWidth;
-
-
-    if(s.customHeight)
-      customHeight.value =
-        s.customHeight;
-
-
-    if(s.watermarkPosition)
-      watermarkPosition.value =
-        s.watermarkPosition;
-
-
-    if(s.watermarkSize)
-      watermarkSize.value =
-        s.watermarkSize;
-
-
-    if(s.watermarkOpacity)
-      watermarkOpacity.value =
-        s.watermarkOpacity;
-
-
-    if(s.carouselEnabled)
-      carouselEnabled.value =
-        s.carouselEnabled;
-
-
-    if(s.carouselPosition)
-      carouselPosition.value =
-        s.carouselPosition;
-
-
-    if(s.headlineSize)
-      headlineSize.value =
-        s.headlineSize;
-
-
-    if(s.textAlign)
-      textAlign.value =
-        s.textAlign;
-
-
-    if(s.headline)
-      headline.value =
-        s.headline;
-
-
-    if(s.subtitle)
-      subtitle.value =
-        s.subtitle;
-
-
-    document.getElementById(
-      "watermarkSizeValue"
-    ).textContent =
-      watermarkSize.value;
-
-
-    document.getElementById(
-      "watermarkOpacityValue"
-    ).textContent =
-      watermarkOpacity.value;
-
-
-    document.getElementById(
-      "headlineSizeValue"
-    ).textContent =
-      headlineSize.value;
-
-
-    if(
-      imageSize.value ===
-      "custom"
-    ){
-
-      customSize.style.display =
-        "grid";
-
-    }
-
-
-  }catch(error){
-
-    console.log(error);
-
-  }
-
-}
-
-
-/* =====================================================
-   STATUS
-===================================================== */
-
-function setStatus(message){
-
-  document.getElementById(
-    "status"
-  ).textContent =
-    message;
-
-}
-
-
-/* =====================================================
+/* =========================================================
    DOWNLOAD
-===================================================== */
+   ========================================================= */
 
-document.getElementById(
-  "downloadButton"
-).addEventListener(
-  "click",
-  function(){
+document.getElementById("downloadButton")
+.addEventListener("click", function() {
+
+  try {
 
     const link =
-      document.createElement(
-        "a"
-      );
-
+      document.createElement("a");
 
     link.download =
       "ai-post-maker.png";
-
 
     link.href =
       canvas.toDataURL(
         "image/png"
       );
 
-
     link.click();
 
+    showStatus(
+      document.getElementById("mainStatus"),
+      "PNG downloaded successfully.",
+      "success"
+    );
+
+  } catch(error) {
+
+    showStatus(
+      document.getElementById("mainStatus"),
+      "Could not create PNG: " +
+      error.message,
+      "error"
+    );
+
   }
-);
+
+});
 
 
-/* =====================================================
-   SAVE BUTTON
-===================================================== */
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
 
-document.getElementById(
-  "saveSettingsButton"
-).addEventListener(
-  "click",
-  saveSettings
-);
+updateCustomSizeVisibility();
 
-
-/* =====================================================
-   START
-===================================================== */
+updateOpacityText();
 
 loadSettings();
 
-updateCanvasSize();
+drawCanvas();
 
 </script>
 
