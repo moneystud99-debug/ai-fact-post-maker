@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<meta
+  name="viewport"
+  content="width=device-width,initial-scale=1.0"
+>
+
 <title>AI Post Maker</title>
 
 <style>
+
 *{
   box-sizing:border-box;
 }
@@ -114,9 +122,11 @@ button:disabled{
 }
 
 @media(max-width:700px){
+
   .grid{
     grid-template-columns:1fr;
   }
+
 }
 
 .row{
@@ -204,7 +214,9 @@ hr{
   border-top:1px solid #eee;
   margin:20px 0;
 }
+
 </style>
+
 </head>
 
 <body>
@@ -352,8 +364,6 @@ Gallery
 </select>
 
 
-<!-- AI PROMPT BOX -->
-
 <div
   id="promptBox"
   style="display:none"
@@ -377,8 +387,6 @@ Generate Image From Prompt
 
 </div>
 
-
-<!-- GALLERY BOX -->
 
 <div
   id="galleryBox"
@@ -423,9 +431,6 @@ No generated image yet.
 
 <h2>4. Brand Setup</h2>
 
-
-<!-- PAGE FORMAT -->
-
 <label>
 Your Page Format Reference
 </label>
@@ -433,8 +438,7 @@ Your Page Format Reference
 <div class="small">
 Upload one of your existing Instagram posts showing
 the visual style you want AI images to follow.
-This is saved in this browser so you don't need
-to upload it again for every post.
+This is saved in this browser.
 </div>
 
 <input
@@ -790,32 +794,23 @@ const REMOVE_TEXT_URL =
 
 
 /* =========================================================
-   APP VARIABLES
+   VARIABLES
 ========================================================= */
 
 let referenceImageData = null;
-
 let originalReferenceData = null;
-
 let cleanedReferenceData = null;
-
 let generatedImageData = null;
-
 let galleryImageData = null;
-
 let analysisData = null;
-
 let uploadedFont = null;
-
 let watermarkImage = null;
-
 let fontFamily = "Arial";
-
 let pageFormatReference = null;
 
 
 /* =========================================================
-   DOM ELEMENTS
+   DOM
 ========================================================= */
 
 const referenceInput =
@@ -966,7 +961,7 @@ function readFile(file){
 
 
 /* =========================================================
-   LOCAL STORAGE
+   STORAGE
 ========================================================= */
 
 function saveSetting(key,value){
@@ -980,10 +975,7 @@ function saveSetting(key,value){
 
   }catch(error){
 
-    console.warn(
-      "Could not save setting:",
-      error
-    );
+    console.warn(error);
 
   }
 
@@ -1228,6 +1220,7 @@ analyzeBtn.addEventListener(
             image:
             referenceImageData
           })
+
         }
       );
 
@@ -1349,8 +1342,7 @@ analyzeBtn.addEventListener(
 
 
 /* =========================================================
-   REMOVE TEXT
-   CLEANED IMAGE AUTOMATICALLY BECOMES ACTIVE
+   REMOVE ORIGINAL TEXT
 ========================================================= */
 
 removeTextBtn.addEventListener(
@@ -1370,7 +1362,7 @@ removeTextBtn.addEventListener(
     true;
 
     removeTextStatus.textContent =
-    "AI is removing the original text... This may take a little time.";
+    "AI is removing the original text...";
 
     try{
 
@@ -1389,6 +1381,7 @@ removeTextBtn.addEventListener(
             image:
             originalReferenceData
           })
+
         }
       );
 
@@ -1443,10 +1436,7 @@ removeTextBtn.addEventListener(
 
     }catch(error){
 
-      console.error(
-        "REMOVE TEXT ERROR:",
-        error
-      );
+      console.error(error);
 
       removeTextStatus.innerHTML =
       '<span class="error">Text removal failed: '+
@@ -1471,86 +1461,58 @@ function displayAnalysis(
   blocks
 ){
 
-  let html="";
+  let html = "";
 
-
-  html+=`
+  html += `
     <div class="text-block">
-
-      <strong>
-      Layout
-      </strong>
-
+      <strong>Layout</strong>
       ${escapeHtml(
         analysis.overall_layout ||
         "Detected"
       )}
-
     </div>
   `;
 
-
-  html+=`
+  html += `
     <div class="text-block">
-
-      <strong>
-      Aspect Ratio
-      </strong>
-
+      <strong>Aspect Ratio</strong>
       ${escapeHtml(
         analysis.aspect_ratio ||
         "Detected automatically"
       )}
-
     </div>
   `;
 
+  if(analysis.main_image_area){
 
-  if(
-    analysis.main_image_area
-  ){
-
-    html+=`
+    html += `
       <div class="text-block">
+        <strong>Main Image Area</strong>
 
-        <strong>
-        Main Image Area
-        </strong>
-
-        x:
-        ${analysis.main_image_area.x||0}%
+        x: ${analysis.main_image_area.x || 0}%
 
         &nbsp;
 
-        y:
-        ${analysis.main_image_area.y||0}%
+        y: ${analysis.main_image_area.y || 0}%
 
         &nbsp;
 
         width:
-        ${analysis.main_image_area.width||0}%
+        ${analysis.main_image_area.width || 0}%
 
         &nbsp;
 
         height:
-        ${analysis.main_image_area.height||0}%
-
+        ${analysis.main_image_area.height || 0}%
       </div>
     `;
 
   }
 
-
-  html+=`
+  html += `
     <div class="text-block">
-
-      <strong>
-      Detected Text
-      </strong>
-
-      ${blocks.length}
-      text block(s)
-
+      <strong>Detected Text</strong>
+      ${blocks.length} text block(s)
     </div>
   `;
 
@@ -1558,7 +1520,7 @@ function displayAnalysis(
   blocks.forEach(
     block=>{
 
-      html+=`
+      html += `
         <div class="text-block">
 
           <strong>
@@ -1579,14 +1541,14 @@ function displayAnalysis(
 
           Position:
 
-          ${block.x||0}%,
-          ${block.y||0}%
+          ${block.x || 0}%,
+          ${block.y || 0}%
 
           &nbsp; | &nbsp;
 
-          ${block.width||0}%
+          ${block.width || 0}%
           ×
-          ${block.height||0}%
+          ${block.height || 0}%
 
           </div>
 
@@ -1649,7 +1611,7 @@ newTextBtn.addEventListener(
     let headline =
     headlineOptions[
       Math.floor(
-        Math.random()*
+        Math.random() *
         headlineOptions.length
       )
     ];
@@ -1658,7 +1620,7 @@ newTextBtn.addEventListener(
     let supporting =
     supportOptions[
       Math.floor(
-        Math.random()*
+        Math.random() *
         supportOptions.length
       )
     ];
@@ -1671,8 +1633,11 @@ newTextBtn.addEventListener(
 
       headline =
       headlineOptions[
-        (headlineOptions.indexOf(headline)+1)
-        %
+        (
+          headlineOptions.indexOf(
+            headline
+          ) + 1
+        ) %
         headlineOptions.length
       ];
 
@@ -1686,8 +1651,11 @@ newTextBtn.addEventListener(
 
       supporting =
       supportOptions[
-        (supportOptions.indexOf(supporting)+1)
-        %
+        (
+          supportOptions.indexOf(
+            supporting
+          ) + 1
+        ) %
         supportOptions.length
       ];
 
@@ -1717,8 +1685,6 @@ function updateImageSourceUI(){
     "gallery"
   ){
 
-    /* Gallery */
-
     galleryBox.style.display =
     "block";
 
@@ -1732,8 +1698,6 @@ function updateImageSourceUI(){
     "prompt"
   ){
 
-    /* AI Prompt */
-
     galleryBox.style.display =
     "none";
 
@@ -1743,8 +1707,6 @@ function updateImageSourceUI(){
   }
 
   else{
-
-    /* AI Automatic */
 
     galleryBox.style.display =
     "none";
@@ -1764,7 +1726,7 @@ imageSource.addEventListener(
 
 
 /* =========================================================
-   GALLERY IMAGE
+   GALLERY
 ========================================================= */
 
 galleryInput.addEventListener(
@@ -1820,133 +1782,169 @@ async function generateAIImage(
   true;
 
 
-  let layoutDescription =
-  "";
+  let layoutDescription = "";
 
 
   if(analysisData){
 
+    /*
+      IMPORTANT:
+
+      We deliberately DO NOT send text_blocks.
+
+      This prevents the actual headline and supporting
+      text from being passed to the image generator.
+    */
+
     layoutDescription =
     JSON.stringify({
 
-      layout:
+      overallLayout:
       analysisData.overall_layout,
 
       aspectRatio:
       analysisData.aspect_ratio,
 
-      imageArea:
+      mainImageArea:
       analysisData.main_image_area,
+
+      overlay:
+      analysisData.overlay,
+
+      watermark:
+      analysisData.watermark,
+
+      colors:
+      analysisData.colors,
 
       composition:
       analysisData.composition,
 
       designNotes:
-      analysisData.design_notes,
-
-      colors:
-      analysisData.colors
+      analysisData.design_notes
 
     });
 
   }
 
 
-  const headline =
-  headlineInput.value.trim();
-
-
-  const supporting =
-  supportingInput.value.trim();
-
-
   let prompt;
 
 
   /* =====================================================
-     CUSTOM PROMPT MODE
+     CUSTOM PROMPT
   ===================================================== */
 
   if(customPrompt){
 
     prompt =
-    customPrompt;
+    customPrompt +
+
+    `
+
+IMPORTANT IMAGE RULES:
+
+Create only the visual image.
+
+Do NOT generate:
+- text
+- letters
+- numbers
+- captions
+- headlines
+- logos
+- watermarks
+- typography
+- written signs
+
+The website will add all text separately.
+`;
 
   }
 
 
   /* =====================================================
-     AI AUTOMATIC MODE
+     AI AUTOMATIC
   ===================================================== */
 
   else{
 
     prompt = `
 
-Create a completely new original visual
-for an Instagram facts post.
+Create a completely NEW original visual
+for an Instagram facts page.
 
-This is AUTOMATIC MODE.
+AUTOMATIC MODE.
 
-The user has NOT supplied a custom image prompt.
+The visual must be based on the visual
+analysis of the reference post.
 
-Use the supplied reference image and the
-AI analysis to understand the subject,
-concept and visual composition.
+REFERENCE VISUAL ANALYSIS:
+
+${layoutDescription}
 
 IMPORTANT:
 
-Create a NEW image.
+Create a fresh original image.
 
-Do NOT copy the reference image.
+Preserve the important visual SUBJECT
+and general IDEA described by the visual
+analysis.
 
-Do NOT reproduce the exact people,
-faces or objects from the reference.
+Preserve the useful composition,
+framing, subject placement, lighting,
+color feeling and overall visual style.
 
-Do NOT create text.
+Do NOT reproduce the exact photograph.
 
-Do NOT create letters.
+Do NOT reproduce exact people.
 
-Do NOT create numbers.
+Do NOT reproduce exact faces.
 
-Do NOT create captions.
+Do NOT reproduce exact clothing.
 
-Do NOT create logos.
+Do NOT reproduce exact objects.
 
-Do NOT create watermarks.
+Create a new scene representing the
+same general concept.
 
-Do NOT create typography.
+TEXT RULE — EXTREMELY IMPORTANT:
 
-The website will add all text,
-font and branding separately.
+The final image must contain ZERO text.
 
-Headline concept:
-${headline}
+Do NOT generate:
 
-Supporting concept:
-${supporting}
+- words
+- letters
+- numbers
+- headlines
+- captions
+- subtitles
+- labels
+- logos
+- watermarks
+- typography
+- written signs
+- readable text of any kind
 
-Reference analysis:
-${layoutDescription}
+The website will add the headline,
+supporting text, font and branding
+separately.
 
-The saved Page Format Reference should
-guide the visual style, composition,
-framing, spacing and overall design feeling.
+Do NOT create an Instagram post mockup.
 
-Create only the actual visual/image.
+Do NOT create a phone screenshot.
 
-Do not create an Instagram post mockup.
+Do NOT create a border.
 
-Do not create a phone screenshot.
+Create ONLY the actual visual image.
 
-Do not create borders.
+Leave suitable clean visual space for
+the website to place text later.
 
-Make the result visually attractive
-and suitable for an Instagram facts page.
-
-Create a fresh original image while
-preserving the important subject/concept
-of the reference.
+Make the image visually attractive,
+professional and suitable for an
+Instagram facts page.
 
 `;
 
@@ -1966,6 +1964,12 @@ of the reference.
           "Content-Type":
           "application/json"
         },
+
+        /*
+          We still send these fields so the
+          backend can use them when we finish
+          the reference-image integration.
+        */
 
         body:JSON.stringify({
 
@@ -2023,7 +2027,6 @@ of the reference.
     imageStatus.innerHTML =
     '<span class="success">✓ AI image generated.</span>';
 
-
     drawCanvas();
 
 
@@ -2033,7 +2036,9 @@ of the reference.
 
     imageStatus.innerHTML =
     '<span class="error">'+
-    escapeHtml(error.message)+
+    escapeHtml(
+      error.message
+    )+
     '</span>';
 
   }
@@ -2058,11 +2063,6 @@ changeImageBtn.addEventListener(
 
     try{
 
-
-      /* ================================
-         GALLERY
-      ================================= */
-
       if(
         imageSource.value ===
         "gallery"
@@ -2074,10 +2074,6 @@ changeImageBtn.addEventListener(
 
       }
 
-
-      /* ================================
-         AI PROMPT
-      ================================= */
 
       if(
         imageSource.value ===
@@ -2107,24 +2103,13 @@ changeImageBtn.addEventListener(
       }
 
 
-      /* ================================
-         AI AUTOMATIC
-      ================================= */
-
       /*
-        No prompt required.
+        AI AUTOMATIC
 
-        AI automatically uses:
-
-        1. Reference image
-        2. Analysis
-        3. Headline
-        4. Supporting text
-        5. Saved Page Format Reference
+        No prompt is required.
       */
 
       await generateAIImage();
-
 
     }catch(error){
 
@@ -2196,7 +2181,6 @@ fontInput.addEventListener(
     if(!file)
       return;
 
-
     uploadedFont =
     await readFile(file);
 
@@ -2230,22 +2214,14 @@ fontInput.addEventListener(
     );
 
 
-    try{
+    saveSetting(
+      "aiPostMaker_font",
+      uploadedFont
+    );
 
-      saveSetting(
-        "aiPostMaker_font",
-        uploadedFont
-      );
 
-      fontSaved.style.display =
-      "block";
-
-    }catch(error){
-
-      console.warn(error);
-
-    }
-
+    fontSaved.style.display =
+    "block";
 
     drawCanvas();
 
@@ -2369,7 +2345,6 @@ imageSize.addEventListener(
       "aiPostMaker_imageSize",
       imageSize.value
     );
-
 
     drawCanvas();
 
@@ -2521,10 +2496,8 @@ function getSize(){
 
 
   return{
-
     width,
     height
-
   };
 
 }
@@ -2614,15 +2587,12 @@ async function drawCanvas(){
 
 
 /* =========================================================
-   DRAW IMAGE
+   IMAGE LAYOUT
 ========================================================= */
 
-function drawImageWithLayout(
-  img
-){
+function drawImageWithLayout(img){
 
-  let area =
-  null;
+  let area = null;
 
 
   if(
@@ -2641,28 +2611,32 @@ function drawImageWithLayout(
     const x =
     canvas.width *
     (
-      (area.x||0)/100
+      (area.x || 0) /
+      100
     );
 
 
     const y =
     canvas.height *
     (
-      (area.y||0)/100
+      (area.y || 0) /
+      100
     );
 
 
     const w =
     canvas.width *
     (
-      (area.width||100)/100
+      (area.width || 100) /
+      100
     );
 
 
     const h =
     canvas.height *
     (
-      (area.height||100)/100
+      (area.height || 100) /
+      100
     );
 
 
@@ -2705,13 +2679,11 @@ function drawCover(
   img.width /
   img.height;
 
-
   const boxRatio =
-  w / h;
-
+  w /
+  h;
 
   let drawWidth;
-
   let drawHeight;
 
 
@@ -2744,7 +2716,8 @@ function drawCover(
   (
     w -
     drawWidth
-  )/2;
+  ) /
+  2;
 
 
   const dy =
@@ -2752,14 +2725,13 @@ function drawCover(
   (
     h -
     drawHeight
-  )/2;
+  ) /
+  2;
 
 
   ctx.save();
 
-
   ctx.beginPath();
-
 
   ctx.rect(
     x,
@@ -2767,7 +2739,6 @@ function drawCover(
     w,
     h
   );
-
 
   ctx.clip();
 
@@ -2795,7 +2766,6 @@ function drawPlaceholder(){
   ctx.fillStyle =
   "#eeeeee";
 
-
   ctx.fillRect(
     0,
     0,
@@ -2818,8 +2788,8 @@ function drawPlaceholder(){
 
   ctx.fillText(
     "Generate an image",
-    canvas.width/2,
-    canvas.height/2
+    canvas.width / 2,
+    canvas.height / 2
   );
 
 }
@@ -2834,10 +2804,8 @@ function drawText(){
   const headline =
   headlineInput.value.trim();
 
-
   const supporting =
   supportingInput.value.trim();
-
 
   const blocks =
   analysisData?.text_blocks ||
@@ -2861,16 +2829,13 @@ function drawText(){
   if(headline){
 
     let x =
-    canvas.width/2;
-
+    canvas.width / 2;
 
     let y =
-    canvas.height*.15;
-
+    canvas.height * .15;
 
     let width =
-    canvas.width*.9;
-
+    canvas.width * .9;
 
     let align =
     textAlignment.value;
@@ -2881,7 +2846,7 @@ function drawText(){
       x =
       canvas.width *
       (
-        (headlineBlock.x||50)/
+        (headlineBlock.x || 50) /
         100
       );
 
@@ -2889,7 +2854,7 @@ function drawText(){
       y =
       canvas.height *
       (
-        (headlineBlock.y||15)/
+        (headlineBlock.y || 15) /
         100
       );
 
@@ -2897,7 +2862,7 @@ function drawText(){
       width =
       canvas.width *
       (
-        (headlineBlock.width||90)/
+        (headlineBlock.width || 90) /
         100
       );
 
@@ -2924,14 +2889,12 @@ function drawText(){
     ctx.textAlign =
     align;
 
-
     ctx.textBaseline =
     "top";
 
 
     ctx.shadowColor =
     "rgba(0,0,0,.45)";
-
 
     ctx.shadowBlur =
     8;
@@ -2944,7 +2907,7 @@ function drawText(){
       width,
       parseInt(
         headlineSize.value
-      )*1.15,
+      ) * 1.15,
       align
     );
 
@@ -2958,16 +2921,13 @@ function drawText(){
   if(supporting){
 
     let x =
-    canvas.width/2;
-
+    canvas.width / 2;
 
     let y =
-    canvas.height*.3;
-
+    canvas.height * .3;
 
     let width =
-    canvas.width*.85;
-
+    canvas.width * .85;
 
     let align =
     textAlignment.value;
@@ -2978,7 +2938,7 @@ function drawText(){
       x =
       canvas.width *
       (
-        (supportingBlock.x||50)/
+        (supportingBlock.x || 50) /
         100
       );
 
@@ -2986,7 +2946,7 @@ function drawText(){
       y =
       canvas.height *
       (
-        (supportingBlock.y||30)/
+        (supportingBlock.y || 30) /
         100
       );
 
@@ -2994,7 +2954,7 @@ function drawText(){
       width =
       canvas.width *
       (
-        (supportingBlock.width||85)/
+        (supportingBlock.width || 85) /
         100
       );
 
@@ -3016,7 +2976,7 @@ function drawText(){
       28,
       parseInt(
         headlineSize.value
-      )*.42
+      ) * .42
     ) +
     "px " +
     fontFamily;
@@ -3025,14 +2985,12 @@ function drawText(){
     ctx.textAlign =
     align;
 
-
     ctx.textBaseline =
     "top";
 
 
     ctx.shadowColor =
     "rgba(0,0,0,.45)";
-
 
     ctx.shadowBlur =
     6;
@@ -3047,7 +3005,7 @@ function drawText(){
         28,
         parseInt(
           headlineSize.value
-        )*.55
+        ) * .55
       ),
       align
     );
@@ -3070,20 +3028,15 @@ function wrapText(
   x,
   y,
   maxWidth,
-  lineHeight,
-  align
+  lineHeight
 ){
 
   const words =
   text.split(" ");
 
+  let line = "";
 
-  let line =
-  "";
-
-
-  const lines =
-  [];
+  const lines = [];
 
 
   for(
@@ -3113,7 +3066,6 @@ function wrapText(
       lines.push(
         line.trim()
       );
-
 
       line =
       words[i] +
@@ -3190,11 +3142,11 @@ function drawWatermark(){
 
 
   const margin =
-  canvas.width*.03;
+  canvas.width *
+  .03;
 
 
   let x;
-
   let y;
 
 
@@ -3324,9 +3276,7 @@ document.getElementById(
    ESCAPE HTML
 ========================================================= */
 
-function escapeHtml(
-  value
-){
+function escapeHtml(value){
 
   return String(value)
 
@@ -3364,12 +3314,10 @@ function escapeHtml(
 
 async function loadSavedSettings(){
 
-  /* Page format */
-
   await loadSavedPageFormat();
 
 
-  /* Font */
+  /* FONT */
 
   const savedFont =
   getSetting(
@@ -3381,7 +3329,6 @@ async function loadSavedSettings(){
 
     uploadedFont =
     savedFont;
-
 
     fontFamily =
     "UploadedFont";
@@ -3419,7 +3366,7 @@ async function loadSavedSettings(){
   }
 
 
-  /* Watermark */
+  /* WATERMARK */
 
   const savedWatermark =
   getSetting(
@@ -3439,7 +3386,6 @@ async function loadSavedSettings(){
       watermarkSaved.style.display =
       "block";
 
-
       drawCanvas();
 
     };
@@ -3451,7 +3397,7 @@ async function loadSavedSettings(){
   }
 
 
-  /* Watermark position */
+  /* WATERMARK POSITION */
 
   const savedPosition =
   getSetting(
@@ -3467,7 +3413,7 @@ async function loadSavedSettings(){
   }
 
 
-  /* Watermark size */
+  /* WATERMARK SIZE */
 
   const savedSize =
   getSetting(
@@ -3483,7 +3429,7 @@ async function loadSavedSettings(){
   }
 
 
-  /* Watermark opacity */
+  /* WATERMARK OPACITY */
 
   const savedOpacity =
   getSetting(
@@ -3499,7 +3445,7 @@ async function loadSavedSettings(){
   }
 
 
-  /* Image size */
+  /* IMAGE SIZE */
 
   const savedImageSize =
   getSetting(
@@ -3512,7 +3458,6 @@ async function loadSavedSettings(){
     imageSize.value =
     savedImageSize;
 
-
     customSize.style.display =
     savedImageSize === "custom"
     ?
@@ -3523,7 +3468,7 @@ async function loadSavedSettings(){
   }
 
 
-  /* Custom dimensions */
+  /* CUSTOM WIDTH */
 
   const savedWidth =
   getSetting(
@@ -3539,6 +3484,8 @@ async function loadSavedSettings(){
   }
 
 
+  /* CUSTOM HEIGHT */
+
   const savedHeight =
   getSetting(
     "aiPostMaker_customHeight"
@@ -3553,7 +3500,7 @@ async function loadSavedSettings(){
   }
 
 
-  /* Headline size */
+  /* HEADLINE SIZE */
 
   const savedHeadlineSize =
   getSetting(
@@ -3569,7 +3516,7 @@ async function loadSavedSettings(){
   }
 
 
-  /* Alignment */
+  /* ALIGNMENT */
 
   const savedAlignment =
   getSetting(
@@ -3585,7 +3532,7 @@ async function loadSavedSettings(){
   }
 
 
-  /* Carousel */
+  /* CAROUSEL */
 
   const savedCarousel =
   getSetting(
@@ -3618,7 +3565,7 @@ async function loadSavedSettings(){
 
 
 /* =========================================================
-   START APP
+   START
 ========================================================= */
 
 loadSavedSettings();
@@ -3630,4 +3577,5 @@ drawCanvas();
 </script>
 
 </body>
+
 </html>
