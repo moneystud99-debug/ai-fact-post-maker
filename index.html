@@ -89,6 +89,10 @@ button.blue{
   background:#1769d1;
 }
 
+button.orange{
+  background:#e87500;
+}
+
 button:disabled{
   opacity:.5;
   cursor:not-allowed;
@@ -168,6 +172,16 @@ canvas{
   font-size:13px;
   color:#777;
 }
+
+.clean-preview{
+  border:3px solid #16803c;
+}
+
+.divider{
+  height:1px;
+  background:#eee;
+  margin:18px 0;
+}
 </style>
 </head>
 
@@ -176,6 +190,7 @@ canvas{
 <div class="container">
 
 <h1>AI Post Maker</h1>
+
 <div class="subtitle">
 Create Instagram posts from a reference design using AI.
 </div>
@@ -206,6 +221,34 @@ Create Instagram posts from a reference design using AI.
 >
 Analyze Reference Layout
 </button>
+
+
+<!-- REMOVE ORIGINAL TEXT -->
+
+<button
+  id="removeTextBtn"
+  class="green"
+>
+Remove Original Text
+</button>
+
+<div class="small">
+AI will remove the visible text from the reference image while trying to preserve the original background, people, objects, lighting and composition.
+</div>
+
+<img
+  id="cleanedPreview"
+  class="preview clean-preview"
+  style="display:none"
+>
+
+<div
+  id="removeTextStatus"
+  class="status"
+>
+Original reference is unchanged.
+</div>
+
 
 <div
   id="analysisStatus"
@@ -535,24 +578,45 @@ Download PNG
 
 <script>
 
+
+/* =========================================================
+   SUPABASE FUNCTIONS
+========================================================= */
+
 const ANALYZE_URL =
 "https://zflphadtukkvvlbrzace.supabase.co/functions/v1/analyze-reference";
 
 const GENERATE_URL =
 "https://zflphadtukkvvlbrzace.supabase.co/functions/v1/generate-image";
 
+const REMOVE_TEXT_URL =
+"https://zflphadtukkvvlbrzace.supabase.co/functions/v1/remove-text";
+
+
+/* =========================================================
+   VARIABLES
+========================================================= */
 
 let referenceImageData = null;
+
+let cleanedReferenceData = null;
+
 let generatedImageData = null;
+
 let galleryImageData = null;
 
 let analysisData = null;
 
 let uploadedFont = null;
+
 let watermarkImage = null;
 
 let fontFamily = "Arial";
 
+
+/* =========================================================
+   ELEMENTS
+========================================================= */
 
 const referenceInput =
 document.getElementById("referenceInput");
@@ -562,6 +626,15 @@ document.getElementById("referencePreview");
 
 const analyzeBtn =
 document.getElementById("analyzeBtn");
+
+const removeTextBtn =
+document.getElementById("removeTextBtn");
+
+const cleanedPreview =
+document.getElementById("cleanedPreview");
+
+const removeTextStatus =
+document.getElementById("removeTextStatus");
 
 const analysisStatus =
 document.getElementById("analysisStatus");
@@ -648,17 +721,22 @@ const ctx =
 canvas.getContext("2d");
 
 
-/* ---------------- FILE READER ---------------- */
+/* =========================================================
+   FILE READER
+========================================================= */
 
 function readFile(file){
 
   return new Promise((resolve,reject)=>{
 
-    const reader = new FileReader();
+    const reader =
+      new FileReader();
 
-    reader.onload = () => resolve(reader.result);
+    reader.onload =
+      () => resolve(reader.result);
 
-    reader.onerror = reject;
+    reader.onerror =
+      reject;
 
     reader.readAsDataURL(file);
 
@@ -667,184 +745,402 @@ function readFile(file){
 }
 
 
-/* ---------------- REFERENCE ---------------- */
+/* =========================================================
+   REFERENCE UPLOAD
+========================================================= */
 
-referenceInput.addEventListener("change",async()=>{
+referenceInput.addEventListener(
+  "change",
+  async()=>{
 
-  const file = referenceInput.files[0];
+    const file =
+      referenceInput.files[0];
 
-  if(!file) return;
+    if(!file) return;
 
-  referenceImageData =
-    await readFile(file);
+    referenceImageData =
+      await readFile(file);
 
-  referencePreview.src =
-    referenceImageData;
+    /*
+      New reference means the
+      previous cleaned image is no
+      longer relevant.
+    */
 
-  referencePreview.style.display =
-    "block";
+    cleanedReferenceData = null;
 
-  analysisStatus.textContent =
-    "Reference image loaded.";
+    cleanedPreview.style.display =
+      "none";
 
-});
+    removeTextStatus.textContent =
+      "Original reference is unchanged.";
 
+    referencePreview.src =
+      referenceImageData;
 
-/* ---------------- ANALYZE ---------------- */
-
-analyzeBtn.addEventListener("click",async()=>{
-
-  if(!referenceImageData){
+    referencePreview.style.display =
+      "block";
 
     analysisStatus.textContent =
-      "Please upload a reference image first.";
+      "Reference image loaded.";
 
-    return;
-  }
-
-  analyzeBtn.disabled = true;
-
-  analysisStatus.textContent =
-    "Analyzing reference with AI...";
-
-  analysisDetails.innerHTML = "";
-
-  try{
-
-    const response =
-      await fetch(
-        ANALYZE_URL,
-        {
-          method:"POST",
-
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-
-          body:JSON.stringify({
-            image:referenceImageData
-          })
-        }
-      );
-
-    const data =
-      await response.json();
-
-    if(!response.ok || data.success === false){
-
-      throw new Error(
-        data.error ||
-        "Analysis failed"
-      );
-
-    }
-
-    /*
-      Analyzer returns:
-
-      {
-        success:true,
-        analysis:{
-          text_blocks:[...]
-        }
-      }
-    */
+    analysisDetails.innerHTML =
+      "";
 
     analysisData =
-      data.analysis ||
-      data.result ||
-      data;
-
-    const blocks =
-      analysisData.text_blocks ||
-      analysisData.textBlocks ||
-      data.text_blocks ||
-      [];
-
-    displayAnalysis(
-      analysisData,
-      blocks
-    );
+      null;
 
     /*
-      IMPORTANT:
-      Use the REAL text detected
-      by the analyzer.
+      Clear generated image so the
+      new reference starts clean.
     */
 
-    if(blocks.length){
+    generatedImageData =
+      null;
 
-      const headline =
-        blocks.find(
-          x => x.type === "headline"
-        );
+    imageStatus.textContent =
+      "No generated image yet.";
 
-      const supporting =
-        blocks.find(
-          x =>
-            x.type === "supporting" ||
-            x.type === "body"
-        );
+    drawCanvas();
 
-      if(headline && headline.text){
+  }
+);
 
-        headlineInput.value =
-          headline.text;
 
-      }
+/* =========================================================
+   ANALYZE REFERENCE
+========================================================= */
 
-      if(supporting && supporting.text){
+analyzeBtn.addEventListener(
+  "click",
+  async()=>{
 
-        supportingInput.value =
-          supporting.text;
+    if(!referenceImageData){
 
-      }
+      analysisStatus.textContent =
+        "Please upload a reference image first.";
 
-      /*
-        If analyzer doesn't classify
-        a block correctly, use the
-        first two blocks.
-      */
-
-      if(!headlineInput.value &&
-         blocks[0]?.text){
-
-        headlineInput.value =
-          blocks[0].text;
-
-      }
-
-      if(!supportingInput.value &&
-         blocks[1]?.text){
-
-        supportingInput.value =
-          blocks[1].text;
-
-      }
+      return;
 
     }
 
-    analysisStatus.innerHTML =
-      '<span class="success">✓ Reference analyzed successfully.</span>';
+    analyzeBtn.disabled =
+      true;
 
-  }catch(error){
+    analysisStatus.textContent =
+      "Analyzing reference with AI...";
 
-    console.error(error);
+    analysisDetails.innerHTML =
+      "";
 
-    analysisStatus.innerHTML =
-      '<span class="error">Analysis failed: ' +
-      escapeHtml(error.message) +
-      '</span>';
+    try{
+
+      const response =
+        await fetch(
+          ANALYZE_URL,
+          {
+            method:"POST",
+
+            headers:{
+              "Content-Type":
+                "application/json"
+            },
+
+            body:JSON.stringify({
+              image:
+                referenceImageData
+            })
+          }
+        );
+
+      const data =
+        await response.json();
+
+      if(
+        !response.ok ||
+        data.success === false
+      ){
+
+        throw new Error(
+          data.error ||
+          "Analysis failed"
+        );
+
+      }
+
+      analysisData =
+        data.analysis ||
+        data.result ||
+        data;
+
+      const blocks =
+        analysisData.text_blocks ||
+        analysisData.textBlocks ||
+        data.text_blocks ||
+        [];
+
+      displayAnalysis(
+        analysisData,
+        blocks
+      );
+
+
+      /*
+        Use actual detected text.
+      */
+
+      if(blocks.length){
+
+        const headline =
+          blocks.find(
+            x =>
+              x.type === "headline"
+          );
+
+        const supporting =
+          blocks.find(
+            x =>
+              x.type === "supporting" ||
+              x.type === "body"
+          );
+
+
+        if(
+          headline &&
+          headline.text
+        ){
+
+          headlineInput.value =
+            headline.text;
+
+        }
+
+
+        if(
+          supporting &&
+          supporting.text
+        ){
+
+          supportingInput.value =
+            supporting.text;
+
+        }
+
+
+        /*
+          Fallback to first blocks.
+        */
+
+        if(
+          !headlineInput.value &&
+          blocks[0]?.text
+        ){
+
+          headlineInput.value =
+            blocks[0].text;
+
+        }
+
+
+        if(
+          !supportingInput.value &&
+          blocks[1]?.text
+        ){
+
+          supportingInput.value =
+            blocks[1].text;
+
+        }
+
+      }
+
+
+      analysisStatus.innerHTML =
+        '<span class="success">✓ Reference analyzed successfully.</span>';
+
+      drawCanvas();
+
+    }catch(error){
+
+      console.error(error);
+
+      analysisStatus.innerHTML =
+        '<span class="error">Analysis failed: ' +
+        escapeHtml(
+          error.message
+        ) +
+        '</span>';
+
+    }
+
+    analyzeBtn.disabled =
+      false;
 
   }
-
-  analyzeBtn.disabled = false;
-
-});
+);
 
 
-/* ---------------- DISPLAY ANALYSIS ---------------- */
+/* =========================================================
+   REMOVE ORIGINAL TEXT
+========================================================= */
+
+removeTextBtn.addEventListener(
+  "click",
+  async()=>{
+
+    if(!referenceImageData){
+
+      removeTextStatus.innerHTML =
+        '<span class="error">Please upload a reference image first.</span>';
+
+      return;
+
+    }
+
+
+    removeTextBtn.disabled =
+      true;
+
+    removeTextStatus.textContent =
+      "AI is removing the original text... This may take a little time.";
+
+
+    try{
+
+      const response =
+        await fetch(
+          REMOVE_TEXT_URL,
+          {
+            method:"POST",
+
+            headers:{
+              "Content-Type":
+                "application/json"
+            },
+
+            body:JSON.stringify({
+
+              image:
+                referenceImageData
+
+            })
+          }
+        );
+
+
+      const data =
+        await response.json();
+
+
+      if(
+        !response.ok ||
+        data.success === false
+      ){
+
+        throw new Error(
+          data.error ||
+          "Text removal failed."
+        );
+
+      }
+
+
+      if(!data.image){
+
+        throw new Error(
+          "No cleaned image was returned."
+        );
+
+      }
+
+
+      /*
+        Save cleaned image.
+      */
+
+      cleanedReferenceData =
+        data.image;
+
+
+      /*
+        Show cleaned preview.
+      */
+
+      cleanedPreview.src =
+        cleanedReferenceData;
+
+      cleanedPreview.style.display =
+        "block";
+
+
+      /*
+        IMPORTANT:
+        The cleaned image becomes
+        the current reference image.
+      */
+
+      referenceImageData =
+        cleanedReferenceData;
+
+
+      /*
+        Update normal reference
+        preview as well.
+      */
+
+      referencePreview.src =
+        cleanedReferenceData;
+
+
+      /*
+        Any generated image from
+        the previous reference should
+        be cleared.
+      */
+
+      generatedImageData =
+        null;
+
+
+      imageStatus.textContent =
+        "Reference cleaned. Ready to generate a new image.";
+
+
+      removeTextStatus.innerHTML =
+        '<span class="success">✓ Original text removed successfully.</span>';
+
+
+      drawCanvas();
+
+
+    }catch(error){
+
+      console.error(
+        "REMOVE TEXT ERROR:",
+        error
+      );
+
+
+      removeTextStatus.innerHTML =
+        '<span class="error">Text removal failed: ' +
+        escapeHtml(
+          error.message
+        ) +
+        '</span>';
+
+    }
+
+
+    removeTextBtn.disabled =
+      false;
+
+  }
+);
+
+
+/* =========================================================
+   DISPLAY ANALYSIS
+========================================================= */
 
 function displayAnalysis(
   analysis,
@@ -852,6 +1148,7 @@ function displayAnalysis(
 ){
 
   let html = "";
+
 
   html += `
     <div class="text-block">
@@ -863,6 +1160,7 @@ function displayAnalysis(
     </div>
   `;
 
+
   html += `
     <div class="text-block">
       <strong>Aspect Ratio</strong>
@@ -873,65 +1171,96 @@ function displayAnalysis(
     </div>
   `;
 
+
   if(
     analysis.main_image_area
   ){
 
     html += `
       <div class="text-block">
-        <strong>Main Image Area</strong>
-        x: ${analysis.main_image_area.x || 0}%
+
+        <strong>
+          Main Image Area
+        </strong>
+
+        x:
+        ${analysis.main_image_area.x || 0}%
+
         &nbsp;
-        y: ${analysis.main_image_area.y || 0}%
+
+        y:
+        ${analysis.main_image_area.y || 0}%
+
         &nbsp;
-        width: ${analysis.main_image_area.width || 0}%
+
+        width:
+        ${analysis.main_image_area.width || 0}%
+
         &nbsp;
-        height: ${analysis.main_image_area.height || 0}%
+
+        height:
+        ${analysis.main_image_area.height || 0}%
+
       </div>
     `;
 
   }
 
+
   html += `
     <div class="text-block">
-      <strong>Detected Text</strong>
+
+      <strong>
+        Detected Text
+      </strong>
+
       ${blocks.length}
       text block(s)
+
     </div>
   `;
 
-  blocks.forEach((block,index)=>{
 
-    html += `
-      <div class="text-block">
+  blocks.forEach(
+    (block,index)=>{
 
-        <strong>
-          ${escapeHtml(
-            block.type ||
-            "Text"
-          )}
-        </strong>
+      html += `
+        <div class="text-block">
 
-        <div>
-          ${escapeHtml(
-            block.text ||
-            "(No readable text)"
-          )}
+          <strong>
+            ${escapeHtml(
+              block.type ||
+              "Text"
+            )}
+          </strong>
+
+          <div>
+            ${escapeHtml(
+              block.text ||
+              "(No readable text)"
+            )}
+          </div>
+
+          <div class="small">
+
+            Position:
+
+            ${block.x || 0}%,
+            ${block.y || 0}%
+
+            &nbsp; | &nbsp;
+
+            ${block.width || 0}% ×
+            ${block.height || 0}%
+
+          </div>
+
         </div>
+      `;
 
-        <div class="small">
-          Position:
-          ${block.x || 0}%,
-          ${block.y || 0}%
-          &nbsp; | &nbsp;
-          ${block.width || 0}% ×
-          ${block.height || 0}%
-        </div>
+    }
+  );
 
-      </div>
-    `;
-
-  });
 
   analysisDetails.innerHTML =
     html;
@@ -939,7 +1268,9 @@ function displayAnalysis(
 }
 
 
-/* ---------------- NEW TEXT ---------------- */
+/* =========================================================
+   NEW TEXT
+========================================================= */
 
 newTextBtn.addEventListener(
   "click",
@@ -951,13 +1282,6 @@ newTextBtn.addEventListener(
     const oldSupporting =
       supportingInput.value.trim();
 
-    /*
-      For now this creates a
-      related alternative locally.
-
-      Later we can connect this
-      to AI text generation.
-    */
 
     const headlineOptions = [
 
@@ -973,6 +1297,7 @@ newTextBtn.addEventListener(
 
     ];
 
+
     const supportOptions = [
 
       "Here is something worth knowing.",
@@ -985,6 +1310,7 @@ newTextBtn.addEventListener(
 
     ];
 
+
     let headline =
       headlineOptions[
         Math.floor(
@@ -992,6 +1318,7 @@ newTextBtn.addEventListener(
           headlineOptions.length
         )
       ];
+
 
     let supporting =
       supportOptions[
@@ -1001,6 +1328,7 @@ newTextBtn.addEventListener(
         )
       ];
 
+
     if(
       headline.toLowerCase() ===
       oldHeadline.toLowerCase()
@@ -1008,11 +1336,16 @@ newTextBtn.addEventListener(
 
       headline =
         headlineOptions[
-          (headlineOptions.indexOf(headline)+1)
-          % headlineOptions.length
+          (
+            headlineOptions.indexOf(
+              headline
+            ) + 1
+          ) %
+          headlineOptions.length
         ];
 
     }
+
 
     if(
       supporting.toLowerCase() ===
@@ -1021,11 +1354,16 @@ newTextBtn.addEventListener(
 
       supporting =
         supportOptions[
-          (supportOptions.indexOf(supporting)+1)
-          % supportOptions.length
+          (
+            supportOptions.indexOf(
+              supporting
+            ) + 1
+          ) %
+          supportOptions.length
         ];
 
     }
+
 
     headlineInput.value =
       headline;
@@ -1039,7 +1377,9 @@ newTextBtn.addEventListener(
 );
 
 
-/* ---------------- IMAGE SOURCE ---------------- */
+/* =========================================================
+   IMAGE SOURCE
+========================================================= */
 
 imageSource.addEventListener(
   "change",
@@ -1070,7 +1410,9 @@ imageSource.addEventListener(
 );
 
 
-/* ---------------- GALLERY ---------------- */
+/* =========================================================
+   GALLERY
+========================================================= */
 
 galleryInput.addEventListener(
   "change",
@@ -1096,7 +1438,9 @@ galleryInput.addEventListener(
 );
 
 
-/* ---------------- IMAGE GENERATION ---------------- */
+/* =========================================================
+   AI IMAGE GENERATION
+========================================================= */
 
 async function generateAIImage(
   customPrompt=""
@@ -1110,8 +1454,10 @@ async function generateAIImage(
 
   }
 
+
   imageStatus.textContent =
     "Generating AI image...";
+
 
   changeImageBtn.disabled =
     true;
@@ -1119,12 +1465,10 @@ async function generateAIImage(
   generatePromptBtn.disabled =
     true;
 
-  /*
-    Use detected layout information
-    when creating the image prompt.
-  */
 
-  let layoutDescription = "";
+  let layoutDescription =
+    "";
+
 
   if(analysisData){
 
@@ -1147,13 +1491,16 @@ async function generateAIImage(
 
   }
 
+
   const headline =
     headlineInput.value.trim();
 
   const supporting =
     supportingInput.value.trim();
 
+
   let prompt;
+
 
   if(customPrompt){
 
@@ -1180,12 +1527,15 @@ The final text will be added separately
 by the website.
 
 Headline concept:
+
 ${headline}
 
 Supporting concept:
+
 ${supporting}
 
 Reference layout information:
+
 ${layoutDescription}
 
 Create a visually attractive,
@@ -1199,10 +1549,12 @@ general visual composition.
 
   }
 
+
   try{
 
     const widthHeight =
       getSize();
+
 
     const response =
       await fetch(
@@ -1217,7 +1569,8 @@ general visual composition.
 
           body:JSON.stringify({
 
-            prompt:prompt,
+            prompt:
+              prompt,
 
             referenceImage:
               referenceImageData,
@@ -1233,8 +1586,10 @@ general visual composition.
         }
       );
 
+
     const data =
       await response.json();
+
 
     if(!response.ok){
 
@@ -1244,6 +1599,7 @@ general visual composition.
       );
 
     }
+
 
     if(
       !data.image
@@ -1255,24 +1611,32 @@ general visual composition.
 
     }
 
+
     generatedImageData =
       data.image;
+
 
     imageStatus.innerHTML =
       '<span class="success">✓ AI image generated.</span>';
 
+
     drawCanvas();
+
 
   }catch(error){
 
     console.error(error);
 
+
     imageStatus.innerHTML =
       '<span class="error">' +
-      escapeHtml(error.message) +
+      escapeHtml(
+        error.message
+      ) +
       '</span>';
 
   }
+
 
   changeImageBtn.disabled =
     false;
@@ -1283,19 +1647,31 @@ general visual composition.
 }
 
 
-/* ---------------- CHANGE IMAGE ---------------- */
+/* =========================================================
+   CHANGE IMAGE
+========================================================= */
 
 changeImageBtn.addEventListener(
   "click",
   async()=>{
 
-    await generateAIImage();
+    try{
+
+      await generateAIImage();
+
+    }catch(error){
+
+      console.error(error);
+
+    }
 
   }
 );
 
 
-/* ---------------- PROMPT IMAGE ---------------- */
+/* =========================================================
+   PROMPT IMAGE
+========================================================= */
 
 generatePromptBtn.addEventListener(
   "click",
@@ -1303,6 +1679,7 @@ generatePromptBtn.addEventListener(
 
     const prompt =
       imagePrompt.value.trim();
+
 
     if(!prompt){
 
@@ -1313,6 +1690,7 @@ generatePromptBtn.addEventListener(
 
     }
 
+
     await generateAIImage(
       prompt
     );
@@ -1321,7 +1699,9 @@ generatePromptBtn.addEventListener(
 );
 
 
-/* ---------------- FONT ---------------- */
+/* =========================================================
+   FONT
+========================================================= */
 
 fontInput.addEventListener(
   "change",
@@ -1332,25 +1712,38 @@ fontInput.addEventListener(
 
     if(!file) return;
 
+
     uploadedFont =
       await readFile(file);
+
 
     fontFamily =
       "UploadedFont";
 
+
     const style =
-      document.createElement("style");
+      document.createElement(
+        "style"
+      );
+
 
     style.innerHTML = `
       @font-face{
-        font-family:UploadedFont;
-        src:url("${uploadedFont}");
+
+        font-family:
+          UploadedFont;
+
+        src:
+          url("${uploadedFont}");
+
       }
     `;
+
 
     document.head.appendChild(
       style
     );
+
 
     drawCanvas();
 
@@ -1358,7 +1751,9 @@ fontInput.addEventListener(
 );
 
 
-/* ---------------- WATERMARK ---------------- */
+/* =========================================================
+   WATERMARK
+========================================================= */
 
 watermarkInput.addEventListener(
   "change",
@@ -1369,14 +1764,18 @@ watermarkInput.addEventListener(
 
     if(!file) return;
 
+
     const data =
       await readFile(file);
+
 
     watermarkImage =
       new Image();
 
+
     watermarkImage.onload =
       () => drawCanvas();
+
 
     watermarkImage.src =
       data;
@@ -1390,10 +1789,12 @@ watermarkPosition.addEventListener(
   drawCanvas
 );
 
+
 watermarkSize.addEventListener(
   "input",
   drawCanvas
 );
+
 
 watermarkOpacity.addEventListener(
   "input",
@@ -1401,7 +1802,9 @@ watermarkOpacity.addEventListener(
 );
 
 
-/* ---------------- SIZE ---------------- */
+/* =========================================================
+   IMAGE SIZE
+========================================================= */
 
 imageSize.addEventListener(
   "change",
@@ -1412,15 +1815,18 @@ imageSize.addEventListener(
         ? "flex"
         : "none";
 
+
     drawCanvas();
 
   }
 );
 
+
 customWidth.addEventListener(
   "input",
   drawCanvas
 );
+
 
 customHeight.addEventListener(
   "input",
@@ -1428,22 +1834,27 @@ customHeight.addEventListener(
 );
 
 
-/* ---------------- TEXT STYLE ---------------- */
+/* =========================================================
+   TEXT STYLE
+========================================================= */
 
 headlineSize.addEventListener(
   "input",
   drawCanvas
 );
 
+
 textAlignment.addEventListener(
   "change",
   drawCanvas
 );
 
+
 headlineInput.addEventListener(
   "input",
   drawCanvas
 );
+
 
 supportingInput.addEventListener(
   "input",
@@ -1451,7 +1862,9 @@ supportingInput.addEventListener(
 );
 
 
-/* ---------------- SIZE HELPER ---------------- */
+/* =========================================================
+   SIZE HELPER
+========================================================= */
 
 function getSize(){
 
@@ -1476,6 +1889,7 @@ function getSize(){
 
   }
 
+
   const [
     width,
     height
@@ -1483,6 +1897,7 @@ function getSize(){
     imageSize.value
       .split("x")
       .map(Number);
+
 
   return {
     width,
@@ -1492,18 +1907,22 @@ function getSize(){
 }
 
 
-/* ---------------- CANVAS ---------------- */
+/* =========================================================
+   CANVAS
+========================================================= */
 
 async function drawCanvas(){
 
   const size =
     getSize();
 
+
   canvas.width =
     size.width;
 
   canvas.height =
     size.height;
+
 
   ctx.clearRect(
     0,
@@ -1512,12 +1931,10 @@ async function drawCanvas(){
     canvas.height
   );
 
-  /*
-    Background
-  */
 
   ctx.fillStyle =
     "#ffffff";
+
 
   ctx.fillRect(
     0,
@@ -1527,14 +1944,11 @@ async function drawCanvas(){
   );
 
 
-  /*
-    Draw generated image
-  */
-
   if(generatedImageData){
 
     const img =
       new Image();
+
 
     img.onload =
       () => {
@@ -1549,8 +1963,20 @@ async function drawCanvas(){
 
       };
 
+
+    img.onerror =
+      () => {
+
+        console.error(
+          "Could not load generated image."
+        );
+
+      };
+
+
     img.src =
       generatedImageData;
+
 
   }else{
 
@@ -1565,13 +1991,16 @@ async function drawCanvas(){
 }
 
 
-/* ---------------- IMAGE LAYOUT ---------------- */
+/* =========================================================
+   IMAGE LAYOUT
+========================================================= */
 
 function drawImageWithLayout(
   img
 ){
 
   let area = null;
+
 
   if(
     analysisData &&
@@ -1583,12 +2012,6 @@ function drawImageWithLayout(
 
   }
 
-  /*
-    If AI detected image area,
-    use it.
-
-    Otherwise fill canvas.
-  */
 
   if(area){
 
@@ -1596,17 +2019,21 @@ function drawImageWithLayout(
       canvas.width *
       ((area.x || 0)/100);
 
+
     const y =
       canvas.height *
       ((area.y || 0)/100);
+
 
     const w =
       canvas.width *
       ((area.width || 100)/100);
 
+
     const h =
       canvas.height *
       ((area.height || 100)/100);
+
 
     drawCover(
       img,
@@ -1615,6 +2042,7 @@ function drawImageWithLayout(
       w,
       h
     );
+
 
   }else{
 
@@ -1631,7 +2059,9 @@ function drawImageWithLayout(
 }
 
 
-/* ---------------- COVER IMAGE ---------------- */
+/* =========================================================
+   COVER IMAGE
+========================================================= */
 
 function drawCover(
   img,
@@ -1645,11 +2075,15 @@ function drawCover(
     img.width /
     img.height;
 
+
   const boxRatio =
     w / h;
 
+
   let drawWidth;
+
   let drawHeight;
+
 
   if(
     imageRatio >
@@ -1660,7 +2094,8 @@ function drawCover(
       h;
 
     drawWidth =
-      h * imageRatio;
+      h *
+      imageRatio;
 
   }else{
 
@@ -1668,21 +2103,31 @@ function drawCover(
       w;
 
     drawHeight =
-      w / imageRatio;
+      w /
+      imageRatio;
 
   }
 
+
   const dx =
     x +
-    (w-drawWidth)/2;
+    (w -
+    drawWidth) /
+    2;
+
 
   const dy =
     y +
-    (h-drawHeight)/2;
+    (h -
+    drawHeight) /
+    2;
+
 
   ctx.save();
 
+
   ctx.beginPath();
+
 
   ctx.rect(
     x,
@@ -1691,7 +2136,9 @@ function drawCover(
     h
   );
 
+
   ctx.clip();
+
 
   ctx.drawImage(
     img,
@@ -1701,17 +2148,21 @@ function drawCover(
     drawHeight
   );
 
+
   ctx.restore();
 
 }
 
 
-/* ---------------- PLACEHOLDER ---------------- */
+/* =========================================================
+   PLACEHOLDER
+========================================================= */
 
 function drawPlaceholder(){
 
   ctx.fillStyle =
     "#eeeeee";
+
 
   ctx.fillRect(
     0,
@@ -1720,14 +2171,18 @@ function drawPlaceholder(){
     canvas.height
   );
 
+
   ctx.fillStyle =
     "#888";
+
 
   ctx.textAlign =
     "center";
 
+
   ctx.font =
     "40px Arial";
+
 
   ctx.fillText(
     "Generate an image",
@@ -1738,29 +2193,31 @@ function drawPlaceholder(){
 }
 
 
-/* ---------------- TEXT ---------------- */
+/* =========================================================
+   TEXT
+========================================================= */
 
 function drawText(){
 
   const headline =
     headlineInput.value.trim();
 
+
   const supporting =
     supportingInput.value.trim();
 
-  /*
-    If analyzer found text blocks,
-    use their approximate positions.
-  */
 
   const blocks =
     analysisData?.text_blocks ||
     [];
 
+
   const headlineBlock =
     blocks.find(
-      x => x.type === "headline"
+      x =>
+        x.type === "headline"
     );
+
 
   const supportingBlock =
     blocks.find(
@@ -1775,16 +2232,20 @@ function drawText(){
   if(headline){
 
     let x =
-      canvas.width/2;
+      canvas.width / 2;
+
 
     let y =
       canvas.height * .15;
 
+
     let width =
       canvas.width * .9;
 
+
     let align =
       textAlignment.value;
+
 
     if(headlineBlock){
 
@@ -1792,13 +2253,16 @@ function drawText(){
         canvas.width *
         ((headlineBlock.x || 50)/100);
 
+
       y =
         canvas.height *
         ((headlineBlock.y || 15)/100);
 
+
       width =
         canvas.width *
         ((headlineBlock.width || 90)/100);
+
 
       align =
         headlineBlock.alignment ||
@@ -1806,9 +2270,11 @@ function drawText(){
 
     }
 
+
     ctx.fillStyle =
       headlineBlock?.color ||
       "#ffffff";
+
 
     ctx.font =
       "bold " +
@@ -1816,22 +2282,22 @@ function drawText(){
       "px " +
       fontFamily;
 
+
     ctx.textAlign =
       align;
+
 
     ctx.textBaseline =
       "top";
 
-    /*
-      Add subtle shadow so text
-      remains readable.
-    */
 
     ctx.shadowColor =
       "rgba(0,0,0,.45)";
 
+
     ctx.shadowBlur =
       8;
+
 
     wrapText(
       headline,
@@ -1844,6 +2310,7 @@ function drawText(){
       align
     );
 
+
     ctx.shadowBlur =
       0;
 
@@ -1855,16 +2322,20 @@ function drawText(){
   if(supporting){
 
     let x =
-      canvas.width/2;
+      canvas.width / 2;
+
 
     let y =
       canvas.height * .3;
 
+
     let width =
       canvas.width * .85;
 
+
     let align =
       textAlignment.value;
+
 
     if(supportingBlock){
 
@@ -1872,13 +2343,16 @@ function drawText(){
         canvas.width *
         ((supportingBlock.x || 50)/100);
 
+
       y =
         canvas.height *
         ((supportingBlock.y || 30)/100);
 
+
       width =
         canvas.width *
         ((supportingBlock.width || 85)/100);
+
 
       align =
         supportingBlock.alignment ||
@@ -1886,9 +2360,11 @@ function drawText(){
 
     }
 
+
     ctx.fillStyle =
       supportingBlock?.color ||
       "#ffffff";
+
 
     ctx.font =
       Math.max(
@@ -1900,17 +2376,22 @@ function drawText(){
       "px " +
       fontFamily;
 
+
     ctx.textAlign =
       align;
+
 
     ctx.textBaseline =
       "top";
 
+
     ctx.shadowColor =
       "rgba(0,0,0,.45)";
 
+
     ctx.shadowBlur =
       6;
+
 
     wrapText(
       supporting,
@@ -1926,6 +2407,7 @@ function drawText(){
       align
     );
 
+
     ctx.shadowBlur =
       0;
 
@@ -1934,7 +2416,9 @@ function drawText(){
 }
 
 
-/* ---------------- WRAP TEXT ---------------- */
+/* =========================================================
+   WRAP TEXT
+========================================================= */
 
 function wrapText(
   text,
@@ -1948,13 +2432,16 @@ function wrapText(
   const words =
     text.split(" ");
 
+
   let line = "";
+
 
   const lines = [];
 
+
   for(
-    let i=0;
-    i<words.length;
+    let i = 0;
+    i < words.length;
     i++
   ){
 
@@ -1963,10 +2450,12 @@ function wrapText(
       words[i] +
       " ";
 
+
     const metrics =
       ctx.measureText(
         test
       );
+
 
     if(
       metrics.width >
@@ -1978,8 +2467,10 @@ function wrapText(
         line.trim()
       );
 
+
       line =
-        words[i] + " ";
+        words[i] +
+        " ";
 
     }else{
 
@@ -1990,44 +2481,22 @@ function wrapText(
 
   }
 
+
   if(line){
+
     lines.push(
       line.trim()
     );
+
   }
+
 
   lines.forEach(
     (lineText,index)=>{
 
-      let drawX =
-        x;
-
-      if(
-        align ===
-        "left"
-      ){
-
-        drawX =
-          x;
-
-      }else if(
-        align ===
-        "right"
-      ){
-
-        drawX =
-          x;
-
-      }else{
-
-        drawX =
-          x;
-
-      }
-
       ctx.fillText(
         lineText,
-        drawX,
+        x,
         y +
         index *
         lineHeight
@@ -2039,35 +2508,45 @@ function wrapText(
 }
 
 
-/* ---------------- WATERMARK ---------------- */
+/* =========================================================
+   WATERMARK
+========================================================= */
 
 function drawWatermark(){
 
   if(!watermarkImage)
     return;
 
+
   const size =
     parseInt(
       watermarkSize.value
     ) || 120;
 
+
   const ratio =
     watermarkImage.width /
     watermarkImage.height;
 
+
   const width =
     size;
+
 
   const height =
     size /
     ratio;
 
+
   const margin =
     canvas.width *
     .03;
 
+
   let x;
+
   let y;
+
 
   switch(
     watermarkPosition.value
@@ -2083,6 +2562,7 @@ function drawWatermark(){
 
       break;
 
+
     case "bottom-left":
 
       x =
@@ -2094,6 +2574,7 @@ function drawWatermark(){
         margin;
 
       break;
+
 
     case "bottom-right":
 
@@ -2109,6 +2590,7 @@ function drawWatermark(){
 
       break;
 
+
     default:
 
       x =
@@ -2121,12 +2603,15 @@ function drawWatermark(){
 
   }
 
+
   ctx.save();
+
 
   ctx.globalAlpha =
     parseInt(
       watermarkOpacity.value
     ) / 100;
+
 
   ctx.drawImage(
     watermarkImage,
@@ -2136,12 +2621,15 @@ function drawWatermark(){
     height
   );
 
+
   ctx.restore();
 
 }
 
 
-/* ---------------- DOWNLOAD ---------------- */
+/* =========================================================
+   DOWNLOAD
+========================================================= */
 
 document.getElementById(
   "downloadBtn"
@@ -2151,6 +2639,7 @@ document.getElementById(
 
     drawCanvas();
 
+
     setTimeout(
       ()=>{
 
@@ -2159,13 +2648,16 @@ document.getElementById(
             "a"
           );
 
+
         link.download =
           "ai-post-maker.png";
+
 
         link.href =
           canvas.toDataURL(
             "image/png"
           );
+
 
         link.click();
 
@@ -2177,29 +2669,36 @@ document.getElementById(
 );
 
 
-/* ---------------- ESCAPE HTML ---------------- */
+/* =========================================================
+   ESCAPE HTML
+========================================================= */
 
 function escapeHtml(
   value
 ){
 
   return String(value)
+
     .replace(
       /&/g,
       "&amp;"
     )
+
     .replace(
       /</g,
       "&lt;"
     )
+
     .replace(
       />/g,
       "&gt;"
     )
+
     .replace(
       /"/g,
       "&quot;"
     )
+
     .replace(
       /'/g,
       "&#039;"
@@ -2208,7 +2707,9 @@ function escapeHtml(
 }
 
 
-/* ---------------- INITIAL DRAW ---------------- */
+/* =========================================================
+   INITIAL DRAW
+========================================================= */
 
 drawCanvas();
 
