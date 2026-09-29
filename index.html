@@ -4,34 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>AI Post Maker</title>
-
 <style>
-*{
-  box-sizing:border-box;
-}
-
+*{box-sizing:border-box;}
 body{
   margin:0;
   font-family:Arial,sans-serif;
   background:#f4f5f7;
   color:#111;
 }
-
 .container{
   max-width:1100px;
   margin:auto;
   padding:20px;
 }
-
 h1{
   margin:0 0 6px;
 }
-
 .subtitle{
   color:#666;
   margin-bottom:25px;
 }
-
 .card{
   background:white;
   border-radius:16px;
@@ -39,18 +31,15 @@ h1{
   margin-bottom:20px;
   box-shadow:0 4px 18px rgba(0,0,0,.07);
 }
-
 h2{
   margin-top:0;
   font-size:20px;
 }
-
 label{
   display:block;
   font-weight:600;
   margin:12px 0 6px;
 }
-
 input,
 select,
 textarea,
@@ -61,12 +50,10 @@ button{
   border:1px solid #ddd;
   font-size:15px;
 }
-
 textarea{
   min-height:90px;
   resize:vertical;
 }
-
 button{
   background:#111;
   color:white;
@@ -75,29 +62,23 @@ button{
   margin-top:10px;
   font-weight:700;
 }
-
 button.secondary{
   background:#eee;
   color:#111;
 }
-
 button.green{
   background:#16803c;
 }
-
 button.blue{
   background:#1769d1;
 }
-
 button.orange{
   background:#e87500;
 }
-
 button:disabled{
   opacity:.5;
   cursor:not-allowed;
 }
-
 .preview{
   width:100%;
   max-width:500px;
@@ -106,28 +87,23 @@ button:disabled{
   border-radius:12px;
   background:#eee;
 }
-
 .grid{
   display:grid;
   grid-template-columns:1fr 1fr;
   gap:15px;
 }
-
 @media(max-width:700px){
   .grid{
     grid-template-columns:1fr;
   }
 }
-
 .row{
   display:flex;
   gap:10px;
 }
-
 .row>*{
   flex:1;
 }
-
 .status{
   background:#f0f2f5;
   padding:12px;
@@ -135,31 +111,25 @@ button:disabled{
   margin-top:12px;
   white-space:pre-wrap;
 }
-
 .success{
   color:#16803c;
 }
-
 .error{
   color:#c62828;
 }
-
 .text-block{
   border:1px solid #ddd;
   padding:12px;
   border-radius:10px;
   margin-top:10px;
 }
-
 .text-block strong{
   display:block;
   margin-bottom:5px;
 }
-
 #canvasWrap{
   text-align:center;
 }
-
 canvas{
   max-width:100%;
   height:auto;
@@ -167,288 +137,278 @@ canvas{
   box-shadow:0 5px 20px rgba(0,0,0,.15);
   background:white;
 }
-
 .small{
   font-size:13px;
   color:#777;
 }
-
 .clean-preview{
   border:3px solid #16803c;
 }
-
-.divider{
-  height:1px;
-  background:#eee;
-  margin:18px 0;
+.saved-box{
+  background:#eef8f1;
+  border:1px solid #b9dfc4;
+  padding:12px;
+  border-radius:10px;
+  margin-top:10px;
 }
-
-.choice-title{
-  font-weight:700;
-  margin-top:15px;
-  margin-bottom:5px;
+.saved-box strong{
+  color:#16803c;
+}
+.remove-btn{
+  background:#d32f2f;
+  margin-top:8px;
+}
+.format-preview{
+  max-width:300px;
+  border:3px solid #1769d1;
+}
+hr{
+  border:0;
+  border-top:1px solid #eee;
+  margin:20px 0;
 }
 </style>
 </head>
-
 <body>
-
 <div class="container">
-
 <h1>AI Post Maker</h1>
-
 <div class="subtitle">
 Create Instagram posts from a reference design using AI.
 </div>
-
-
-<!-- REFERENCE -->
+<!-- ===================================================== -->
+<!-- 1. REFERENCE POST -->
+<!-- ===================================================== -->
 <div class="card">
-
 <h2>1. Reference Post</h2>
-
-<label>Upload reference Instagram post</label>
-
+<label>Upload Reference Instagram Post</label>
 <input
   type="file"
   id="referenceInput"
   accept="image/*"
 >
-
 <img
   id="referencePreview"
   class="preview"
   style="display:none"
 >
-
 <button
   id="analyzeBtn"
   class="blue"
 >
 Analyze Reference Layout
 </button>
-
-
-<!-- REMOVE ORIGINAL TEXT -->
-
 <button
   id="removeTextBtn"
   class="green"
 >
 Remove Original Text
 </button>
-
 <div class="small">
-AI will remove the visible text from the reference image while trying to preserve the original background, people, objects, lighting and composition.
+AI will remove visible text while trying to preserve
+the original people, objects, background, lighting
+and composition.
 </div>
-
 <img
   id="cleanedPreview"
   class="preview clean-preview"
   style="display:none"
 >
-
-<div
-  id="referenceChoiceButtons"
-  style="display:none"
-  class="row"
->
-  <button
-    id="useOriginalBtn"
-    class="secondary"
-  >
-    Use Original
-  </button>
-
-  <button
-    id="useCleanedBtn"
-    class="green"
-  >
-    Use Cleaned Image
-  </button>
-</div>
-
 <div
   id="removeTextStatus"
   class="status"
 >
 Original reference is unchanged.
 </div>
-
-
 <div
   id="analysisStatus"
   class="status"
 >
 Waiting for reference image...
 </div>
-
 <div id="analysisDetails"></div>
-
 </div>
-
-
-<!-- TEXT -->
+<!-- ===================================================== -->
+<!-- 2. POST TEXT -->
+<!-- ===================================================== -->
 <div class="card">
-
 <h2>2. Post Text</h2>
-
 <label>Detected / New Headline</label>
-
 <input
   id="headlineInput"
   placeholder="Headline"
 >
-
 <label>Supporting Text</label>
-
 <textarea
   id="supportingInput"
   placeholder="Supporting text"
 ></textarea>
-
 <button
   id="newTextBtn"
   class="secondary"
 >
 Generate Different Text
 </button>
-
 </div>
-
-
-<!-- IMAGE -->
+<!-- ===================================================== -->
+<!-- 3. IMAGE -->
+<!-- ===================================================== -->
 <div class="card">
-
 <h2>3. Image</h2>
-
 <label>Image Source</label>
-
 <select id="imageSource">
-
 <option value="ai">
 AI Automatic
 </option>
-
 <option value="prompt">
 AI Prompt
 </option>
-
 <option value="gallery">
 Gallery
 </option>
-
 </select>
-
-
 <div id="promptBox">
-
 <label>AI Image Prompt</label>
-
 <textarea
   id="imagePrompt"
   placeholder="Describe the image you want..."
 ></textarea>
-
 <button
   id="generatePromptBtn"
   class="blue"
 >
 Generate Image From Prompt
 </button>
-
 </div>
-
-
-<div id="galleryBox" style="display:none">
-
-<label>Upload image</label>
-
+<div
+  id="galleryBox"
+  style="display:none"
+>
+<label>Upload Image</label>
 <input
   type="file"
   id="galleryInput"
   accept="image/*"
 >
-
 </div>
-
-
 <button
   id="changeImageBtn"
   class="green"
 >
 Change Image
 </button>
-
 <div
   id="imageStatus"
   class="status"
 >
 No generated image yet.
 </div>
-
 </div>
-
-
-<!-- BRAND -->
+<!-- ===================================================== -->
+<!-- 4. BRAND SETUP -->
+<!-- ===================================================== -->
 <div class="card">
-
 <h2>4. Brand Setup</h2>
-
+<!-- PAGE FORMAT -->
+<label>
+Your Page Format Reference
+</label>
+<div class="small">
+Upload one of your existing Instagram posts showing
+the visual style you want AI images to follow.
+This is saved in this browser so you don't need
+to upload it again for every post.
+</div>
+<input
+  type="file"
+  id="pageFormatInput"
+  accept="image/*"
+>
+<img
+  id="pageFormatPreview"
+  class="preview format-preview"
+  style="display:none"
+>
+<div
+  id="pageFormatSaved"
+  class="saved-box"
+  style="display:none"
+>
+<strong>✓ Page format saved</strong>
+<br>
+This format will be reused automatically.
+</div>
+<button
+  id="removePageFormatBtn"
+  class="remove-btn"
+  style="display:none"
+>
+Remove Saved Page Format
+</button>
+<hr>
 <div class="grid">
-
 <div>
-
-<label>Upload Font</label>
-
+<label>
+Upload Font
+</label>
 <input
   type="file"
   id="fontInput"
   accept=".ttf,.otf,.woff,.woff2"
 >
-
-<div class="small">
-Font is used locally for the final post.
+<div
+  id="fontSaved"
+  class="saved-box"
+  style="display:none"
+>
+<strong>✓ Font loaded</strong>
+<br>
+Your uploaded font is active.
 </div>
-
 </div>
-
 <div>
-
-<label>Upload Watermark PNG</label>
-
+<label>
+Upload Watermark PNG
+</label>
 <input
   type="file"
   id="watermarkInput"
   accept="image/png"
 >
-
+<div
+  id="watermarkSaved"
+  class="saved-box"
+  style="display:none"
+>
+<strong>✓ Watermark loaded</strong>
+<br>
+Your watermark is active.
 </div>
-
 </div>
-
-
+</div>
 <div class="grid">
-
 <div>
-
-<label>Watermark Position</label>
-
+<label>
+Watermark Position
+</label>
 <select id="watermarkPosition">
-
-<option value="top-right">Top Right</option>
-<option value="top-left">Top Left</option>
-<option value="bottom-right">Bottom Right</option>
-<option value="bottom-left">Bottom Left</option>
-
+<option value="top-right">
+Top Right
+</option>
+<option value="top-left">
+Top Left
+</option>
+<option value="bottom-right">
+Bottom Right
+</option>
+<option value="bottom-left">
+Bottom Left
+</option>
 </select>
-
 </div>
-
 <div>
-
-<label>Watermark Size</label>
-
+<label>
+Watermark Size
+</label>
 <input
   type="number"
   id="watermarkSize"
@@ -456,14 +416,11 @@ Font is used locally for the final post.
   min="20"
   max="500"
 >
-
 </div>
-
 </div>
-
-
-<label>Watermark Opacity</label>
-
+<label>
+Watermark Opacity
+</label>
 <input
   type="range"
   id="watermarkOpacity"
@@ -471,69 +428,54 @@ Font is used locally for the final post.
   max="100"
   value="100"
 >
-
 </div>
-
-
-<!-- SIZE -->
+<!-- ===================================================== -->
+<!-- 5. IMAGE SIZE -->
+<!-- ===================================================== -->
 <div class="card">
-
 <h2>5. Image Size</h2>
-
 <select id="imageSize">
-
 <option value="1080x1080">
 1080 × 1080 Square
 </option>
-
 <option value="1080x1350">
 1080 × 1350 Portrait
 </option>
-
 <option value="1080x566">
 1080 × 566 Landscape
 </option>
-
 <option value="1080x1920">
 1080 × 1920 Story / Reel
 </option>
-
 <option value="custom">
 Custom
 </option>
-
 </select>
-
 <div
   id="customSize"
   class="row"
   style="display:none"
 >
-
 <input
   type="number"
   id="customWidth"
   placeholder="Width"
 >
-
 <input
   type="number"
   id="customHeight"
   placeholder="Height"
 >
-
 </div>
-
 </div>
-
-
-<!-- TEXT STYLE -->
+<!-- ===================================================== -->
+<!-- 6. TEXT STYLE -->
+<!-- ===================================================== -->
 <div class="card">
-
 <h2>6. Text Style</h2>
-
-<label>Headline Size</label>
-
+<label>
+Headline Size
+</label>
 <input
   type="range"
   id="headlineSize"
@@ -541,1579 +483,1181 @@ Custom
   max="180"
   value="70"
 >
-
-<label>Text Alignment</label>
-
+<label>
+Text Alignment
+</label>
 <select id="textAlignment">
-
-<option value="left">Left</option>
-<option value="center">Center</option>
-<option value="right">Right</option>
-
+<option value="left">
+Left
+</option>
+<option value="center">
+Center
+</option>
+<option value="right">
+Right
+</option>
 </select>
-
 </div>
-
-
-<!-- CAROUSEL -->
+<!-- ===================================================== -->
+<!-- 7. CAROUSEL -->
+<!-- ===================================================== -->
 <div class="card">
-
 <h2>7. Carousel</h2>
-
 <label>
 <input
   type="checkbox"
   id="carouselEnabled"
   style="width:auto"
 >
- Enable carousel / swipe
+Enable carousel / swipe
 </label>
-
-<label>Carousel Position</label>
-
+<label>
+Carousel Position
+</label>
 <select id="carouselPosition">
-
-<option value="top-right">Top Right</option>
-<option value="top-left">Top Left</option>
-
+<option value="top-right">
+Top Right
+</option>
+<option value="top-left">
+Top Left
+</option>
 </select>
-
 </div>
-
-
-<!-- FINAL -->
+<!-- ===================================================== -->
+<!-- 8. FINAL POST -->
+<!-- ===================================================== -->
 <div class="card">
-
 <h2>8. Final Post</h2>
-
 <div id="canvasWrap">
 <canvas id="canvas"></canvas>
 </div>
-
 <button
   id="downloadBtn"
   class="green"
 >
 Download PNG
 </button>
-
 </div>
-
 </div>
-
-
 <script>
-
 /* =========================================================
-   SUPABASE FUNCTIONS
+   API URLS
 ========================================================= */
-
 const ANALYZE_URL =
 "https://zflphadtukkvvlbrzace.supabase.co/functions/v1/analyze-reference";
-
 const GENERATE_URL =
 "https://zflphadtukkvvlbrzace.supabase.co/functions/v1/generate-image";
-
 const REMOVE_TEXT_URL =
 "https://zflphadtukkvvlbrzace.supabase.co/functions/v1/remove-text";
-
-
 /* =========================================================
-   VARIABLES
+   APP VARIABLES
 ========================================================= */
-
 let referenceImageData = null;
-
 let originalReferenceData = null;
-
 let cleanedReferenceData = null;
-
 let generatedImageData = null;
-
 let galleryImageData = null;
-
 let analysisData = null;
-
 let uploadedFont = null;
-
 let watermarkImage = null;
-
 let fontFamily = "Arial";
-
-
+let pageFormatReference = null;
 /* =========================================================
-   ELEMENTS
+   DOM ELEMENTS
 ========================================================= */
-
 const referenceInput =
 document.getElementById("referenceInput");
-
 const referencePreview =
 document.getElementById("referencePreview");
-
 const analyzeBtn =
 document.getElementById("analyzeBtn");
-
 const removeTextBtn =
 document.getElementById("removeTextBtn");
-
 const cleanedPreview =
 document.getElementById("cleanedPreview");
-
-const referenceChoiceButtons =
-document.getElementById("referenceChoiceButtons");
-
-const useOriginalBtn =
-document.getElementById("useOriginalBtn");
-
-const useCleanedBtn =
-document.getElementById("useCleanedBtn");
-
 const removeTextStatus =
 document.getElementById("removeTextStatus");
-
 const analysisStatus =
 document.getElementById("analysisStatus");
-
 const analysisDetails =
 document.getElementById("analysisDetails");
-
 const headlineInput =
 document.getElementById("headlineInput");
-
 const supportingInput =
 document.getElementById("supportingInput");
-
 const newTextBtn =
 document.getElementById("newTextBtn");
-
 const imageSource =
 document.getElementById("imageSource");
-
 const promptBox =
 document.getElementById("promptBox");
-
 const galleryBox =
 document.getElementById("galleryBox");
-
 const imagePrompt =
 document.getElementById("imagePrompt");
-
 const generatePromptBtn =
 document.getElementById("generatePromptBtn");
-
 const galleryInput =
 document.getElementById("galleryInput");
-
 const changeImageBtn =
 document.getElementById("changeImageBtn");
-
 const imageStatus =
 document.getElementById("imageStatus");
-
+const pageFormatInput =
+document.getElementById("pageFormatInput");
+const pageFormatPreview =
+document.getElementById("pageFormatPreview");
+const pageFormatSaved =
+document.getElementById("pageFormatSaved");
+const removePageFormatBtn =
+document.getElementById("removePageFormatBtn");
 const fontInput =
 document.getElementById("fontInput");
-
+const fontSaved =
+document.getElementById("fontSaved");
 const watermarkInput =
 document.getElementById("watermarkInput");
-
+const watermarkSaved =
+document.getElementById("watermarkSaved");
 const watermarkPosition =
 document.getElementById("watermarkPosition");
-
 const watermarkSize =
 document.getElementById("watermarkSize");
-
 const watermarkOpacity =
 document.getElementById("watermarkOpacity");
-
 const imageSize =
 document.getElementById("imageSize");
-
 const customSize =
 document.getElementById("customSize");
-
 const customWidth =
 document.getElementById("customWidth");
-
 const customHeight =
 document.getElementById("customHeight");
-
 const headlineSize =
 document.getElementById("headlineSize");
-
 const textAlignment =
 document.getElementById("textAlignment");
-
 const carouselEnabled =
 document.getElementById("carouselEnabled");
-
 const carouselPosition =
 document.getElementById("carouselPosition");
-
 const canvas =
 document.getElementById("canvas");
-
 const ctx =
 canvas.getContext("2d");
-
-
 /* =========================================================
    FILE READER
 ========================================================= */
-
 function readFile(file){
-
-  return new Promise((resolve,reject)=>{
-
-    const reader =
+  return new Promise(
+    (resolve,reject)=>{
+      const reader =
       new FileReader();
-
-    reader.onload =
-      () => resolve(reader.result);
-
-    reader.onerror =
+      reader.onload =
+      ()=>resolve(reader.result);
+      reader.onerror =
       reject;
-
-    reader.readAsDataURL(file);
-
-  });
-
+      reader.readAsDataURL(file);
+    }
+  );
 }
-
-
 /* =========================================================
-   REFERENCE UPLOAD
+   LOCAL STORAGE
 ========================================================= */
-
+function saveSetting(key,value){
+  try{
+    localStorage.setItem(
+      key,
+      value
+    );
+  }catch(error){
+    console.warn(
+      "Could not save setting:",
+      error
+    );
+  }
+}
+function getSetting(key){
+  try{
+    return localStorage.getItem(key);
+  }catch(error){
+    return null;
+  }
+}
+function removeSetting(key){
+  try{
+    localStorage.removeItem(key);
+  }catch(error){
+    console.warn(error);
+  }
+}
+/* =========================================================
+   PAGE FORMAT
+========================================================= */
+async function loadSavedPageFormat(){
+  const saved =
+  getSetting(
+    "aiPostMaker_pageFormat"
+  );
+  if(!saved)
+    return;
+  pageFormatReference =
+  saved;
+  pageFormatPreview.src =
+  saved;
+  pageFormatPreview.style.display =
+  "block";
+  pageFormatSaved.style.display =
+  "block";
+  removePageFormatBtn.style.display =
+  "block";
+}
+pageFormatInput.addEventListener(
+  "change",
+  async()=>{
+    const file =
+    pageFormatInput.files[0];
+    if(!file)
+      return;
+    try{
+      const data =
+      await readFile(file);
+      pageFormatReference =
+      data;
+      saveSetting(
+        "aiPostMaker_pageFormat",
+        data
+      );
+      pageFormatPreview.src =
+      data;
+      pageFormatPreview.style.display =
+      "block";
+      pageFormatSaved.style.display =
+      "block";
+      removePageFormatBtn.style.display =
+      "block";
+    }catch(error){
+      alert(
+        "Could not save page format image."
+      );
+    }
+  }
+);
+removePageFormatBtn.addEventListener(
+  "click",
+  ()=>{
+    pageFormatReference =
+    null;
+    removeSetting(
+      "aiPostMaker_pageFormat"
+    );
+    pageFormatPreview.src =
+    "";
+    pageFormatPreview.style.display =
+    "none";
+    pageFormatSaved.style.display =
+    "none";
+    removePageFormatBtn.style.display =
+    "none";
+    pageFormatInput.value =
+    "";
+  }
+);
+/* =========================================================
+   REFERENCE IMAGE
+========================================================= */
 referenceInput.addEventListener(
   "change",
   async()=>{
-
     const file =
-      referenceInput.files[0];
-
-    if(!file) return;
-
+    referenceInput.files[0];
+    if(!file)
+      return;
     originalReferenceData =
-      await readFile(file);
-
+    await readFile(file);
     referenceImageData =
-      originalReferenceData;
-
+    originalReferenceData;
     cleanedReferenceData =
-      null;
-
+    null;
     cleanedPreview.style.display =
-      "none";
-
-    referenceChoiceButtons.style.display =
-      "none";
-
+    "none";
     removeTextStatus.textContent =
-      "Original reference is unchanged.";
-
+    "Original reference is unchanged.";
     referencePreview.src =
-      originalReferenceData;
-
+    originalReferenceData;
     referencePreview.style.display =
-      "block";
-
+    "block";
     analysisStatus.textContent =
-      "Reference image loaded.";
-
+    "Reference image loaded.";
     analysisDetails.innerHTML =
-      "";
-
+    "";
     analysisData =
-      null;
-
+    null;
     generatedImageData =
-      null;
-
+    null;
     imageStatus.textContent =
-      "No generated image yet.";
-
+    "No generated image yet.";
     drawCanvas();
-
   }
 );
-
-
 /* =========================================================
    ANALYZE REFERENCE
 ========================================================= */
-
 analyzeBtn.addEventListener(
   "click",
   async()=>{
-
     if(!referenceImageData){
-
       analysisStatus.textContent =
-        "Please upload a reference image first.";
-
+      "Please upload a reference image first.";
       return;
-
     }
-
     analyzeBtn.disabled =
-      true;
-
+    true;
     analysisStatus.textContent =
-      "Analyzing reference with AI...";
-
+    "Analyzing reference with AI...";
     analysisDetails.innerHTML =
-      "";
-
+    "";
     try{
-
       const response =
-        await fetch(
-          ANALYZE_URL,
-          {
-            method:"POST",
-
-            headers:{
-              "Content-Type":
-                "application/json"
-            },
-
-            body:JSON.stringify({
-              image:
-                referenceImageData
-            })
-          }
-        );
-
+      await fetch(
+        ANALYZE_URL,
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":
+            "application/json"
+          },
+          body:JSON.stringify({
+            image:
+            referenceImageData
+          })
+        }
+      );
       const data =
-        await response.json();
-
+      await response.json();
       if(
         !response.ok ||
-        data.success === false
+        data.success===false
       ){
-
         throw new Error(
           data.error ||
           "Analysis failed"
         );
-
       }
-
       analysisData =
-        data.analysis ||
-        data.result ||
-        data;
-
+      data.analysis ||
+      data.result ||
+      data;
       const blocks =
-        analysisData.text_blocks ||
-        analysisData.textBlocks ||
-        data.text_blocks ||
-        [];
-
+      analysisData.text_blocks ||
+      analysisData.textBlocks ||
+      data.text_blocks ||
+      [];
       displayAnalysis(
         analysisData,
         blocks
       );
-
-
       if(blocks.length){
-
         const headline =
-          blocks.find(
-            x =>
-              x.type === "headline"
-          );
-
+        blocks.find(
+          x=>x.type==="headline"
+        );
         const supporting =
-          blocks.find(
-            x =>
-              x.type === "supporting" ||
-              x.type === "body"
-          );
-
-
+        blocks.find(
+          x=>
+          x.type==="supporting" ||
+          x.type==="body"
+        );
         if(
           headline &&
           headline.text
         ){
-
           headlineInput.value =
-            headline.text;
-
+          headline.text;
         }
-
-
         if(
           supporting &&
           supporting.text
         ){
-
           supportingInput.value =
-            supporting.text;
-
+          supporting.text;
         }
-
-
         if(
           !headlineInput.value &&
           blocks[0]?.text
         ){
-
           headlineInput.value =
-            blocks[0].text;
-
+          blocks[0].text;
         }
-
-
         if(
           !supportingInput.value &&
           blocks[1]?.text
         ){
-
           supportingInput.value =
-            blocks[1].text;
-
+          blocks[1].text;
         }
-
       }
-
-
       analysisStatus.innerHTML =
-        '<span class="success">✓ Reference analyzed successfully.</span>';
-
+      '<span class="success">✓ Reference analyzed successfully.</span>';
       drawCanvas();
-
     }catch(error){
-
       console.error(error);
-
       analysisStatus.innerHTML =
-        '<span class="error">Analysis failed: ' +
-        escapeHtml(
-          error.message
-        ) +
-        '</span>';
-
+      '<span class="error">Analysis failed: '+
+      escapeHtml(error.message)+
+      '</span>';
     }
-
     analyzeBtn.disabled =
-      false;
-
+    false;
   }
 );
-
-
 /* =========================================================
-   REMOVE ORIGINAL TEXT
+   REMOVE TEXT
+   CLEANED IMAGE AUTOMATICALLY BECOMES ACTIVE
 ========================================================= */
-
 removeTextBtn.addEventListener(
   "click",
   async()=>{
-
     if(!originalReferenceData){
-
       removeTextStatus.innerHTML =
-        '<span class="error">Please upload a reference image first.</span>';
-
+      '<span class="error">Please upload a reference image first.</span>';
       return;
-
     }
-
-
     removeTextBtn.disabled =
-      true;
-
+    true;
     removeTextStatus.textContent =
-      "AI is removing the original text... This may take a little time.";
-
-
+    "AI is removing the original text... This may take a little time.";
     try{
-
       const response =
-        await fetch(
-          REMOVE_TEXT_URL,
-          {
-            method:"POST",
-
-            headers:{
-              "Content-Type":
-                "application/json"
-            },
-
-            body:JSON.stringify({
-
-              image:
-                originalReferenceData
-
-            })
-          }
-        );
-
-
+      await fetch(
+        REMOVE_TEXT_URL,
+        {
+          method:"POST",
+          headers:{
+            "Content-Type":
+            "application/json"
+          },
+          body:JSON.stringify({
+            image:
+            originalReferenceData
+          })
+        }
+      );
       const data =
-        await response.json();
-
-
+      await response.json();
       if(
         !response.ok ||
-        data.success === false
+        data.success===false
       ){
-
         throw new Error(
           data.error ||
           "Text removal failed."
         );
-
       }
-
-
       if(!data.image){
-
         throw new Error(
           "No cleaned image was returned."
         );
-
       }
-
-
       cleanedReferenceData =
-        data.image;
-
-
+      data.image;
+      /* Automatically use cleaned image */
+      referenceImageData =
+      cleanedReferenceData;
       cleanedPreview.src =
-        cleanedReferenceData;
-
+      cleanedReferenceData;
       cleanedPreview.style.display =
-        "block";
-
-
-      referenceChoiceButtons.style.display =
-        "flex";
-
-
-      /*
-        IMPORTANT:
-        Keep originalReferenceData
-        unchanged.
-
-        The cleaned image is NOT
-        automatically selected.
-      */
-
-
+      "block";
+      referencePreview.src =
+      cleanedReferenceData;
       removeTextStatus.innerHTML =
-        '<span class="success">✓ Original text removed successfully. Choose which reference to use below.</span>';
-
-
+      '<span class="success">✓ Original text removed. Cleaned image is now the active reference.</span>';
+      generatedImageData =
+      null;
+      imageStatus.textContent =
+      "Cleaned reference selected automatically.";
+      drawCanvas();
     }catch(error){
-
       console.error(
         "REMOVE TEXT ERROR:",
         error
       );
-
-
       removeTextStatus.innerHTML =
-        '<span class="error">Text removal failed: ' +
-        escapeHtml(
-          error.message
-        ) +
-        '</span>';
-
+      '<span class="error">Text removal failed: '+
+      escapeHtml(error.message)+
+      '</span>';
     }
-
-
     removeTextBtn.disabled =
-      false;
-
+    false;
   }
 );
-
-
-/* =========================================================
-   USE ORIGINAL
-========================================================= */
-
-useOriginalBtn.addEventListener(
-  "click",
-  ()=>{
-
-    if(!originalReferenceData)
-      return;
-
-
-    referenceImageData =
-      originalReferenceData;
-
-
-    referencePreview.src =
-      originalReferenceData;
-
-    referencePreview.style.display =
-      "block";
-
-
-    generatedImageData =
-      null;
-
-
-    imageStatus.textContent =
-      "Original reference selected.";
-
-
-    removeTextStatus.innerHTML =
-      '<span class="success">✓ Original image selected.</span>';
-
-
-    drawCanvas();
-
-  }
-);
-
-
-/* =========================================================
-   USE CLEANED IMAGE
-========================================================= */
-
-useCleanedBtn.addEventListener(
-  "click",
-  ()=>{
-
-    if(!cleanedReferenceData)
-      return;
-
-
-    referenceImageData =
-      cleanedReferenceData;
-
-
-    referencePreview.src =
-      cleanedReferenceData;
-
-    referencePreview.style.display =
-      "block";
-
-
-    generatedImageData =
-      null;
-
-
-    imageStatus.textContent =
-      "Cleaned reference selected.";
-
-
-    removeTextStatus.innerHTML =
-      '<span class="success">✓ Cleaned image selected.</span>';
-
-
-    drawCanvas();
-
-  }
-);
-
-
 /* =========================================================
    DISPLAY ANALYSIS
 ========================================================= */
-
 function displayAnalysis(
   analysis,
   blocks
 ){
-
-  let html = "";
-
-
-  html += `
+  let html="";
+  html+=`
     <div class="text-block">
-      <strong>Layout</strong>
+      <strong>
+      Layout
+      </strong>
       ${escapeHtml(
         analysis.overall_layout ||
         "Detected"
       )}
     </div>
   `;
-
-
-  html += `
+  html+=`
     <div class="text-block">
-      <strong>Aspect Ratio</strong>
+      <strong>
+      Aspect Ratio
+      </strong>
       ${escapeHtml(
         analysis.aspect_ratio ||
         "Detected automatically"
       )}
     </div>
   `;
-
-
   if(
     analysis.main_image_area
   ){
-
-    html += `
+    html+=`
       <div class="text-block">
-
         <strong>
-          Main Image Area
+        Main Image Area
         </strong>
-
         x:
-        ${analysis.main_image_area.x || 0}%
-
+        ${analysis.main_image_area.x||0}%
         &nbsp;
-
         y:
-        ${analysis.main_image_area.y || 0}%
-
+        ${analysis.main_image_area.y||0}%
         &nbsp;
-
         width:
-        ${analysis.main_image_area.width || 0}%
-
+        ${analysis.main_image_area.width||0}%
         &nbsp;
-
         height:
-        ${analysis.main_image_area.height || 0}%
-
+        ${analysis.main_image_area.height||0}%
       </div>
     `;
-
   }
-
-
-  html += `
+  html+=`
     <div class="text-block">
-
       <strong>
-        Detected Text
+      Detected Text
       </strong>
-
       ${blocks.length}
       text block(s)
-
     </div>
   `;
-
-
   blocks.forEach(
-    (block)=>{
-
-      html += `
+    block=>{
+      html+=`
         <div class="text-block">
-
           <strong>
-            ${escapeHtml(
-              block.type ||
-              "Text"
-            )}
+          ${escapeHtml(
+            block.type ||
+            "Text"
+          )}
           </strong>
-
           <div>
-            ${escapeHtml(
-              block.text ||
-              "(No readable text)"
-            )}
+          ${escapeHtml(
+            block.text ||
+            "(No readable text)"
+          )}
           </div>
-
           <div class="small">
-
-            Position:
-
-            ${block.x || 0}%,
-            ${block.y || 0}%
-
-            &nbsp; | &nbsp;
-
-            ${block.width || 0}% ×
-            ${block.height || 0}%
-
+          Position:
+          ${block.x||0}%,
+          ${block.y||0}%
+          &nbsp; | &nbsp;
+          ${block.width||0}%
+          ×
+          ${block.height||0}%
           </div>
-
         </div>
       `;
-
     }
   );
-
-
   analysisDetails.innerHTML =
-    html;
-
+  html;
 }
-
-
 /* =========================================================
    NEW TEXT
 ========================================================= */
-
 newTextBtn.addEventListener(
   "click",
   ()=>{
-
     const oldHeadline =
-      headlineInput.value.trim();
-
+    headlineInput.value.trim();
     const oldSupporting =
-      supportingInput.value.trim();
-
-
+    supportingInput.value.trim();
     const headlineOptions = [
-
       "Interesting Facts You Should Know",
-
       "You Probably Didn't Know This",
-
       "Facts That Will Surprise You",
-
       "Things You Never Knew",
-
       "One Fact You Should Know"
-
     ];
-
-
     const supportOptions = [
-
       "Here is something worth knowing.",
-
       "This simple fact is more interesting than it looks.",
-
       "You might be surprised by this information.",
-
       "A fascinating fact you probably haven't heard before."
-
     ];
-
-
     let headline =
-      headlineOptions[
-        Math.floor(
-          Math.random() *
-          headlineOptions.length
-        )
-      ];
-
-
+    headlineOptions[
+      Math.floor(
+        Math.random()*
+        headlineOptions.length
+      )
+    ];
     let supporting =
-      supportOptions[
-        Math.floor(
-          Math.random() *
-          supportOptions.length
-        )
-      ];
-
-
+    supportOptions[
+      Math.floor(
+        Math.random()*
+        supportOptions.length
+      )
+    ];
     if(
       headline.toLowerCase() ===
       oldHeadline.toLowerCase()
     ){
-
       headline =
-        headlineOptions[
-          (
-            headlineOptions.indexOf(
-              headline
-            ) + 1
-          ) %
-          headlineOptions.length
-        ];
-
+      headlineOptions[
+        (headlineOptions.indexOf(headline)+1)
+        %
+        headlineOptions.length
+      ];
     }
-
-
     if(
       supporting.toLowerCase() ===
       oldSupporting.toLowerCase()
     ){
-
       supporting =
-        supportOptions[
-          (
-            supportOptions.indexOf(
-              supporting
-            ) + 1
-          ) %
-          supportOptions.length
-        ];
-
+      supportOptions[
+        (supportOptions.indexOf(supporting)+1)
+        %
+        supportOptions.length
+      ];
     }
-
-
     headlineInput.value =
-      headline;
-
+    headline;
     supportingInput.value =
-      supporting;
-
+    supporting;
     drawCanvas();
-
   }
 );
-
-
 /* =========================================================
    IMAGE SOURCE
 ========================================================= */
-
 imageSource.addEventListener(
   "change",
   ()=>{
-
     if(
       imageSource.value ===
       "gallery"
     ){
-
       galleryBox.style.display =
-        "block";
-
+      "block";
       promptBox.style.display =
-        "none";
-
+      "none";
     }else{
-
       galleryBox.style.display =
-        "none";
-
+      "none";
       promptBox.style.display =
-        "block";
-
+      "block";
     }
-
   }
 );
-
-
 /* =========================================================
-   GALLERY
+   GALLERY IMAGE
 ========================================================= */
-
 galleryInput.addEventListener(
   "change",
   async()=>{
-
     const file =
-      galleryInput.files[0];
-
-    if(!file) return;
-
+    galleryInput.files[0];
+    if(!file)
+      return;
     galleryImageData =
-      await readFile(file);
-
+    await readFile(file);
     generatedImageData =
-      galleryImageData;
-
+    galleryImageData;
     imageStatus.textContent =
-      "Gallery image loaded.";
-
+    "Gallery image loaded.";
     drawCanvas();
-
   }
 );
-
-
 /* =========================================================
    AI IMAGE GENERATION
 ========================================================= */
-
 async function generateAIImage(
   customPrompt=""
 ){
-
   if(!referenceImageData){
-
     throw new Error(
       "Upload a reference image first."
     );
-
   }
-
-
   imageStatus.textContent =
-    "Generating AI image...";
-
-
+  "Generating AI image...";
   changeImageBtn.disabled =
-    true;
-
+  true;
   generatePromptBtn.disabled =
-    true;
-
-
+  true;
   let layoutDescription =
-    "";
-
-
+  "";
   if(analysisData){
-
     layoutDescription =
-      JSON.stringify({
-
-        layout:
-          analysisData.overall_layout,
-
-        imageArea:
-          analysisData.main_image_area,
-
-        composition:
-          analysisData.composition,
-
-        designNotes:
-          analysisData.design_notes
-
-      });
-
+    JSON.stringify({
+      layout:
+      analysisData.overall_layout,
+      imageArea:
+      analysisData.main_image_area,
+      composition:
+      analysisData.composition,
+      designNotes:
+      analysisData.design_notes
+    });
   }
-
-
   const headline =
-    headlineInput.value.trim();
-
+  headlineInput.value.trim();
   const supporting =
-    supportingInput.value.trim();
-
-
+  supportingInput.value.trim();
   let prompt;
-
-
   if(customPrompt){
-
     prompt =
-      customPrompt;
-
+    customPrompt;
   }else{
-
     prompt = `
 Create a completely new original image
 for an Instagram fact post.
-
 The image should visually fit the
 reference post's composition.
-
 IMPORTANT:
-
 Do not create text.
 Do not create letters.
 Do not create logos.
 Do not create watermarks.
-
 The final text will be added separately
 by the website.
-
 Headline concept:
-
 ${headline}
-
 Supporting concept:
-
 ${supporting}
-
 Reference layout information:
-
 ${layoutDescription}
-
 Create a visually attractive,
 photorealistic or highly suitable image
 for an Instagram facts page.
-
 Make the image different from the
 reference image while preserving the
 general visual composition.
 `;
-
   }
-
-
   try{
-
     const widthHeight =
-      getSize();
-
-
+    getSize();
     const response =
-      await fetch(
-        GENERATE_URL,
-        {
-          method:"POST",
-
-          headers:{
-            "Content-Type":
-              "application/json"
-          },
-
-          body:JSON.stringify({
-
-            prompt:
-              prompt,
-
-            referenceImage:
-              referenceImageData,
-
-            width:
-              widthHeight.width,
-
-            height:
-              widthHeight.height
-
-          })
-
-        }
-      );
-
-
+    await fetch(
+      GENERATE_URL,
+      {
+        method:"POST",
+        headers:{
+          "Content-Type":
+          "application/json"
+        },
+        body:JSON.stringify({
+          prompt:
+          prompt,
+          referenceImage:
+          referenceImageData,
+          pageFormatReference:
+          pageFormatReference,
+          width:
+          widthHeight.width,
+          height:
+          widthHeight.height
+        })
+      }
+    );
     const data =
-      await response.json();
-
-
+    await response.json();
     if(
       !response.ok ||
-      data.success === false
+      data.success===false
     ){
-
       throw new Error(
         data.error ||
         "Image generation failed"
       );
-
     }
-
-
-    if(
-      !data.image
-    ){
-
+    if(!data.image){
       throw new Error(
         "No image returned by AI."
       );
-
     }
-
-
     generatedImageData =
-      data.image;
-
-
+    data.image;
     imageStatus.innerHTML =
-      '<span class="success">✓ AI image generated.</span>';
-
-
+    '<span class="success">✓ AI image generated.</span>';
     drawCanvas();
-
-
   }catch(error){
-
     console.error(error);
-
-
     imageStatus.innerHTML =
-      '<span class="error">' +
-      escapeHtml(
-        error.message
-      ) +
-      '</span>';
-
+    '<span class="error">'+
+    escapeHtml(error.message)+
+    '</span>';
   }
-
-
   changeImageBtn.disabled =
-    false;
-
+  false;
   generatePromptBtn.disabled =
-    false;
-
+  false;
 }
-
-
 /* =========================================================
    CHANGE IMAGE
 ========================================================= */
-
 changeImageBtn.addEventListener(
   "click",
   async()=>{
-
     try{
-
       await generateAIImage();
-
     }catch(error){
-
       console.error(error);
-
     }
-
   }
 );
-
-
 /* =========================================================
-   PROMPT IMAGE
+   PROMPT GENERATION
 ========================================================= */
-
 generatePromptBtn.addEventListener(
   "click",
   async()=>{
-
     const prompt =
-      imagePrompt.value.trim();
-
-
+    imagePrompt.value.trim();
     if(!prompt){
-
       imageStatus.textContent =
-        "Enter an image prompt first.";
-
+      "Enter an image prompt first.";
       return;
-
     }
-
-
     await generateAIImage(
       prompt
     );
-
   }
 );
-
-
 /* =========================================================
    FONT
 ========================================================= */
-
 fontInput.addEventListener(
   "change",
   async()=>{
-
     const file =
-      fontInput.files[0];
-
-    if(!file) return;
-
-
+    fontInput.files[0];
+    if(!file)
+      return;
     uploadedFont =
-      await readFile(file);
-
-
+    await readFile(file);
     fontFamily =
-      "UploadedFont";
-
-
+    "UploadedFont";
     const style =
-      document.createElement(
-        "style"
-      );
-
-
+    document.createElement(
+      "style"
+    );
     style.innerHTML = `
       @font-face{
-
         font-family:
-          UploadedFont;
-
+        UploadedFont;
         src:
-          url("${uploadedFont}");
-
+        url("${uploadedFont}");
       }
     `;
-
-
     document.head.appendChild(
       style
     );
-
-
+    try{
+      saveSetting(
+        "aiPostMaker_font",
+        uploadedFont
+      );
+      fontSaved.style.display =
+      "block";
+    }catch(error){
+      console.warn(error);
+    }
     drawCanvas();
-
   }
 );
-
-
 /* =========================================================
    WATERMARK
 ========================================================= */
-
 watermarkInput.addEventListener(
   "change",
   async()=>{
-
     const file =
-      watermarkInput.files[0];
-
-    if(!file) return;
-
-
+    watermarkInput.files[0];
+    if(!file)
+      return;
     const data =
-      await readFile(file);
-
-
+    await readFile(file);
+    saveSetting(
+      "aiPostMaker_watermark",
+      data
+    );
     watermarkImage =
-      new Image();
-
-
+    new Image();
     watermarkImage.onload =
-      () => drawCanvas();
-
-
+    ()=>{
+      watermarkSaved.style.display =
+      "block";
+      drawCanvas();
+    };
     watermarkImage.src =
-      data;
-
+    data;
   }
 );
-
-
+/* =========================================================
+   WATERMARK SETTINGS
+========================================================= */
 watermarkPosition.addEventListener(
   "change",
-  drawCanvas
+  ()=>{
+    saveSetting(
+      "aiPostMaker_watermarkPosition",
+      watermarkPosition.value
+    );
+    drawCanvas();
+  }
 );
-
-
 watermarkSize.addEventListener(
   "input",
-  drawCanvas
+  ()=>{
+    saveSetting(
+      "aiPostMaker_watermarkSize",
+      watermarkSize.value
+    );
+    drawCanvas();
+  }
 );
-
-
 watermarkOpacity.addEventListener(
   "input",
-  drawCanvas
+  ()=>{
+    saveSetting(
+      "aiPostMaker_watermarkOpacity",
+      watermarkOpacity.value
+    );
+    drawCanvas();
+  }
 );
-
-
 /* =========================================================
    IMAGE SIZE
 ========================================================= */
-
 imageSize.addEventListener(
   "change",
   ()=>{
-
     customSize.style.display =
-      imageSize.value === "custom"
-        ? "flex"
-        : "none";
-
-
+    imageSize.value === "custom"
+    ?
+    "flex"
+    :
+    "none";
+    saveSetting(
+      "aiPostMaker_imageSize",
+      imageSize.value
+    );
     drawCanvas();
-
   }
 );
-
-
 customWidth.addEventListener(
   "input",
-  drawCanvas
+  ()=>{
+    saveSetting(
+      "aiPostMaker_customWidth",
+      customWidth.value
+    );
+    drawCanvas();
+  }
 );
-
-
 customHeight.addEventListener(
   "input",
-  drawCanvas
+  ()=>{
+    saveSetting(
+      "aiPostMaker_customHeight",
+      customHeight.value
+    );
+    drawCanvas();
+  }
 );
-
-
 /* =========================================================
    TEXT STYLE
 ========================================================= */
-
 headlineSize.addEventListener(
   "input",
-  drawCanvas
+  ()=>{
+    saveSetting(
+      "aiPostMaker_headlineSize",
+      headlineSize.value
+    );
+    drawCanvas();
+  }
 );
-
-
 textAlignment.addEventListener(
   "change",
-  drawCanvas
+  ()=>{
+    saveSetting(
+      "aiPostMaker_textAlignment",
+      textAlignment.value
+    );
+    drawCanvas();
+  }
 );
-
-
 headlineInput.addEventListener(
   "input",
   drawCanvas
 );
-
-
 supportingInput.addEventListener(
   "input",
   drawCanvas
 );
-
-
 /* =========================================================
-   SIZE HELPER
+   CAROUSEL
 ========================================================= */
-
+carouselEnabled.addEventListener(
+  "change",
+  ()=>{
+    saveSetting(
+      "aiPostMaker_carouselEnabled",
+      carouselEnabled.checked
+    );
+  }
+);
+carouselPosition.addEventListener(
+  "change",
+  ()=>{
+    saveSetting(
+      "aiPostMaker_carouselPosition",
+      carouselPosition.value
+    );
+  }
+);
+/* =========================================================
+   GET SIZE
+========================================================= */
 function getSize(){
-
   if(
     imageSize.value ===
     "custom"
   ){
-
-    return {
-
+    return{
       width:
-        parseInt(
-          customWidth.value
-        ) || 1080,
-
+      parseInt(
+        customWidth.value
+      ) || 1080,
       height:
-        parseInt(
-          customHeight.value
-        ) || 1080
-
+      parseInt(
+        customHeight.value
+      ) || 1080
     };
-
   }
-
-
   const [
     width,
     height
   ] =
-    imageSize.value
-      .split("x")
-      .map(Number);
-
-
-  return {
+  imageSize.value
+  .split("x")
+  .map(Number);
+  return{
     width,
     height
   };
-
 }
-
-
 /* =========================================================
    CANVAS
 ========================================================= */
-
 async function drawCanvas(){
-
   const size =
-    getSize();
-
-
+  getSize();
   canvas.width =
-    size.width;
-
+  size.width;
   canvas.height =
-    size.height;
-
-
+  size.height;
   ctx.clearRect(
     0,
     0,
     canvas.width,
     canvas.height
   );
-
-
   ctx.fillStyle =
-    "#ffffff";
-
-
+  "#ffffff";
   ctx.fillRect(
     0,
     0,
     canvas.width,
     canvas.height
   );
-
-
   if(generatedImageData){
-
     const img =
-      new Image();
-
-
+    new Image();
     img.onload =
-      () => {
-
-        drawImageWithLayout(
-          img
-        );
-
-        drawText();
-
-        drawWatermark();
-
-      };
-
-
+    ()=>{
+      drawImageWithLayout(
+        img
+      );
+      drawText();
+      drawWatermark();
+    };
     img.onerror =
-      () => {
-
-        console.error(
-          "Could not load generated image."
-        );
-
-      };
-
-
+    ()=>{
+      console.error(
+        "Could not load generated image."
+      );
+    };
     img.src =
-      generatedImageData;
-
-
+    generatedImageData;
   }else{
-
     drawPlaceholder();
-
     drawText();
-
     drawWatermark();
-
   }
-
 }
-
-
 /* =========================================================
-   IMAGE LAYOUT
+   DRAW IMAGE
 ========================================================= */
-
 function drawImageWithLayout(
   img
 ){
-
-  let area = null;
-
-
+  let area =
+  null;
   if(
     analysisData &&
     analysisData.main_image_area
   ){
-
     area =
-      analysisData.main_image_area;
-
+    analysisData.main_image_area;
   }
-
-
   if(area){
-
     const x =
-      canvas.width *
-      ((area.x || 0)/100);
-
-
+    canvas.width *
+    (
+      (area.x||0)/100
+    );
     const y =
-      canvas.height *
-      ((area.y || 0)/100);
-
-
+    canvas.height *
+    (
+      (area.y||0)/100
+    );
     const w =
-      canvas.width *
-      ((area.width || 100)/100);
-
-
+    canvas.width *
+    (
+      (area.width||100)/100
+    );
     const h =
-      canvas.height *
-      ((area.height || 100)/100);
-
-
+    canvas.height *
+    (
+      (area.height||100)/100
+    );
     drawCover(
       img,
       x,
@@ -2121,10 +1665,7 @@ function drawImageWithLayout(
       w,
       h
     );
-
-
   }else{
-
     drawCover(
       img,
       0,
@@ -2132,16 +1673,11 @@ function drawImageWithLayout(
       canvas.width,
       canvas.height
     );
-
   }
-
 }
-
-
 /* =========================================================
    COVER IMAGE
 ========================================================= */
-
 function drawCover(
   img,
   x,
@@ -2149,76 +1685,50 @@ function drawCover(
   w,
   h
 ){
-
   const imageRatio =
-    img.width /
-    img.height;
-
-
+  img.width /
+  img.height;
   const boxRatio =
-    w / h;
-
-
+  w / h;
   let drawWidth;
-
   let drawHeight;
-
-
   if(
     imageRatio >
     boxRatio
   ){
-
     drawHeight =
-      h;
-
+    h;
     drawWidth =
-      h *
-      imageRatio;
-
+    h *
+    imageRatio;
   }else{
-
     drawWidth =
-      w;
-
+    w;
     drawHeight =
-      w /
-      imageRatio;
-
+    w /
+    imageRatio;
   }
-
-
   const dx =
-    x +
-    (w -
-    drawWidth) /
-    2;
-
-
+  x +
+  (
+    w -
+    drawWidth
+  )/2;
   const dy =
-    y +
-    (h -
-    drawHeight) /
-    2;
-
-
+  y +
+  (
+    h -
+    drawHeight
+  )/2;
   ctx.save();
-
-
   ctx.beginPath();
-
-
   ctx.rect(
     x,
     y,
     w,
     h
   );
-
-
   ctx.clip();
-
-
   ctx.drawImage(
     img,
     dx,
@@ -2226,158 +1736,101 @@ function drawCover(
     drawWidth,
     drawHeight
   );
-
-
   ctx.restore();
-
 }
-
-
 /* =========================================================
    PLACEHOLDER
 ========================================================= */
-
 function drawPlaceholder(){
-
   ctx.fillStyle =
-    "#eeeeee";
-
-
+  "#eeeeee";
   ctx.fillRect(
     0,
     0,
     canvas.width,
     canvas.height
   );
-
-
   ctx.fillStyle =
-    "#888";
-
-
+  "#888";
   ctx.textAlign =
-    "center";
-
-
+  "center";
   ctx.font =
-    "40px Arial";
-
-
+  "40px Arial";
   ctx.fillText(
     "Generate an image",
     canvas.width/2,
     canvas.height/2
   );
-
 }
-
-
 /* =========================================================
-   TEXT
+   DRAW TEXT
 ========================================================= */
-
 function drawText(){
-
   const headline =
-    headlineInput.value.trim();
-
-
+  headlineInput.value.trim();
   const supporting =
-    supportingInput.value.trim();
-
-
+  supportingInput.value.trim();
   const blocks =
-    analysisData?.text_blocks ||
-    [];
-
-
+  analysisData?.text_blocks ||
+  [];
   const headlineBlock =
-    blocks.find(
-      x =>
-        x.type === "headline"
-    );
-
-
+  blocks.find(
+    x=>x.type==="headline"
+  );
   const supportingBlock =
-    blocks.find(
-      x =>
-        x.type === "supporting" ||
-        x.type === "body"
-    );
-
-
-  /* HEADLINE */
-
+  blocks.find(
+    x=>
+    x.type==="supporting" ||
+    x.type==="body"
+  );
   if(headline){
-
     let x =
-      canvas.width / 2;
-
-
+    canvas.width/2;
     let y =
-      canvas.height * .15;
-
-
+    canvas.height*.15;
     let width =
-      canvas.width * .9;
-
-
+    canvas.width*.9;
     let align =
-      textAlignment.value;
-
-
+    textAlignment.value;
     if(headlineBlock){
-
       x =
-        canvas.width *
-        ((headlineBlock.x || 50)/100);
-
-
+      canvas.width *
+      (
+        (headlineBlock.x||50)/
+        100
+      );
       y =
-        canvas.height *
-        ((headlineBlock.y || 15)/100);
-
-
+      canvas.height *
+      (
+        (headlineBlock.y||15)/
+        100
+      );
       width =
-        canvas.width *
-        ((headlineBlock.width || 90)/100);
-
-
+      canvas.width *
+      (
+        (headlineBlock.width||90)/
+        100
+      );
       align =
-        headlineBlock.alignment ||
-        align;
-
-    }
-
-
-    ctx.fillStyle =
-      headlineBlock?.color ||
-      "#ffffff";
-
-
-    ctx.font =
-      "bold " +
-      headlineSize.value +
-      "px " +
-      fontFamily;
-
-
-    ctx.textAlign =
+      headlineBlock.alignment ||
       align;
-
-
+    }
+    ctx.fillStyle =
+    headlineBlock?.color ||
+    "#ffffff";
+    ctx.font =
+    "bold " +
+    headlineSize.value +
+    "px " +
+    fontFamily;
+    ctx.textAlign =
+    align;
     ctx.textBaseline =
-      "top";
-
-
+    "top";
     ctx.shadowColor =
-      "rgba(0,0,0,.45)";
-
-
+    "rgba(0,0,0,.45)";
     ctx.shadowBlur =
-      8;
-
-
+    8;
     wrapText(
       headline,
       x,
@@ -2385,93 +1838,64 @@ function drawText(){
       width,
       parseInt(
         headlineSize.value
-      ) * 1.15,
+      )*1.15,
       align
     );
-
-
     ctx.shadowBlur =
-      0;
-
+    0;
   }
-
-
-  /* SUPPORTING */
-
   if(supporting){
-
     let x =
-      canvas.width / 2;
-
-
+    canvas.width/2;
     let y =
-      canvas.height * .3;
-
-
+    canvas.height*.3;
     let width =
-      canvas.width * .85;
-
-
+    canvas.width*.85;
     let align =
-      textAlignment.value;
-
-
+    textAlignment.value;
     if(supportingBlock){
-
       x =
-        canvas.width *
-        ((supportingBlock.x || 50)/100);
-
-
+      canvas.width *
+      (
+        (supportingBlock.x||50)/
+        100
+      );
       y =
-        canvas.height *
-        ((supportingBlock.y || 30)/100);
-
-
+      canvas.height *
+      (
+        (supportingBlock.y||30)/
+        100
+      );
       width =
-        canvas.width *
-        ((supportingBlock.width || 85)/100);
-
-
+      canvas.width *
+      (
+        (supportingBlock.width||85)/
+        100
+      );
       align =
-        supportingBlock.alignment ||
-        align;
-
-    }
-
-
-    ctx.fillStyle =
-      supportingBlock?.color ||
-      "#ffffff";
-
-
-    ctx.font =
-      Math.max(
-        28,
-        parseInt(
-          headlineSize.value
-        ) * .42
-      ) +
-      "px " +
-      fontFamily;
-
-
-    ctx.textAlign =
+      supportingBlock.alignment ||
       align;
-
-
+    }
+    ctx.fillStyle =
+    supportingBlock?.color ||
+    "#ffffff";
+    ctx.font =
+    Math.max(
+      28,
+      parseInt(
+        headlineSize.value
+      )*.42
+    ) +
+    "px " +
+    fontFamily;
+    ctx.textAlign =
+    align;
     ctx.textBaseline =
-      "top";
-
-
+    "top";
     ctx.shadowColor =
-      "rgba(0,0,0,.45)";
-
-
+    "rgba(0,0,0,.45)";
     ctx.shadowBlur =
-      6;
-
-
+    6;
     wrapText(
       supporting,
       x,
@@ -2481,24 +1905,17 @@ function drawText(){
         28,
         parseInt(
           headlineSize.value
-        ) * .55
+        )*.55
       ),
       align
     );
-
-
     ctx.shadowBlur =
-      0;
-
+    0;
   }
-
 }
-
-
 /* =========================================================
    WRAP TEXT
 ========================================================= */
-
 function wrapText(
   text,
   x,
@@ -2507,72 +1924,51 @@ function wrapText(
   lineHeight,
   align
 ){
-
   const words =
-    text.split(" ");
-
-
-  let line = "";
-
-
-  const lines = [];
-
-
+  text.split(" ");
+  let line =
+  "";
+  const lines =
+  [];
   for(
-    let i = 0;
-    i < words.length;
+    let i=0;
+    i<words.length;
     i++
   ){
-
     const test =
-      line +
-      words[i] +
-      " ";
-
-
+    line +
+    words[i] +
+    " ";
     const metrics =
-      ctx.measureText(
-        test
-      );
-
-
+    ctx.measureText(
+      test
+    );
     if(
       metrics.width >
       maxWidth &&
       line
     ){
-
       lines.push(
         line.trim()
       );
-
-
       line =
-        words[i] +
-        " ";
-
+      words[i] +
+      " ";
     }else{
-
       line =
-        test;
-
+      test;
     }
-
   }
-
-
   if(line){
-
     lines.push(
       line.trim()
     );
-
   }
-
-
   lines.forEach(
-    (lineText,index)=>{
-
+    (
+      lineText,
+      index
+    )=>{
       ctx.fillText(
         lineText,
         x,
@@ -2580,118 +1976,73 @@ function wrapText(
         index *
         lineHeight
       );
-
     }
   );
-
 }
-
-
 /* =========================================================
    WATERMARK
 ========================================================= */
-
 function drawWatermark(){
-
   if(!watermarkImage)
     return;
-
-
   const size =
-    parseInt(
-      watermarkSize.value
-    ) || 120;
-
-
+  parseInt(
+    watermarkSize.value
+  ) ||
+  120;
   const ratio =
-    watermarkImage.width /
-    watermarkImage.height;
-
-
+  watermarkImage.width /
+  watermarkImage.height;
   const width =
-    size;
-
-
+  size;
   const height =
-    size /
-    ratio;
-
-
+  size /
+  ratio;
   const margin =
-    canvas.width *
-    .03;
-
-
+  canvas.width*.03;
   let x;
-
   let y;
-
-
   switch(
     watermarkPosition.value
   ){
-
     case "top-left":
-
       x =
-        margin;
-
+      margin;
       y =
-        margin;
-
+      margin;
       break;
-
-
     case "bottom-left":
-
       x =
-        margin;
-
+      margin;
       y =
-        canvas.height -
-        height -
-        margin;
-
+      canvas.height -
+      height -
+      margin;
       break;
-
-
     case "bottom-right":
-
       x =
-        canvas.width -
-        width -
-        margin;
-
+      canvas.width -
+      width -
+      margin;
       y =
-        canvas.height -
-        height -
-        margin;
-
+      canvas.height -
+      height -
+      margin;
       break;
-
-
     default:
-
       x =
-        canvas.width -
-        width -
-        margin;
-
+      canvas.width -
+      width -
+      margin;
       y =
-        margin;
-
+      margin;
   }
-
-
   ctx.save();
-
-
   ctx.globalAlpha =
-    parseInt(
-      watermarkOpacity.value
-    ) / 100;
-
-
+  parseInt(
+    watermarkOpacity.value
+  ) /
+  100;
   ctx.drawImage(
     watermarkImage,
     x,
@@ -2699,100 +2050,214 @@ function drawWatermark(){
     width,
     height
   );
-
-
   ctx.restore();
-
 }
-
-
 /* =========================================================
    DOWNLOAD
 ========================================================= */
-
 document.getElementById(
   "downloadBtn"
 ).addEventListener(
   "click",
   ()=>{
-
     drawCanvas();
-
-
     setTimeout(
       ()=>{
-
         const link =
-          document.createElement(
-            "a"
-          );
-
-
+        document.createElement(
+          "a"
+        );
         link.download =
-          "ai-post-maker.png";
-
-
+        "ai-post-maker.png";
         link.href =
-          canvas.toDataURL(
-            "image/png"
-          );
-
-
+        canvas.toDataURL(
+          "image/png"
+        );
         link.click();
-
       },
       500
     );
-
   }
 );
-
-
 /* =========================================================
    ESCAPE HTML
 ========================================================= */
-
 function escapeHtml(
   value
 ){
-
   return String(value)
-
     .replace(
       /&/g,
       "&amp;"
     )
-
     .replace(
       /</g,
       "&lt;"
     )
-
     .replace(
       />/g,
       "&gt;"
     )
-
     .replace(
       /"/g,
       "&quot;"
     )
-
     .replace(
       /'/g,
       "&#039;"
     );
-
 }
-
-
 /* =========================================================
-   INITIAL DRAW
+   LOAD SAVED SETTINGS
 ========================================================= */
-
+async function loadSavedSettings(){
+  /* Page format */
+  await loadSavedPageFormat();
+  /* Font */
+  const savedFont =
+  getSetting(
+    "aiPostMaker_font"
+  );
+  if(savedFont){
+    uploadedFont =
+    savedFont;
+    fontFamily =
+    "UploadedFont";
+    const style =
+    document.createElement(
+      "style"
+    );
+    style.innerHTML = `
+      @font-face{
+        font-family:
+        UploadedFont;
+        src:
+        url("${savedFont}");
+      }
+    `;
+    document.head.appendChild(
+      style
+    );
+    fontSaved.style.display =
+    "block";
+  }
+  /* Watermark */
+  const savedWatermark =
+  getSetting(
+    "aiPostMaker_watermark"
+  );
+  if(savedWatermark){
+    watermarkImage =
+    new Image();
+    watermarkImage.onload =
+    ()=>{
+      watermarkSaved.style.display =
+      "block";
+      drawCanvas();
+    };
+    watermarkImage.src =
+    savedWatermark;
+  }
+  /* Watermark position */
+  const savedPosition =
+  getSetting(
+    "aiPostMaker_watermarkPosition"
+  );
+  if(savedPosition){
+    watermarkPosition.value =
+    savedPosition;
+  }
+  /* Watermark size */
+  const savedSize =
+  getSetting(
+    "aiPostMaker_watermarkSize"
+  );
+  if(savedSize){
+    watermarkSize.value =
+    savedSize;
+  }
+  /* Watermark opacity */
+  const savedOpacity =
+  getSetting(
+    "aiPostMaker_watermarkOpacity"
+  );
+  if(savedOpacity){
+    watermarkOpacity.value =
+    savedOpacity;
+  }
+  /* Image size */
+  const savedImageSize =
+  getSetting(
+    "aiPostMaker_imageSize"
+  );
+  if(savedImageSize){
+    imageSize.value =
+    savedImageSize;
+    customSize.style.display =
+    savedImageSize === "custom"
+    ?
+    "flex"
+    :
+    "none";
+  }
+  /* Custom dimensions */
+  const savedWidth =
+  getSetting(
+    "aiPostMaker_customWidth"
+  );
+  if(savedWidth){
+    customWidth.value =
+    savedWidth;
+  }
+  const savedHeight =
+  getSetting(
+    "aiPostMaker_customHeight"
+  );
+  if(savedHeight){
+    customHeight.value =
+    savedHeight;
+  }
+  /* Headline size */
+  const savedHeadlineSize =
+  getSetting(
+    "aiPostMaker_headlineSize"
+  );
+  if(savedHeadlineSize){
+    headlineSize.value =
+    savedHeadlineSize;
+  }
+  /* Alignment */
+  const savedAlignment =
+  getSetting(
+    "aiPostMaker_textAlignment"
+  );
+  if(savedAlignment){
+    textAlignment.value =
+    savedAlignment;
+  }
+  /* Carousel */
+  const savedCarousel =
+  getSetting(
+    "aiPostMaker_carouselEnabled"
+  );
+  if(savedCarousel !== null){
+    carouselEnabled.checked =
+    savedCarousel === "true";
+  }
+  const savedCarouselPosition =
+  getSetting(
+    "aiPostMaker_carouselPosition"
+  );
+  if(savedCarouselPosition){
+    carouselPosition.value =
+    savedCarouselPosition;
+  }
+}
+/* =========================================================
+   START APP
+========================================================= */
+loadSavedSettings();
 drawCanvas();
-
 </script>
-
 </body>
 </html>
