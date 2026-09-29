@@ -182,6 +182,12 @@ canvas{
   background:#eee;
   margin:18px 0;
 }
+
+.choice-title{
+  font-weight:700;
+  margin-top:15px;
+  margin-bottom:5px;
+}
 </style>
 </head>
 
@@ -241,6 +247,26 @@ AI will remove the visible text from the reference image while trying to preserv
   class="preview clean-preview"
   style="display:none"
 >
+
+<div
+  id="referenceChoiceButtons"
+  style="display:none"
+  class="row"
+>
+  <button
+    id="useOriginalBtn"
+    class="secondary"
+  >
+    Use Original
+  </button>
+
+  <button
+    id="useCleanedBtn"
+    class="green"
+  >
+    Use Cleaned Image
+  </button>
+</div>
 
 <div
   id="removeTextStatus"
@@ -578,7 +604,6 @@ Download PNG
 
 <script>
 
-
 /* =========================================================
    SUPABASE FUNCTIONS
 ========================================================= */
@@ -598,6 +623,8 @@ const REMOVE_TEXT_URL =
 ========================================================= */
 
 let referenceImageData = null;
+
+let originalReferenceData = null;
 
 let cleanedReferenceData = null;
 
@@ -632,6 +659,15 @@ document.getElementById("removeTextBtn");
 
 const cleanedPreview =
 document.getElementById("cleanedPreview");
+
+const referenceChoiceButtons =
+document.getElementById("referenceChoiceButtons");
+
+const useOriginalBtn =
+document.getElementById("useOriginalBtn");
+
+const useCleanedBtn =
+document.getElementById("useCleanedBtn");
 
 const removeTextStatus =
 document.getElementById("removeTextStatus");
@@ -758,25 +794,26 @@ referenceInput.addEventListener(
 
     if(!file) return;
 
-    referenceImageData =
+    originalReferenceData =
       await readFile(file);
 
-    /*
-      New reference means the
-      previous cleaned image is no
-      longer relevant.
-    */
+    referenceImageData =
+      originalReferenceData;
 
-    cleanedReferenceData = null;
+    cleanedReferenceData =
+      null;
 
     cleanedPreview.style.display =
+      "none";
+
+    referenceChoiceButtons.style.display =
       "none";
 
     removeTextStatus.textContent =
       "Original reference is unchanged.";
 
     referencePreview.src =
-      referenceImageData;
+      originalReferenceData;
 
     referencePreview.style.display =
       "block";
@@ -789,11 +826,6 @@ referenceInput.addEventListener(
 
     analysisData =
       null;
-
-    /*
-      Clear generated image so the
-      new reference starts clean.
-    */
 
     generatedImageData =
       null;
@@ -885,10 +917,6 @@ analyzeBtn.addEventListener(
       );
 
 
-      /*
-        Use actual detected text.
-      */
-
       if(blocks.length){
 
         const headline =
@@ -926,10 +954,6 @@ analyzeBtn.addEventListener(
 
         }
 
-
-        /*
-          Fallback to first blocks.
-        */
 
         if(
           !headlineInput.value &&
@@ -988,7 +1012,7 @@ removeTextBtn.addEventListener(
   "click",
   async()=>{
 
-    if(!referenceImageData){
+    if(!originalReferenceData){
 
       removeTextStatus.innerHTML =
         '<span class="error">Please upload a reference image first.</span>';
@@ -1021,7 +1045,7 @@ removeTextBtn.addEventListener(
             body:JSON.stringify({
 
               image:
-                referenceImageData
+                originalReferenceData
 
             })
           }
@@ -1054,17 +1078,9 @@ removeTextBtn.addEventListener(
       }
 
 
-      /*
-        Save cleaned image.
-      */
-
       cleanedReferenceData =
         data.image;
 
-
-      /*
-        Show cleaned preview.
-      */
 
       cleanedPreview.src =
         cleanedReferenceData;
@@ -1073,44 +1089,22 @@ removeTextBtn.addEventListener(
         "block";
 
 
+      referenceChoiceButtons.style.display =
+        "flex";
+
+
       /*
         IMPORTANT:
-        The cleaned image becomes
-        the current reference image.
+        Keep originalReferenceData
+        unchanged.
+
+        The cleaned image is NOT
+        automatically selected.
       */
-
-      referenceImageData =
-        cleanedReferenceData;
-
-
-      /*
-        Update normal reference
-        preview as well.
-      */
-
-      referencePreview.src =
-        cleanedReferenceData;
-
-
-      /*
-        Any generated image from
-        the previous reference should
-        be cleared.
-      */
-
-      generatedImageData =
-        null;
-
-
-      imageStatus.textContent =
-        "Reference cleaned. Ready to generate a new image.";
 
 
       removeTextStatus.innerHTML =
-        '<span class="success">✓ Original text removed successfully.</span>';
-
-
-      drawCanvas();
+        '<span class="success">✓ Original text removed successfully. Choose which reference to use below.</span>';
 
 
     }catch(error){
@@ -1133,6 +1127,88 @@ removeTextBtn.addEventListener(
 
     removeTextBtn.disabled =
       false;
+
+  }
+);
+
+
+/* =========================================================
+   USE ORIGINAL
+========================================================= */
+
+useOriginalBtn.addEventListener(
+  "click",
+  ()=>{
+
+    if(!originalReferenceData)
+      return;
+
+
+    referenceImageData =
+      originalReferenceData;
+
+
+    referencePreview.src =
+      originalReferenceData;
+
+    referencePreview.style.display =
+      "block";
+
+
+    generatedImageData =
+      null;
+
+
+    imageStatus.textContent =
+      "Original reference selected.";
+
+
+    removeTextStatus.innerHTML =
+      '<span class="success">✓ Original image selected.</span>';
+
+
+    drawCanvas();
+
+  }
+);
+
+
+/* =========================================================
+   USE CLEANED IMAGE
+========================================================= */
+
+useCleanedBtn.addEventListener(
+  "click",
+  ()=>{
+
+    if(!cleanedReferenceData)
+      return;
+
+
+    referenceImageData =
+      cleanedReferenceData;
+
+
+    referencePreview.src =
+      cleanedReferenceData;
+
+    referencePreview.style.display =
+      "block";
+
+
+    generatedImageData =
+      null;
+
+
+    imageStatus.textContent =
+      "Cleaned reference selected.";
+
+
+    removeTextStatus.innerHTML =
+      '<span class="success">✓ Cleaned image selected.</span>';
+
+
+    drawCanvas();
 
   }
 );
@@ -1222,7 +1298,7 @@ function displayAnalysis(
 
 
   blocks.forEach(
-    (block,index)=>{
+    (block)=>{
 
       html += `
         <div class="text-block">
@@ -1449,7 +1525,7 @@ async function generateAIImage(
   if(!referenceImageData){
 
     throw new Error(
-      "Upload and analyze a reference image first."
+      "Upload a reference image first."
     );
 
   }
@@ -1591,7 +1667,10 @@ general visual composition.
       await response.json();
 
 
-    if(!response.ok){
+    if(
+      !response.ok ||
+      data.success === false
+    ){
 
       throw new Error(
         data.error ||
