@@ -3,338 +3,229 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>AI Post Maker</title>
 
 <style>
-*{
-    box-sizing:border-box;
+* {
+  box-sizing: border-box;
 }
 
-body{
-    margin:0;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f5f7fb;
-    color:#111827;
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f5f7;
+  color: #111;
 }
 
-header{
-    background:#111827;
-    color:white;
-    padding:18px 20px;
-    position:sticky;
-    top:0;
-    z-index:10;
+header {
+  background: #111;
+  color: white;
+  padding: 18px;
+  text-align: center;
 }
 
-.header-inner{
-    max-width:1100px;
-    margin:auto;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
+header h1 {
+  margin: 0;
+  font-size: 24px;
 }
 
-.logo{
-    font-size:22px;
-    font-weight:800;
+header p {
+  margin: 6px 0 0;
+  color: #ccc;
+  font-size: 13px;
 }
 
-.badge{
-    background:#2563eb;
-    padding:7px 12px;
-    border-radius:20px;
-    font-size:12px;
+.container {
+  max-width: 900px;
+  margin: auto;
+  padding: 16px;
 }
 
-.container{
-    max-width:1100px;
-    margin:20px auto;
-    padding:0 15px;
+.card {
+  background: white;
+  border-radius: 14px;
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 3px 12px rgba(0,0,0,.07);
 }
 
-.card{
-    background:white;
-    border-radius:16px;
-    padding:20px;
-    margin-bottom:18px;
-    box-shadow:0 3px 15px rgba(0,0,0,.06);
+.card h2 {
+  margin-top: 0;
+  font-size: 19px;
 }
 
-.card h2{
-    margin:0 0 15px;
-    font-size:19px;
+label {
+  display: block;
+  font-weight: 600;
+  margin-top: 12px;
+  margin-bottom: 6px;
 }
 
-.card h3{
-    margin:15px 0 8px;
-    font-size:15px;
-}
-
-label{
-    display:block;
-    font-size:13px;
-    font-weight:700;
-    margin:12px 0 6px;
-}
-
-input[type="text"],
-input[type="number"],
+input,
+select,
 textarea,
-select{
-    width:100%;
-    padding:12px;
-    border:1px solid #d1d5db;
-    border-radius:10px;
-    font-size:14px;
-    outline:none;
+button {
+  width: 100%;
+  font-size: 15px;
+  border-radius: 9px;
 }
 
-textarea{
-    min-height:90px;
-    resize:vertical;
+input,
+select,
+textarea {
+  border: 1px solid #ccc;
+  padding: 10px;
+  background: white;
 }
 
-input:focus,
-textarea:focus,
-select:focus{
-    border-color:#2563eb;
+textarea {
+  min-height: 85px;
+  resize: vertical;
 }
 
-input[type="file"]{
-    width:100%;
-    padding:10px;
-    border:1px dashed #9ca3af;
-    border-radius:10px;
-    background:#f9fafb;
+button {
+  border: none;
+  padding: 12px;
+  margin-top: 10px;
+  background: #111;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
 }
 
-button{
-    border:none;
-    border-radius:10px;
-    padding:12px 16px;
-    font-weight:700;
-    cursor:pointer;
-    font-size:14px;
+button.secondary {
+  background: #e9e9e9;
+  color: #111;
 }
 
-button:disabled{
-    opacity:.55;
-    cursor:not-allowed;
+button.success {
+  background: #16803c;
 }
 
-.primary{
-    background:#2563eb;
-    color:white;
+button.warning {
+  background: #b56a00;
 }
 
-.secondary{
-    background:#e5e7eb;
-    color:#111827;
+button:disabled {
+  opacity: .5;
 }
 
-.success{
-    background:#16a34a;
-    color:white;
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
 }
 
-.danger{
-    background:#dc2626;
-    color:white;
+.preview-wrap {
+  text-align: center;
+  margin-top: 15px;
 }
 
-.button-row{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    margin-top:12px;
+#referencePreview {
+  max-width: 100%;
+  max-height: 450px;
+  border-radius: 10px;
+  display: none;
 }
 
-.grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:18px;
+.analysis-box {
+  background: #f6f7f8;
+  border-radius: 10px;
+  padding: 14px;
+  margin-top: 15px;
 }
 
-.preview-box{
-    background:#111827;
-    border-radius:14px;
-    padding:12px;
-    text-align:center;
+.analysis-item {
+  padding: 9px 0;
+  border-bottom: 1px solid #ddd;
 }
 
-.preview-box img{
-    max-width:100%;
-    max-height:350px;
-    border-radius:8px;
-    display:block;
-    margin:auto;
+.analysis-item:last-child {
+  border-bottom: none;
 }
 
-.canvas-wrap{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    background:#e5e7eb;
-    border-radius:15px;
-    padding:15px;
-    overflow:auto;
+.analysis-label {
+  font-size: 12px;
+  color: #777;
+  margin-bottom: 3px;
 }
 
-canvas{
-    max-width:100%;
-    height:auto;
-    display:block;
-    background:white;
-    box-shadow:0 4px 20px rgba(0,0,0,.15);
+.analysis-value {
+  font-weight: 600;
+  word-break: break-word;
 }
 
-.status{
-    margin-top:12px;
-    padding:12px;
-    border-radius:10px;
-    background:#f3f4f6;
-    font-size:13px;
-    white-space:pre-wrap;
+.text-block {
+  background: white;
+  border: 1px solid #ddd;
+  padding: 10px;
+  border-radius: 9px;
+  margin-top: 8px;
 }
 
-.status.success-status{
-    background:#dcfce7;
-    color:#166534;
+#canvasWrap {
+  text-align: center;
 }
 
-.status.error-status{
-    background:#fee2e2;
-    color:#991b1b;
+#postCanvas {
+  max-width: 100%;
+  height: auto;
+  border-radius: 10px;
+  background: #eee;
 }
 
-.analysis{
-    background:#f8fafc;
-    border:1px solid #e5e7eb;
-    border-radius:12px;
-    padding:12px;
-    margin-top:12px;
-    font-size:13px;
-    line-height:1.5;
-    max-height:350px;
-    overflow:auto;
+.status {
+  margin-top: 10px;
+  padding: 10px;
+  border-radius: 8px;
+  background: #f0f0f0;
+  font-size: 14px;
 }
 
-.source-buttons{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:10px;
+.status.error {
+  background: #ffe6e6;
+  color: #a00000;
 }
 
-.source-button{
-    background:#f3f4f6;
-    border:2px solid transparent;
-    padding:15px 8px;
-    text-align:center;
+.status.success {
+  background: #e6f8ec;
+  color: #116b2e;
 }
 
-.source-button.active{
-    border-color:#2563eb;
-    background:#eff6ff;
+.hidden {
+  display: none !important;
 }
 
-.source-button strong{
-    display:block;
-    margin-bottom:4px;
+.small {
+  font-size: 12px;
+  color: #777;
 }
 
-.small{
-    font-size:12px;
-    color:#6b7280;
+hr {
+  border: none;
+  border-top: 1px solid #eee;
+  margin: 18px 0;
 }
 
-.range-row{
-    display:flex;
-    gap:10px;
-    align-items:center;
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
 }
 
-.range-row input{
-    flex:1;
+.checkbox-row input {
+  width: auto;
 }
 
-.value{
-    min-width:45px;
-    text-align:right;
-    font-size:13px;
-    font-weight:bold;
-}
+@media (max-width: 600px) {
+  .row {
+    grid-template-columns: 1fr;
+  }
 
-.checkbox-row{
-    display:flex;
-    align-items:center;
-    gap:8px;
-    margin-top:12px;
-}
-
-.checkbox-row label{
-    margin:0;
-}
-
-.radio-row{
-    display:flex;
-    gap:15px;
-    flex-wrap:wrap;
-}
-
-.radio-row label{
-    font-weight:500;
-    margin:0;
-}
-
-#loading{
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.55);
-    z-index:100;
-    align-items:center;
-    justify-content:center;
-}
-
-.loading-box{
-    background:white;
-    border-radius:16px;
-    padding:25px;
-    text-align:center;
-    width:280px;
-}
-
-.spinner{
-    width:40px;
-    height:40px;
-    border:4px solid #ddd;
-    border-top-color:#2563eb;
-    border-radius:50%;
-    animation:spin 1s linear infinite;
-    margin:0 auto 15px;
-}
-
-@keyframes spin{
-    to{transform:rotate(360deg);}
-}
-
-@media(max-width:700px){
-    .grid{
-        grid-template-columns:1fr;
-    }
-
-    .source-buttons{
-        grid-template-columns:1fr;
-    }
-
-    .button-row button{
-        width:100%;
-    }
-
-    .header-inner{
-        gap:10px;
-    }
+  .card {
+    padding: 14px;
+  }
 }
 </style>
 </head>
@@ -342,360 +233,417 @@ canvas{
 <body>
 
 <header>
-    <div class="header-inner">
-        <div class="logo">AI Post Maker</div>
-        <div class="badge">AI FACT POST CREATOR</div>
-    </div>
+  <h1>AI Post Maker</h1>
+  <p>Create Instagram posts using your own branding</p>
 </header>
 
 <div class="container">
 
-<!-- BRAND SETUP -->
-<div class="card">
+  <!-- REFERENCE ANALYZER -->
+  <div class="card">
+    <h2>1. Reference Post Analyzer</h2>
+
+    <label>Upload Reference Instagram Post</label>
+    <input
+      type="file"
+      id="referenceInput"
+      accept="image/*"
+    >
+
+    <div class="preview-wrap">
+      <img id="referencePreview">
+    </div>
+
+    <button id="analyzeBtn">
+      Analyze Reference Layout
+    </button>
+
+    <div id="analysisStatus" class="status hidden"></div>
+
+    <div id="analysisBox" class="analysis-box hidden">
+
+      <div class="analysis-item">
+        <div class="analysis-label">Dimensions</div>
+        <div id="analysisDimensions" class="analysis-value">
+          -
+        </div>
+      </div>
+
+      <div class="analysis-item">
+        <div class="analysis-label">Overall Layout</div>
+        <div id="analysisLayout" class="analysis-value">
+          -
+        </div>
+      </div>
+
+      <div class="analysis-item">
+        <div class="analysis-label">Main Image Area</div>
+        <div id="analysisImageArea" class="analysis-value">
+          -
+        </div>
+      </div>
+
+      <div class="analysis-item">
+        <div class="analysis-label">Overlay</div>
+        <div id="analysisOverlay" class="analysis-value">
+          -
+        </div>
+      </div>
+
+      <div class="analysis-item">
+        <div class="analysis-label">Colors</div>
+        <div id="analysisColors" class="analysis-value">
+          -
+        </div>
+      </div>
+
+      <div class="analysis-item">
+        <div class="analysis-label">Composition</div>
+        <div id="analysisComposition" class="analysis-value">
+          -
+        </div>
+      </div>
+
+      <hr>
+
+      <strong>Detected Text</strong>
+
+      <div id="detectedTextBlocks">
+        No text detected yet.
+      </div>
 
-<h2>1. Brand Setup</h2>
+    </div>
+  </div>
 
-<label>Your Font</label>
-<input type="file" id="fontInput" accept=".ttf,.otf,.woff,.woff2">
 
-<div id="fontStatus" class="small">
-No custom font selected.
-</div>
+  <!-- AUTOMATIC NEW TEXT -->
+  <div class="card">
+    <h2>2. Automatically Generated New Text</h2>
 
-<label>Watermark / Logo</label>
-<input type="file" id="watermarkInput" accept="image/png,image/webp">
+    <p class="small">
+      The app uses the text detected from your reference post and creates
+      different wording while keeping the topic similar.
+    </p>
 
-<div id="watermarkStatus" class="small">
-No watermark selected.
-</div>
+    <label>New Headline</label>
+    <textarea
+      id="headlineInput"
+      placeholder="Your new headline will appear here..."
+    ></textarea>
 
-<div class="grid">
+    <label>New Supporting Text</label>
+    <textarea
+      id="supportingInput"
+      placeholder="Your new supporting text will appear here..."
+    ></textarea>
 
-<div>
-<label>Watermark Position</label>
+    <button
+      id="regenerateTextBtn"
+      class="secondary"
+    >
+      Generate Different Text
+    </button>
+  </div>
 
-<select id="watermarkPosition">
-<option value="top-left">Top Left</option>
-<option value="top-right" selected>Top Right</option>
-<option value="bottom-left">Bottom Left</option>
-<option value="bottom-right">Bottom Right</option>
-</select>
-</div>
 
-<div>
-<label>Watermark Size</label>
+  <!-- IMAGE SOURCE -->
+  <div class="card">
+    <h2>3. Image Source</h2>
 
-<div class="range-row">
-<input type="range" id="watermarkSize" min="30" max="400" value="120">
-<div class="value" id="watermarkSizeValue">120</div>
-</div>
-</div>
+    <label>Choose Image Source</label>
 
-</div>
+    <select id="imageSource">
+      <option value="gallery">Gallery</option>
+      <option value="ai">AI Automatic</option>
+      <option value="prompt">AI Prompt</option>
+    </select>
 
-<label>Watermark Opacity</label>
+    <div id="gallerySection">
 
-<div class="range-row">
-<input type="range" id="watermarkOpacity" min="10" max="100" value="100">
-<div class="value" id="watermarkOpacityValue">100%</div>
-</div>
+      <label>Upload Image</label>
 
-</div>
+      <input
+        type="file"
+        id="galleryInput"
+        accept="image/*"
+      >
 
+    </div>
 
-<!-- IMAGE SIZE -->
-<div class="card">
+    <div id="promptSection" class="hidden">
 
-<h2>2. Instagram Image Size</h2>
+      <label>AI Image Prompt</label>
 
-<label>Choose Size</label>
+      <textarea
+        id="imagePrompt"
+        placeholder="Describe the image you want..."
+      ></textarea>
 
-<select id="imageSize">
-<option value="1080x1080">1080 × 1080 — Square</option>
-<option value="1080x1350">1080 × 1350 — Portrait</option>
-<option value="1080x566">1080 × 566 — Landscape</option>
-<option value="1080x1920">1080 × 1920 — Story / Reel</option>
-<option value="custom">Custom</option>
-</select>
+      <button id="generatePromptBtn">
+        Generate Image From Prompt
+      </button>
 
-<div class="grid" id="customSizeBox" style="display:none">
+    </div>
 
-<div>
-<label>Width</label>
-<input type="number" id="customWidth" value="1080">
-</div>
+    <div id="aiSection" class="hidden">
 
-<div>
-<label>Height</label>
-<input type="number" id="customHeight" value="1080">
-</div>
+      <p class="small">
+        AI will use the detected reference topic to create a new image.
+      </p>
 
-</div>
+      <button id="generateAutomaticBtn">
+        Generate New AI Image
+      </button>
 
-</div>
+    </div>
 
+    <button
+      id="changeImageBtn"
+      class="secondary"
+    >
+      Change Image
+    </button>
 
-<!-- REFERENCE -->
-<div class="card">
+    <div id="imageStatus" class="status hidden"></div>
 
-<h2>3. Upload Reference Instagram Post</h2>
+  </div>
 
-<p class="small">
-Upload the Instagram post whose layout you want AI to understand.
-</p>
 
-<input type="file" id="referenceInput" accept="image/*">
+  <!-- BRAND -->
+  <div class="card">
 
-<div id="referencePreviewBox" class="preview-box" style="display:none;margin-top:15px">
-<img id="referencePreview">
-</div>
+    <h2>4. Brand Setup</h2>
 
-<div class="button-row">
+    <label>Upload Your Font</label>
 
-<button class="primary" id="analyzeButton">
-Analyze Reference Layout
-</button>
+    <input
+      type="file"
+      id="fontInput"
+      accept=".ttf,.otf,.woff,.woff2"
+    >
 
-</div>
+    <div id="fontStatus" class="small">
+      No custom font uploaded.
+    </div>
 
-<div id="analysisStatus" class="status" style="display:none"></div>
+    <hr>
 
-<div id="analysisResult" class="analysis" style="display:none">
+    <label>Upload Transparent Watermark PNG</label>
 
-<h3>AI Layout Analysis</h3>
+    <input
+      type="file"
+      id="watermarkInput"
+      accept="image/png"
+    >
 
-<div>
-<strong>Dimensions:</strong>
-<span id="analysisDimensions"></span>
-</div>
+    <div id="watermarkStatus" class="small">
+      No watermark uploaded.
+    </div>
 
-<div>
-<strong>Layout:</strong>
-<span id="analysisLayout"></span>
-</div>
+    <div class="row">
 
-<div>
-<strong>Text Position:</strong>
-<span id="analysisTextPosition"></span>
-</div>
+      <div>
+        <label>Watermark Position</label>
 
-<div>
-<strong>Alignment:</strong>
-<span id="analysisAlignment"></span>
-</div>
+        <select id="watermarkPosition">
+          <option value="top-left">Top Left</option>
+          <option value="top-right" selected>Top Right</option>
+          <option value="bottom-left">Bottom Left</option>
+          <option value="bottom-right">Bottom Right</option>
+        </select>
+      </div>
 
-<div>
-<strong>Main Image Area:</strong>
-<span id="analysisImageArea"></span>
-</div>
+      <div>
+        <label>Watermark Size</label>
 
-<div>
-<strong>Overlay:</strong>
-<span id="analysisOverlay"></span>
-</div>
+        <input
+          type="number"
+          id="watermarkSize"
+          value="120"
+          min="20"
+          max="500"
+        >
 
-<div>
-<strong>Text Area:</strong>
-<span id="analysisTextArea"></span>
-</div>
+      </div>
 
-<div>
-<strong>Tags:</strong>
-<span id="analysisTags"></span>
-</div>
+    </div>
 
-</div>
+    <label>Watermark Opacity</label>
 
-</div>
+    <input
+      type="range"
+      id="watermarkOpacity"
+      min="0"
+      max="100"
+      value="100"
+    >
 
+  </div>
 
-<!-- IMAGE SOURCE -->
-<div class="card">
 
-<h2>4. Choose Image Source</h2>
+  <!-- IMAGE SIZE -->
+  <div class="card">
 
-<div class="source-buttons">
+    <h2>5. Image Size</h2>
 
-<button class="source-button active" id="galleryButton">
-<strong>📱 Gallery</strong>
-<span class="small">Use your own photo</span>
-</button>
+    <label>Instagram Size</label>
 
-<button class="source-button" id="aiImageButton">
-<strong>🤖 AI Automatic</strong>
-<span class="small">AI creates the image</span>
-</button>
+    <select id="imageSize">
 
-<button class="source-button" id="promptImageButton">
-<strong>✍️ AI Prompt</strong>
-<span class="small">Describe your image</span>
-</button>
+      <option value="1080x1080">
+        1080 × 1080 Square
+      </option>
 
-</div>
+      <option value="1080x1350">
+        1080 × 1350 Portrait
+      </option>
 
-<input
-type="file"
-id="galleryInput"
-accept="image/*"
-style="display:none"
->
+      <option value="1080x566">
+        1080 × 566 Landscape
+      </option>
 
-<div id="promptBox" style="display:none">
+      <option value="1080x1920">
+        1080 × 1920 Story / Reel
+      </option>
 
-<label>Describe the image you want AI to create</label>
+      <option value="custom">
+        Custom
+      </option>
 
-<textarea
-id="imagePrompt"
-placeholder="Example: A realistic Indian farmer standing in a wheat field at sunrise, cinematic photography, natural lighting..."
-></textarea>
+    </select>
 
-<div class="button-row">
+    <div
+      id="customSize"
+      class="row hidden"
+    >
 
-<button class="primary" id="generatePromptButton">
-Generate Image From Prompt
-</button>
+      <div>
 
-</div>
+        <label>Width</label>
 
-</div>
+        <input
+          type="number"
+          id="customWidth"
+          value="1080"
+        >
 
-<div class="button-row">
+      </div>
 
-<button class="primary" id="changeImageButton">
-🔄 Change Image
-</button>
+      <div>
 
-</div>
+        <label>Height</label>
 
-<div id="generationStatus" class="status" style="display:none"></div>
+        <input
+          type="number"
+          id="customHeight"
+          value="1080"
+        >
 
-</div>
+      </div>
 
+    </div>
 
-<!-- POST TEXT -->
-<div class="card">
+  </div>
 
-<h2>5. Post Text</h2>
 
-<label>Headline</label>
+  <!-- POST TEXT -->
+  <div class="card">
 
-<input
-type="text"
-id="headline"
-placeholder="Your headline here"
-/>
+    <h2>6. Post Text</h2>
 
-<label>Supporting Text</label>
+    <div class="row">
 
-<textarea
-id="supportingText"
-placeholder="Supporting text..."
-></textarea>
+      <div>
 
-<div class="grid">
+        <label>Headline Size</label>
 
-<div>
+        <input
+          type="number"
+          id="headlineSize"
+          value="70"
+          min="20"
+          max="200"
+        >
 
-<label>Text Size</label>
+      </div>
 
-<input
-type="number"
-id="textSize"
-value="60"
-min="10"
-max="200"
-/>
+      <div>
 
-</div>
+        <label>Text Alignment</label>
 
-<div>
+        <select id="textAlign">
 
-<label>Text Alignment</label>
+          <option value="left">Left</option>
+          <option value="center" selected>Center</option>
+          <option value="right">Right</option>
 
-<select id="textAlignment">
+        </select>
 
-<option value="left">Left</option>
-<option value="center" selected>Center</option>
-<option value="right">Right</option>
+      </div>
 
-</select>
+    </div>
 
-</div>
+  </div>
 
-</div>
 
-</div>
+  <!-- CAROUSEL -->
+  <div class="card">
 
+    <h2>7. Carousel / Swipe</h2>
 
-<!-- CAROUSEL -->
-<div class="card">
+    <div class="checkbox-row">
 
-<h2>6. Carousel / Swipe</h2>
+      <input
+        type="checkbox"
+        id="carouselEnabled"
+      >
 
-<div class="checkbox-row">
+      <label for="carouselEnabled">
+        Enable Carousel / Swipe
+      </label>
 
-<input type="checkbox" id="carouselEnabled">
+    </div>
 
-<label for="carouselEnabled">
-Show swipe / carousel indicator
-</label>
+    <label>Carousel Position</label>
 
-</div>
+    <select id="carouselPosition">
 
-<label>Indicator Position</label>
+      <option value="top-right">
+        Top Right
+      </option>
 
-<select id="carouselPosition">
+      <option value="top-left">
+        Top Left
+      </option>
 
-<option value="top-left">Top Left</option>
-<option value="top-right" selected>Top Right</option>
-<option value="bottom-left">Bottom Left</option>
-<option value="bottom-right">Bottom Right</option>
+    </select>
 
-</select>
+  </div>
 
-</div>
 
+  <!-- CANVAS -->
+  <div class="card">
 
-<!-- CANVAS -->
-<div class="card">
+    <h2>8. Live Preview</h2>
 
-<h2>7. Final Post</h2>
+    <div id="canvasWrap">
 
-<div class="canvas-wrap">
+      <canvas
+        id="postCanvas"
+        width="1080"
+        height="1080"
+      ></canvas>
 
-<canvas id="postCanvas" width="1080" height="1080"></canvas>
+    </div>
 
-</div>
+    <button
+      id="downloadBtn"
+      class="success"
+    >
+      Download PNG
+    </button>
 
-<div class="button-row">
-
-<button class="success" id="downloadButton">
-⬇️ Download PNG
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- LOADING -->
-<div id="loading">
-
-<div class="loading-box">
-
-<div class="spinner"></div>
-
-<strong id="loadingText">
-Working...
-</strong>
-
-<p class="small">
-Please wait.
-</p>
-
-</div>
+  </div>
 
 </div>
 
@@ -703,8 +651,8 @@ Please wait.
 <script>
 
 /* =========================================================
-   SUPABASE EDGE FUNCTION URLS
-   ========================================================= */
+   CONFIGURATION
+========================================================= */
 
 const ANALYZE_URL =
 "https://zflphadtukkvvlbrzace.supabase.co/functions/v1/analyze-reference";
@@ -714,8 +662,25 @@ const GENERATE_URL =
 
 
 /* =========================================================
+   STATE
+========================================================= */
+
+let referenceImageData = null;
+let currentImage = null;
+let watermarkImage = null;
+let customFontFamily = "Arial";
+
+let analysisData = null;
+
+let detectedTextBlocks = [];
+
+let generatedHeadline = "";
+let generatedSupporting = "";
+
+
+/* =========================================================
    ELEMENTS
-   ========================================================= */
+========================================================= */
 
 const referenceInput =
 document.getElementById("referenceInput");
@@ -723,80 +688,17 @@ document.getElementById("referenceInput");
 const referencePreview =
 document.getElementById("referencePreview");
 
-const referencePreviewBox =
-document.getElementById("referencePreviewBox");
-
-const analyzeButton =
-document.getElementById("analyzeButton");
-
-const analysisResult =
-document.getElementById("analysisResult");
+const analyzeBtn =
+document.getElementById("analyzeBtn");
 
 const analysisStatus =
 document.getElementById("analysisStatus");
 
-const galleryButton =
-document.getElementById("galleryButton");
-
-const aiImageButton =
-document.getElementById("aiImageButton");
-
-const promptImageButton =
-document.getElementById("promptImageButton");
+const analysisBox =
+document.getElementById("analysisBox");
 
 const galleryInput =
 document.getElementById("galleryInput");
-
-const promptBox =
-document.getElementById("promptBox");
-
-const generatePromptButton =
-document.getElementById("generatePromptButton");
-
-const changeImageButton =
-document.getElementById("changeImageButton");
-
-const generationStatus =
-document.getElementById("generationStatus");
-
-const imagePrompt =
-document.getElementById("imagePrompt");
-
-const imageSize =
-document.getElementById("imageSize");
-
-const customSizeBox =
-document.getElementById("customSizeBox");
-
-const customWidth =
-document.getElementById("customWidth");
-
-const customHeight =
-document.getElementById("customHeight");
-
-const headline =
-document.getElementById("headline");
-
-const supportingText =
-document.getElementById("supportingText");
-
-const textSize =
-document.getElementById("textSize");
-
-const textAlignment =
-document.getElementById("textAlignment");
-
-const carouselEnabled =
-document.getElementById("carouselEnabled");
-
-const carouselPosition =
-document.getElementById("carouselPosition");
-
-const canvas =
-document.getElementById("postCanvas");
-
-const ctx =
-canvas.getContext("2d");
 
 const fontInput =
 document.getElementById("fontInput");
@@ -804,820 +706,1215 @@ document.getElementById("fontInput");
 const watermarkInput =
 document.getElementById("watermarkInput");
 
-const watermarkPosition =
-document.getElementById("watermarkPosition");
+const imageSource =
+document.getElementById("imageSource");
 
-const watermarkSize =
-document.getElementById("watermarkSize");
+const gallerySection =
+document.getElementById("gallerySection");
 
-const watermarkOpacity =
-document.getElementById("watermarkOpacity");
+const promptSection =
+document.getElementById("promptSection");
 
-const watermarkSizeValue =
-document.getElementById("watermarkSizeValue");
+const aiSection =
+document.getElementById("aiSection");
 
-const watermarkOpacityValue =
-document.getElementById("watermarkOpacityValue");
+const imageStatus =
+document.getElementById("imageStatus");
 
-const fontStatus =
-document.getElementById("fontStatus");
+const headlineInput =
+document.getElementById("headlineInput");
 
-const watermarkStatus =
-document.getElementById("watermarkStatus");
+const supportingInput =
+document.getElementById("supportingInput");
 
-const loading =
-document.getElementById("loading");
+const headlineSize =
+document.getElementById("headlineSize");
 
-const loadingText =
-document.getElementById("loadingText");
+const textAlign =
+document.getElementById("textAlign");
+
+const imageSize =
+document.getElementById("imageSize");
+
+const customSize =
+document.getElementById("customSize");
+
+const customWidth =
+document.getElementById("customWidth");
+
+const customHeight =
+document.getElementById("customHeight");
+
+const canvas =
+document.getElementById("postCanvas");
+
+const ctx =
+canvas.getContext("2d");
 
 
 /* =========================================================
-   VARIABLES
-   ========================================================= */
+   FILE TO DATA URL
+========================================================= */
 
-let currentImage = null;
+function fileToDataURL(file) {
 
-let referenceImageData = null;
+  return new Promise((resolve, reject) => {
 
-let watermarkImage = null;
+    const reader = new FileReader();
 
-let customFontFamily = "Arial";
+    reader.onload = () =>
+      resolve(reader.result);
 
-let aiAnalysis = null;
+    reader.onerror = reject;
 
-let currentSource = "gallery";
+    reader.readAsDataURL(file);
 
+  });
 
-/* =========================================================
-   LOADING
-   ========================================================= */
-
-function showLoading(message){
-
-    loadingText.textContent = message;
-
-    loading.style.display = "flex";
 }
 
-function hideLoading(){
 
-    loading.style.display = "none";
+/* =========================================================
+   LOAD IMAGE
+========================================================= */
+
+function loadImage(src) {
+
+  return new Promise((resolve, reject) => {
+
+    const img = new Image();
+
+    img.onload = () =>
+      resolve(img);
+
+    img.onerror = reject;
+
+    img.src = src;
+
+  });
+
 }
 
 
 /* =========================================================
    STATUS
-   ========================================================= */
+========================================================= */
 
-function showStatus(element, message, type=""){
+function showStatus(element, message, type = "") {
 
-    element.style.display = "block";
+  element.className =
+    "status " + type;
 
-    element.textContent = message;
+  element.textContent =
+    message;
 
-    element.className = "status";
-
-    if(type === "success"){
-        element.classList.add("success-status");
-    }
-
-    if(type === "error"){
-        element.classList.add("error-status");
-    }
-}
-
-
-/* =========================================================
-   IMAGE FILE → DATA URL
-   ========================================================= */
-
-function fileToDataURL(file){
-
-    return new Promise((resolve,reject)=>{
-
-        const reader = new FileReader();
-
-        reader.onload = () => resolve(reader.result);
-
-        reader.onerror = reject;
-
-        reader.readAsDataURL(file);
-
-    });
+  element.classList.remove("hidden");
 
 }
 
+function hideStatus(element) {
 
-/* =========================================================
-   RESIZE IMAGE DATA
-   ========================================================= */
-
-function resizeImageData(dataURL, maxSize=1536){
-
-    return new Promise((resolve,reject)=>{
-
-        const img = new Image();
-
-        img.onload = () => {
-
-            let width = img.width;
-            let height = img.height;
-
-            if(
-                width <= maxSize &&
-                height <= maxSize
-            ){
-
-                resolve(dataURL);
-
-                return;
-            }
-
-            const scale =
-                Math.min(
-                    maxSize / width,
-                    maxSize / height
-                );
-
-            width = Math.round(width * scale);
-            height = Math.round(height * scale);
-
-            const temp =
-                document.createElement("canvas");
-
-            temp.width = width;
-            temp.height = height;
-
-            const tctx =
-                temp.getContext("2d");
-
-            tctx.drawImage(
-                img,
-                0,
-                0,
-                width,
-                height
-            );
-
-            resolve(
-                temp.toDataURL(
-                    "image/jpeg",
-                    .88
-                )
-            );
-
-        };
-
-        img.onerror = reject;
-
-        img.src = dataURL;
-
-    });
+  element.classList.add("hidden");
 
 }
 
 
 /* =========================================================
    REFERENCE IMAGE
-   ========================================================= */
+========================================================= */
 
-referenceInput.addEventListener("change", async function(){
+referenceInput.addEventListener(
+"change",
+async function() {
 
-    const file = this.files[0];
+  const file = this.files[0];
 
-    if(!file) return;
+  if (!file) return;
 
-    try{
+  referenceImageData =
+    await fileToDataURL(file);
 
-        const data =
-            await fileToDataURL(file);
+  referencePreview.src =
+    referenceImageData;
 
-        referenceImageData =
-            await resizeImageData(data,1536);
+  referencePreview.style.display =
+    "block";
 
-        referencePreview.src =
-            referenceImageData;
-
-        referencePreviewBox.style.display =
-            "block";
-
-        currentImage =
-            referenceImageData;
-
-        drawCanvas();
-
-        showStatus(
-            analysisStatus,
-            "Reference image loaded.",
-            "success"
-        );
-
-    }catch(error){
-
-        showStatus(
-            analysisStatus,
-            "Could not load image: " + error.message,
-            "error"
-        );
-
-    }
+  showStatus(
+    analysisStatus,
+    "Reference image loaded. Tap Analyze Reference Layout.",
+    ""
+  );
 
 });
 
 
 /* =========================================================
    ANALYZE REFERENCE
-   ========================================================= */
+========================================================= */
 
-analyzeButton.addEventListener("click", async function(){
+analyzeBtn.addEventListener(
+"click",
+async function() {
 
-    if(!referenceImageData){
+  if (!referenceImageData) {
 
-        showStatus(
-            analysisStatus,
-            "Please upload a reference image first.",
-            "error"
-        );
+    showStatus(
+      analysisStatus,
+      "Please upload a reference image first.",
+      "error"
+    );
 
-        return;
-    }
+    return;
+  }
 
-    try{
+  analyzeBtn.disabled = true;
 
-        showLoading(
-            "AI is analyzing the reference post..."
-        );
+  showStatus(
+    analysisStatus,
+    "AI is analyzing your reference post...",
+    ""
+  );
 
-        analyzeButton.disabled = true;
+  try {
 
-        const response =
-            await fetch(
-                ANALYZE_URL,
-                {
-                    method:"POST",
+    const response =
+      await fetch(
+        ANALYZE_URL,
+        {
+          method: "POST",
 
-                    headers:{
-                        "Content-Type":
-                        "application/json"
-                    },
+          headers: {
+            "Content-Type": "application/json"
+          },
 
-                    body:JSON.stringify({
-                        image:referenceImageData
-                    })
-                }
-            );
-
-        const data =
-            await response.json();
-
-        if(!response.ok){
-
-            throw new Error(
-                data.error ||
-                data.message ||
-                "Reference analysis failed."
-            );
-
+          body: JSON.stringify({
+            image: referenceImageData
+          })
         }
+      );
 
-        aiAnalysis =
-            extractAnalysis(data);
+    const responseText =
+      await response.text();
 
-        displayAnalysis(
-            aiAnalysis
-        );
+    let data;
 
-        showStatus(
-            analysisStatus,
-            "Reference layout analyzed successfully.",
-            "success"
-        );
+    try {
 
-    }catch(error){
+      data =
+        JSON.parse(responseText);
 
-        console.error(error);
+    } catch {
 
-        showStatus(
-            analysisStatus,
-            "Analysis error:\n" +
-            error.message,
-            "error"
-        );
-
-    }finally{
-
-        analyzeButton.disabled = false;
-
-        hideLoading();
+      throw new Error(
+        "Invalid response from analyzer."
+      );
 
     }
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.error ||
+        data.message ||
+        "Reference analysis failed."
+      );
+
+    }
+
+    /*
+      The Edge Function may return the analysis
+      directly or inside an "analysis" property.
+    */
+
+    analysisData =
+      data.analysis ||
+      data.result ||
+      data;
+
+    processAnalysis(
+      analysisData
+    );
+
+    analysisBox.classList.remove(
+      "hidden"
+    );
+
+    showStatus(
+      analysisStatus,
+      "Reference analysis completed successfully.",
+      "success"
+    );
+
+  } catch(error) {
+
+    console.error(error);
+
+    showStatus(
+      analysisStatus,
+      "Analysis failed: " +
+      error.message,
+      "error"
+    );
+
+  } finally {
+
+    analyzeBtn.disabled = false;
+
+  }
 
 });
 
 
 /* =========================================================
-   EXTRACT ANALYSIS
-   ========================================================= */
+   PROCESS ANALYSIS
+========================================================= */
 
-function extractAnalysis(data){
+function processAnalysis(data) {
 
-    if(
-        data.analysis &&
-        typeof data.analysis === "object"
-    ){
-        return data.analysis;
-    }
+  console.log(
+    "FULL AI ANALYSIS:",
+    data
+  );
 
-    if(
-        data.output &&
-        typeof data.output === "object"
-    ){
-        return data.output;
-    }
+  const dimensions =
+    data.dimensions ||
+    data.image_dimensions ||
+    data.aspect_ratio ||
+    "Detected automatically";
 
-    if(
-        data.result &&
-        typeof data.result === "object"
-    ){
-        return data.result;
-    }
+  const layout =
+    data.overall_layout ||
+    data.layout ||
+    "Detected";
 
-    if(
-        data.response &&
-        typeof data.response === "object"
-    ){
-        return data.response;
-    }
+  const imageArea =
+    data.main_image_area ||
+    data.image_area ||
+    "Detected";
 
-    if(data.output_text){
+  const overlay =
+    data.overlay ||
+    "None detected";
 
-        try{
-            return JSON.parse(data.output_text);
-        }catch(e){}
-    }
+  const colors =
+    data.colors ||
+    data.color_palette ||
+    "Not specified";
 
-    return data;
+  const composition =
+    data.composition ||
+    data.design_notes ||
+    "Not specified";
 
-}
+  document.getElementById(
+    "analysisDimensions"
+  ).textContent =
+    formatValue(dimensions);
 
+  document.getElementById(
+    "analysisLayout"
+  ).textContent =
+    formatValue(layout);
 
-/* =========================================================
-   DISPLAY ANALYSIS
-   ========================================================= */
+  document.getElementById(
+    "analysisImageArea"
+  ).textContent =
+    formatValue(imageArea);
 
-function displayAnalysis(a){
+  document.getElementById(
+    "analysisOverlay"
+  ).textContent =
+    formatValue(overlay);
 
-    analysisResult.style.display =
-        "block";
+  document.getElementById(
+    "analysisColors"
+  ).textContent =
+    formatValue(colors);
 
-    document.getElementById(
-        "analysisDimensions"
-    ).textContent =
-        JSON.stringify(
-            a.aspect_ratio ||
-            a.dimensions ||
-            "Detected automatically"
-        );
-
-    document.getElementById(
-        "analysisLayout"
-    ).textContent =
-        JSON.stringify(
-            a.overall_layout ||
-            a.layout ||
-            "Detected"
-        );
-
-    document.getElementById(
-        "analysisTextPosition"
-    ).textContent =
-        JSON.stringify(
-            a.text_blocks ||
-            a.text_position ||
-            "Detected"
-        );
-
-    document.getElementById(
-        "analysisAlignment"
-    ).textContent =
-        JSON.stringify(
-            a.alignment ||
-            "Detected"
-        );
-
-    document.getElementById(
-        "analysisImageArea"
-    ).textContent =
-        JSON.stringify(
-            a.main_image_area ||
-            "Detected"
-        );
-
-    document.getElementById(
-        "analysisOverlay"
-    ).textContent =
-        JSON.stringify(
-            a.overlay ||
-            "None detected"
-        );
-
-    document.getElementById(
-        "analysisTextArea"
-    ).textContent =
-        JSON.stringify(
-            a.text_blocks ||
-            "Detected"
-        );
-
-    document.getElementById(
-        "analysisTags"
-    ).textContent =
-        JSON.stringify(
-            a.design_notes ||
-            a.colors ||
-            []
-        );
-
-}
+  document.getElementById(
+    "analysisComposition"
+  ).textContent =
+    formatValue(composition);
 
 
-/* =========================================================
-   SOURCE BUTTONS
-   ========================================================= */
+  /*
+    Extract text blocks.
+  */
 
-function selectSource(source){
+  detectedTextBlocks =
+    Array.isArray(data.text_blocks)
+      ? data.text_blocks
+      : Array.isArray(data.textBlocks)
+        ? data.textBlocks
+        : [];
 
-    currentSource = source;
+  displayDetectedText();
 
-    galleryButton.classList.remove("active");
-    aiImageButton.classList.remove("active");
-    promptImageButton.classList.remove("active");
+  /*
+    Automatically create new text.
+  */
 
-    promptBox.style.display = "none";
+  createAutomaticNewText();
 
-    if(source === "gallery"){
+  /*
+    Put the reference image into the canvas
+    so the user immediately sees something.
+  */
 
-        galleryButton.classList.add("active");
+  if (referenceImageData) {
 
-        galleryInput.click();
-
-    }
-
-    if(source === "automatic"){
-
-        aiImageButton.classList.add("active");
-
-    }
-
-    if(source === "prompt"){
-
-        promptImageButton.classList.add("active");
-
-        promptBox.style.display = "block";
-
-    }
-
-}
-
-galleryButton.addEventListener(
-    "click",
-    () => selectSource("gallery")
-);
-
-aiImageButton.addEventListener(
-    "click",
-    () => selectSource("automatic")
-);
-
-promptImageButton.addEventListener(
-    "click",
-    () => selectSource("prompt")
-);
-
-
-/* =========================================================
-   GALLERY
-   ========================================================= */
-
-galleryInput.addEventListener(
-"change",
-async function(){
-
-    const file = this.files[0];
-
-    if(!file) return;
-
-    try{
-
-        const data =
-            await fileToDataURL(file);
+    loadImage(referenceImageData)
+      .then(img => {
 
         currentImage =
-            await resizeImageData(
-                data,
-                1536
-            );
+          img;
 
         drawCanvas();
 
-        showStatus(
-            generationStatus,
-            "Gallery image loaded.",
-            "success"
-        );
+      })
+      .catch(console.error);
 
-    }catch(error){
+  }
 
-        showStatus(
-            generationStatus,
-            "Could not load gallery image: " +
-            error.message,
-            "error"
-        );
+}
+
+
+/* =========================================================
+   FORMAT VALUES
+========================================================= */
+
+function formatValue(value) {
+
+  if (value === null ||
+      value === undefined) {
+
+    return "Not detected";
+
+  }
+
+  if (typeof value === "object") {
+
+    try {
+
+      return JSON.stringify(
+        value,
+        null,
+        2
+      );
+
+    } catch {
+
+      return String(value);
 
     }
 
+  }
+
+  return String(value);
+
+}
+
+
+/* =========================================================
+   DISPLAY DETECTED TEXT
+========================================================= */
+
+function displayDetectedText() {
+
+  const container =
+    document.getElementById(
+      "detectedTextBlocks"
+    );
+
+  container.innerHTML = "";
+
+  if (
+    !detectedTextBlocks ||
+    detectedTextBlocks.length === 0
+  ) {
+
+    container.innerHTML =
+      `<div class="text-block">
+        No readable text blocks were returned by AI.
+      </div>`;
+
+    return;
+  }
+
+  detectedTextBlocks.forEach(
+    (block, index) => {
+
+      const div =
+        document.createElement("div");
+
+      div.className =
+        "text-block";
+
+      const type =
+        block.type ||
+        "Text";
+
+      const text =
+        block.text ||
+        block.content ||
+        "";
+
+      const alignment =
+        block.alignment ||
+        "unknown";
+
+      const color =
+        block.color ||
+        "unknown";
+
+      div.innerHTML = `
+        <strong>${escapeHTML(type)}</strong>
+        <br>
+        <span>${escapeHTML(text)}</span>
+        <br>
+        <span class="small">
+          Alignment: ${escapeHTML(String(alignment))}
+          |
+          Color: ${escapeHTML(String(color))}
+        </span>
+      `;
+
+      container.appendChild(div);
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   AUTOMATIC NEW TEXT
+========================================================= */
+
+function createAutomaticNewText() {
+
+  if (
+    !detectedTextBlocks ||
+    detectedTextBlocks.length === 0
+  ) {
+
+    generatedHeadline =
+      "Interesting Facts You Should Know";
+
+    generatedSupporting =
+      "Here are some surprising facts you may not know.";
+
+    headlineInput.value =
+      generatedHeadline;
+
+    supportingInput.value =
+      generatedSupporting;
+
+    drawCanvas();
+
+    return;
+  }
+
+
+  /*
+    Find the largest/most important text.
+  */
+
+  let headlineBlock =
+    detectedTextBlocks.find(
+      block =>
+        String(block.type || "")
+          .toLowerCase()
+          .includes("headline")
+    );
+
+  if (!headlineBlock) {
+
+    headlineBlock =
+      detectedTextBlocks[0];
+
+  }
+
+
+  let originalHeadline =
+    headlineBlock.text ||
+    headlineBlock.content ||
+    "";
+
+
+  /*
+    Find secondary text.
+  */
+
+  let supportBlock =
+    detectedTextBlocks.find(
+      block =>
+        block !== headlineBlock
+    );
+
+  let originalSupport =
+    supportBlock
+      ? (
+          supportBlock.text ||
+          supportBlock.content ||
+          ""
+        )
+      : "";
+
+
+  /*
+    Generate new wording locally.
+    This doesn't consume an additional
+    OpenAI image-generation request.
+  */
+
+  generatedHeadline =
+    createNewHeadline(
+      originalHeadline
+    );
+
+  generatedSupporting =
+    createNewSupportingText(
+      originalSupport,
+      originalHeadline
+    );
+
+
+  headlineInput.value =
+    generatedHeadline;
+
+  supportingInput.value =
+    generatedSupporting;
+
+  drawCanvas();
+
+}
+
+
+/* =========================================================
+   NEW HEADLINE GENERATOR
+========================================================= */
+
+function createNewHeadline(text) {
+
+  if (!text) {
+
+    return "Amazing Facts You Should Know";
+
+  }
+
+  let clean =
+    text
+      .replace(/\s+/g, " ")
+      .trim();
+
+
+  /*
+    Remove common clickbait numbering
+    so we can create a different version.
+  */
+
+  clean =
+    clean.replace(
+      /^[-–—•\d.)\s]+/,
+      ""
+    );
+
+
+  if (
+    /facts?/i.test(clean)
+  ) {
+
+    const topic =
+      clean
+        .replace(
+          /\bfacts?\b/gi,
+          ""
+        )
+        .trim();
+
+    if (topic) {
+
+      return (
+        "Amazing Facts About " +
+        topic
+      );
+
+    }
+
+  }
+
+
+  if (
+    /tips?/i.test(clean)
+  ) {
+
+    const topic =
+      clean
+        .replace(
+          /\btips?\b/gi,
+          ""
+        )
+        .trim();
+
+    return (
+      "Useful Things To Know " +
+      topic
+    ).trim();
+
+  }
+
+
+  if (
+    /secret/i.test(clean)
+  ) {
+
+    return (
+      "Things You Probably Didn't Know"
+    );
+
+  }
+
+
+  if (
+    /reason/i.test(clean)
+  ) {
+
+    return (
+      "Why This Is More Interesting Than You Think"
+    );
+
+  }
+
+
+  /*
+    Generic transformation.
+  */
+
+  return (
+    "What You Should Know About " +
+    clean
+  );
+
+}
+
+
+/* =========================================================
+   NEW SUPPORTING TEXT
+========================================================= */
+
+function createNewSupportingText(
+  support,
+  headline
+) {
+
+  if (support) {
+
+    const clean =
+      support
+        .replace(/\s+/g, " ")
+        .trim();
+
+    if (clean.length > 10) {
+
+      return (
+        "Here's something interesting " +
+        "you may not have known about it."
+      );
+
+    }
+
+  }
+
+  if (
+    /fact/i.test(headline)
+  ) {
+
+    return (
+      "These interesting facts may surprise you."
+    );
+
+  }
+
+  return (
+    "Save this post and share it with someone who should know."
+  );
+
+}
+
+
+/* =========================================================
+   MANUAL REGENERATE TEXT
+========================================================= */
+
+document.getElementById(
+  "regenerateTextBtn"
+).addEventListener(
+"click",
+function() {
+
+  createAutomaticNewText();
+
 });
 
 
 /* =========================================================
-   AI AUTOMATIC
-   ========================================================= */
+   GALLERY IMAGE
+========================================================= */
 
-aiImageButton.addEventListener(
-"click",
-async function(){
+galleryInput.addEventListener(
+"change",
+async function() {
 
-    selectSource("automatic");
+  const file =
+    this.files[0];
 
-    await generateAIImage("automatic");
+  if (!file) return;
+
+  try {
+
+    const data =
+      await fileToDataURL(file);
+
+    currentImage =
+      await loadImage(data);
+
+    showStatus(
+      imageStatus,
+      "Gallery image loaded.",
+      "success"
+    );
+
+    drawCanvas();
+
+  } catch(error) {
+
+    showStatus(
+      imageStatus,
+      "Could not load image.",
+      "error"
+    );
+
+  }
 
 });
 
 
 /* =========================================================
-   PROMPT GENERATION
-   ========================================================= */
+   IMAGE SOURCE SWITCH
+========================================================= */
 
-generatePromptButton.addEventListener(
+imageSource.addEventListener(
+"change",
+function() {
+
+  gallerySection.classList.add(
+    "hidden"
+  );
+
+  promptSection.classList.add(
+    "hidden"
+  );
+
+  aiSection.classList.add(
+    "hidden"
+  );
+
+
+  if (this.value === "gallery") {
+
+    gallerySection.classList.remove(
+      "hidden"
+    );
+
+  }
+
+
+  if (this.value === "prompt") {
+
+    promptSection.classList.remove(
+      "hidden"
+    );
+
+  }
+
+
+  if (this.value === "ai") {
+
+    aiSection.classList.remove(
+      "hidden"
+    );
+
+  }
+
+});
+
+
+/* =========================================================
+   OPENAI IMAGE GENERATION
+========================================================= */
+
+async function generateAIImage() {
+
+  const prompt =
+    document.getElementById(
+      "imagePrompt"
+    ).value.trim();
+
+
+  let finalPrompt =
+    prompt;
+
+
+  if (!finalPrompt) {
+
+    const topic =
+      headlineInput.value ||
+      "an interesting Instagram fact";
+
+    finalPrompt =
+      "Create a realistic high quality photograph " +
+      "for an Instagram fact post about: " +
+      topic +
+      ". Do not add text or typography to the image.";
+
+  }
+
+
+  showStatus(
+    imageStatus,
+    "Generating AI image...",
+    ""
+  );
+
+
+  try {
+
+    const response =
+      await fetch(
+        GENERATE_URL,
+        {
+          method: "POST",
+
+          headers: {
+            "Content-Type":
+              "application/json"
+          },
+
+          body: JSON.stringify({
+
+            prompt:
+              finalPrompt,
+
+            referenceImage:
+              referenceImageData,
+
+            width:
+              getCanvasSize().width,
+
+            height:
+              getCanvasSize().height
+
+          })
+
+        }
+      );
+
+
+    const responseText =
+      await response.text();
+
+
+    let data;
+
+    try {
+
+      data =
+        JSON.parse(
+          responseText
+        );
+
+    } catch {
+
+      throw new Error(
+        "Invalid response from AI image generator."
+      );
+
+    }
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.error ||
+        data.message ||
+        JSON.stringify(data)
+      );
+
+    }
+
+
+    if (!data.image) {
+
+      throw new Error(
+        "AI responded but no image was returned."
+      );
+
+    }
+
+
+    currentImage =
+      await loadImage(
+        data.image
+      );
+
+
+    showStatus(
+      imageStatus,
+      "AI image generated successfully.",
+      "success"
+    );
+
+
+    drawCanvas();
+
+
+  } catch(error) {
+
+    console.error(error);
+
+    showStatus(
+      imageStatus,
+      "AI image generation failed: " +
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   PROMPT BUTTON
+========================================================= */
+
+document.getElementById(
+  "generatePromptBtn"
+).addEventListener(
 "click",
-async function(){
+generateAIImage
+);
 
-    await generateAIImage("prompt");
+
+/* =========================================================
+   AUTOMATIC AI BUTTON
+========================================================= */
+
+document.getElementById(
+  "generateAutomaticBtn"
+).addEventListener(
+"click",
+function() {
+
+  const topic =
+    headlineInput.value ||
+    "interesting facts";
+
+  document.getElementById(
+    "imagePrompt"
+  ).value =
+    "Create a realistic cinematic photograph " +
+    "related to the topic: " +
+    topic +
+    ". " +
+    "The image should look natural and suitable " +
+    "for an Instagram fact post. " +
+    "Do not put any text, letters, logos or typography " +
+    "inside the generated image.";
+
+  generateAIImage();
 
 });
 
 
 /* =========================================================
    CHANGE IMAGE
-   ========================================================= */
+========================================================= */
 
-changeImageButton.addEventListener(
+document.getElementById(
+  "changeImageBtn"
+).addEventListener(
 "click",
-async function(){
+function() {
 
-    await generateAIImage("change");
+  const currentPrompt =
+    document.getElementById(
+      "imagePrompt"
+    ).value.trim();
+
+
+  if (currentPrompt) {
+
+    generateAIImage();
+
+    return;
+
+  }
+
+
+  document.getElementById(
+    "imagePrompt"
+  ).value =
+    "Create another realistic cinematic image " +
+    "related to: " +
+    (headlineInput.value ||
+      "interesting facts") +
+    ". Do not add text.";
+
+  generateAIImage();
 
 });
 
 
 /* =========================================================
-   CREATE AI IMAGE
-   ========================================================= */
+   FONT UPLOAD
+========================================================= */
 
-async function generateAIImage(mode){
+fontInput.addEventListener(
+"change",
+async function() {
 
-    try{
+  const file =
+    this.files[0];
 
-        let prompt =
-            imagePrompt.value.trim();
-
-        if(mode === "prompt" && !prompt){
-
-            showStatus(
-                generationStatus,
-                "Please describe the image you want.",
-                "error"
-            );
-
-            return;
-        }
-
-        if(mode === "automatic"){
-
-            prompt =
-            "Create a realistic, high-quality Instagram fact-page image based on the uploaded reference composition. Use a visually interesting subject that fits the reference layout. Preserve the general composition, subject placement, camera angle, visual balance, lighting direction and negative space, but create a completely new image.";
-
-        }
-
-        if(mode === "change"){
-
-            prompt =
-            imagePrompt.value.trim() ||
-            "Create a completely different realistic image that fits the same Instagram post composition. Keep the same general visual layout and negative space but change the subject, scene and photographic details.";
-
-        }
-
-        if(aiAnalysis){
-
-            prompt +=
-            "\n\nREFERENCE LAYOUT ANALYSIS:\n" +
-            JSON.stringify(
-                aiAnalysis
-            );
-
-        }
-
-        prompt +=
-        "\n\nIMPORTANT IMAGE RULES:" +
-        "\n- Create a completely new image." +
-        "\n- Do not copy the original image." +
-        "\n- Do not include headlines." +
-        "\n- Do not include captions." +
-        "\n- Do not include logos." +
-        "\n- Do not include watermarks." +
-        "\n- Do not add readable text." +
-        "\n- Leave appropriate clean visual space where text will be placed later." +
-        "\n- Make it suitable for an Instagram fact post." +
-        "\n- High quality realistic photography.";
+  if (!file) return;
 
 
-        const dimensions =
-            getCanvasDimensions();
+  try {
 
-        let reference =
-            referenceImageData;
-
-        if(reference){
-
-            reference =
-                await resizeImageData(
-                    reference,
-                    1536
-                );
-
-        }
+    const fontData =
+      await fileToDataURL(file);
 
 
-        showLoading(
-            "AI is generating your image..."
-        );
-
-        showStatus(
-            generationStatus,
-            "Sending request to AI image generation..."
-        );
+    const fontName =
+      "UserUploadedFont";
 
 
-        const response =
-            await fetch(
-                GENERATE_URL,
-                {
-                    method:"POST",
-
-                    headers:{
-                        "Content-Type":
-                        "application/json"
-                    },
-
-                    body:JSON.stringify({
-
-                        prompt:prompt,
-
-                        referenceImage:
-                            reference || null,
-
-                        width:
-                            dimensions.width,
-
-                        height:
-                            dimensions.height
-
-                    })
-
-                }
-            );
+    const style =
+      document.createElement(
+        "style"
+      );
 
 
-        const data =
-            await response.json();
+    style.innerHTML = `
+      @font-face {
+        font-family: '${fontName}';
+        src: url('${fontData}');
+      }
+    `;
 
 
-        console.log(
-            "Generate response:",
-            data
-        );
+    document.head.appendChild(
+      style
+    );
 
 
-        if(!response.ok){
-
-            throw new Error(
-                data.error ||
-                data.message ||
-                data.details ||
-                "AI image generation failed."
-            );
-
-        }
+    customFontFamily =
+      fontName;
 
 
-        if(!data.image){
-
-            throw new Error(
-                "AI function responded, but no image was returned."
-            );
-
-        }
+    document.getElementById(
+      "fontStatus"
+    ).textContent =
+      "Font loaded: " +
+      file.name;
 
 
-        currentImage =
-            data.image;
+    drawCanvas();
 
 
-        drawCanvas();
+  } catch(error) {
 
+    document.getElementById(
+      "fontStatus"
+    ).textContent =
+      "Could not load font.";
 
-        showStatus(
-            generationStatus,
-            "AI image generated successfully.",
-            "success"
-        );
+  }
 
-
-    }catch(error){
-
-        console.error(
-            "IMAGE GENERATION ERROR:",
-            error
-        );
-
-        showStatus(
-            generationStatus,
-            "Image generation failed:\n\n" +
-            error.message,
-            "error"
-        );
-
-    }finally{
-
-        hideLoading();
-
-    }
-
-}
+});
 
 
 /* =========================================================
-   DIMENSIONS
-   ========================================================= */
+   WATERMARK
+========================================================= */
 
-function getCanvasDimensions(){
+watermarkInput.addEventListener(
+"change",
+async function() {
 
-    if(imageSize.value === "custom"){
+  const file =
+    this.files[0];
 
-        return {
-            width:
-                parseInt(
-                    customWidth.value
-                ) || 1080,
+  if (!file) return;
 
-            height:
-                parseInt(
-                    customHeight.value
-                ) || 1080
-        };
 
-    }
+  try {
 
-    const parts =
-        imageSize.value.split("x");
+    const data =
+      await fileToDataURL(file);
 
-    return {
-        width:
-            parseInt(parts[0]),
+    watermarkImage =
+      await loadImage(data);
 
-        height:
-            parseInt(parts[1])
-    };
 
-}
+    document.getElementById(
+      "watermarkStatus"
+    ).textContent =
+      "Watermark loaded: " +
+      file.name;
+
+
+    drawCanvas();
+
+
+  } catch {
+
+    document.getElementById(
+      "watermarkStatus"
+    ).textContent =
+      "Could not load watermark.";
+
+  }
+
+});
 
 
 /* =========================================================
-   SIZE CHANGE
-   ========================================================= */
+   CANVAS SIZE
+========================================================= */
 
 imageSize.addEventListener(
 "change",
-function(){
+function() {
 
-    customSizeBox.style.display =
-        this.value === "custom"
-        ? "grid"
-        : "none";
+  if (this.value === "custom") {
 
-    resizeCanvas();
+    customSize.classList.remove(
+      "hidden"
+    );
+
+  } else {
+
+    customSize.classList.add(
+      "hidden"
+    );
+
+  }
+
+  resizeCanvas();
 
 });
 
@@ -1633,1145 +1930,684 @@ resizeCanvas
 );
 
 
-function resizeCanvas(){
+/* =========================================================
+   GET CANVAS SIZE
+========================================================= */
 
-    const dimensions =
-        getCanvasDimensions();
+function getCanvasSize() {
 
-    canvas.width =
-        dimensions.width;
+  if (
+    imageSize.value ===
+    "custom"
+  ) {
 
-    canvas.height =
-        dimensions.height;
+    return {
 
-    drawCanvas();
+      width:
+        Number(customWidth.value)
+        || 1080,
+
+      height:
+        Number(customHeight.value)
+        || 1080
+
+    };
+
+  }
+
+
+  const parts =
+    imageSize.value.split("x");
+
+
+  return {
+
+    width:
+      Number(parts[0]),
+
+    height:
+      Number(parts[1])
+
+  };
+
+}
+
+
+/* =========================================================
+   RESIZE CANVAS
+========================================================= */
+
+function resizeCanvas() {
+
+  const size =
+    getCanvasSize();
+
+
+  canvas.width =
+    size.width;
+
+  canvas.height =
+    size.height;
+
+
+  drawCanvas();
 
 }
 
 
 /* =========================================================
    DRAW CANVAS
-   ========================================================= */
+========================================================= */
 
-function drawCanvas(){
+function drawCanvas() {
 
-    const width =
-        canvas.width;
+  const width =
+    canvas.width;
 
-    const height =
-        canvas.height;
+  const height =
+    canvas.height;
 
 
-    ctx.clearRect(
-        0,
-        0,
-        width,
-        height
+  ctx.clearRect(
+    0,
+    0,
+    width,
+    height
+  );
+
+
+  /*
+    Background
+  */
+
+  ctx.fillStyle =
+    "#eeeeee";
+
+  ctx.fillRect(
+    0,
+    0,
+    width,
+    height
+  );
+
+
+  /*
+    Image
+  */
+
+  if (currentImage) {
+
+    drawCoverImage(
+      currentImage,
+      0,
+      0,
+      width,
+      height
     );
 
+  }
 
-    /* Background */
+
+  /*
+    Dark transparent overlay
+    behind text for readability.
+  */
+
+  const headline =
+    headlineInput.value.trim();
+
+  const supporting =
+    supportingInput.value.trim();
+
+
+  if (
+    headline ||
+    supporting
+  ) {
+
+    const gradient =
+      ctx.createLinearGradient(
+        0,
+        height * 0.45,
+        0,
+        height
+      );
+
+    gradient.addColorStop(
+      0,
+      "rgba(0,0,0,0)"
+    );
+
+    gradient.addColorStop(
+      1,
+      "rgba(0,0,0,0.72)"
+    );
 
     ctx.fillStyle =
-        "#ffffff";
+      gradient;
 
     ctx.fillRect(
-        0,
-        0,
-        width,
-        height
+      0,
+      height * 0.35,
+      width,
+      height * 0.65
+    );
+
+  }
+
+
+  /*
+    Headline
+  */
+
+  const size =
+    Number(
+      headlineSize.value
+    ) || 70;
+
+
+  ctx.font =
+    `700 ${size}px ${customFontFamily}`;
+
+
+  ctx.textAlign =
+    textAlign.value;
+
+
+  ctx.fillStyle =
+    "#ffffff";
+
+
+  const x =
+    textAlign.value === "left"
+      ? width * 0.08
+      : textAlign.value === "right"
+        ? width * 0.92
+        : width / 2;
+
+
+  const maxWidth =
+    width * 0.84;
+
+
+  const headlineLines =
+    wrapText(
+      headline,
+      maxWidth
     );
 
 
-    /* Image */
+  let y =
+    height * 0.72;
 
-    if(currentImage){
 
-        const img =
-            new Image();
+  headlineLines.forEach(
+    line => {
 
-        img.onload = function(){
+      ctx.fillText(
+        line,
+        x,
+        y
+      );
 
-            drawImageCover(
-                img,
-                0,
-                0,
-                width,
-                height
-            );
-
-            drawPostElements();
-
-        };
-
-        img.src =
-            currentImage;
-
-    }else{
-
-        drawPlaceholder();
-
-        drawPostElements();
+      y +=
+        size * 1.15;
 
     }
+  );
+
+
+  /*
+    Supporting text
+  */
+
+  if (supporting) {
+
+    ctx.font =
+      `400 ${Math.max(
+        26,
+        size * 0.42
+      )}px ${customFontFamily}`;
+
+
+    const supportLines =
+      wrapText(
+        supporting,
+        maxWidth
+      );
+
+
+    y += 15;
+
+
+    supportLines.forEach(
+      line => {
+
+        ctx.fillText(
+          line,
+          x,
+          y
+        );
+
+        y +=
+          size * 0.62;
+
+      }
+    );
+
+  }
+
+
+  /*
+    Watermark
+  */
+
+  drawWatermark();
 
 }
 
 
 /* =========================================================
    DRAW COVER IMAGE
-   ========================================================= */
+========================================================= */
 
-function drawImageCover(
+function drawCoverImage(
+  img,
+  x,
+  y,
+  width,
+  height
+) {
+
+  const imageRatio =
+    img.width /
+    img.height;
+
+  const canvasRatio =
+    width /
+    height;
+
+
+  let sourceWidth =
+    img.width;
+
+  let sourceHeight =
+    img.height;
+
+  let sourceX = 0;
+  let sourceY = 0;
+
+
+  if (
+    imageRatio >
+    canvasRatio
+  ) {
+
+    sourceWidth =
+      img.height *
+      canvasRatio;
+
+    sourceX =
+      (img.width -
+        sourceWidth) / 2;
+
+  } else {
+
+    sourceHeight =
+      img.width /
+      canvasRatio;
+
+    sourceY =
+      (img.height -
+        sourceHeight) / 2;
+
+  }
+
+
+  ctx.drawImage(
     img,
+    sourceX,
+    sourceY,
+    sourceWidth,
+    sourceHeight,
     x,
     y,
     width,
     height
-){
-
-    const imageRatio =
-        img.width /
-        img.height;
-
-    const canvasRatio =
-        width /
-        height;
-
-    let drawWidth;
-    let drawHeight;
-
-    let offsetX;
-    let offsetY;
-
-
-    if(imageRatio > canvasRatio){
-
-        drawHeight =
-            height;
-
-        drawWidth =
-            height *
-            imageRatio;
-
-        offsetX =
-            x +
-            (width -
-            drawWidth) / 2;
-
-        offsetY =
-            y;
-
-    }else{
-
-        drawWidth =
-            width;
-
-        drawHeight =
-            width /
-            imageRatio;
-
-        offsetX =
-            x;
-
-        offsetY =
-            y +
-            (height -
-            drawHeight) / 2;
-
-    }
-
-
-    ctx.drawImage(
-        img,
-        offsetX,
-        offsetY,
-        drawWidth,
-        drawHeight
-    );
+  );
 
 }
 
 
 /* =========================================================
-   PLACEHOLDER
-   ========================================================= */
+   TEXT WRAPPING
+========================================================= */
 
-function drawPlaceholder(){
+function wrapText(
+  text,
+  maxWidth
+) {
 
-    ctx.fillStyle =
-        "#e5e7eb";
+  if (!text) return [];
 
-    ctx.fillRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
+  const words =
+    text.split(" ");
+
+  const lines = [];
+
+  let line = "";
+
+
+  words.forEach(
+    word => {
+
+      const testLine =
+        line
+          ? line + " " + word
+          : word;
+
+
+      const metrics =
+        ctx.measureText(
+          testLine
+        );
+
+
+      if (
+        metrics.width >
+        maxWidth &&
+        line
+      ) {
+
+        lines.push(
+          line
+        );
+
+        line =
+          word;
+
+      } else {
+
+        line =
+          testLine;
+
+      }
+
+    }
+  );
+
+
+  if (line) {
+
+    lines.push(
+      line
     );
 
-    ctx.fillStyle =
-        "#6b7280";
+  }
 
-    ctx.textAlign =
-        "center";
 
-    ctx.font =
-        "bold 50px Arial";
-
-    ctx.fillText(
-        "Upload or Generate",
-        canvas.width / 2,
-        canvas.height / 2
-    );
+  return lines;
 
 }
 
 
 /* =========================================================
-   POST ELEMENTS
-   ========================================================= */
+   WATERMARK DRAW
+========================================================= */
 
-function drawPostElements(){
+function drawWatermark() {
 
-    const width =
-        canvas.width;
-
-    const height =
-        canvas.height;
+  if (!watermarkImage)
+    return;
 
 
-    /* Dark bottom gradient */
-
-    const gradient =
-        ctx.createLinearGradient(
-            0,
-            height * .55,
-            0,
-            height
-        );
-
-    gradient.addColorStop(
-        0,
-        "rgba(0,0,0,0)"
-    );
-
-    gradient.addColorStop(
-        1,
-        "rgba(0,0,0,.78)"
-    );
-
-    ctx.fillStyle =
-        gradient;
-
-    ctx.fillRect(
-        0,
-        height * .45,
-        width,
-        height * .55
-    );
+  const size =
+    Number(
+      document.getElementById(
+        "watermarkSize"
+      ).value
+    ) || 120;
 
 
-    /* Headline */
-
-    const title =
-        headline.value.trim();
-
-    const supporting =
-        supportingText.value.trim();
-
-    if(title){
-
-        const size =
-            parseInt(
-                textSize.value
-            ) || 60;
-
-        ctx.font =
-            `bold ${size}px ${customFontFamily}`;
-
-        ctx.fillStyle =
-            "#ffffff";
-
-        ctx.textAlign =
-            textAlignment.value;
-
-        let x;
-
-        if(
-            textAlignment.value ===
-            "left"
-        ){
-
-            x =
-                width * .08;
-
-        }else if(
-            textAlignment.value ===
-            "right"
-        ){
-
-            x =
-                width * .92;
-
-        }else{
-
-            x =
-                width / 2;
-
-        }
+  const opacity =
+    Number(
+      document.getElementById(
+        "watermarkOpacity"
+      ).value
+    ) / 100;
 
 
-        drawWrappedText(
-            title,
-            x,
-            height * .72,
-            width * .84,
-            size * 1.15,
-            4
-        );
-
-    }
+  const position =
+    document.getElementById(
+      "watermarkPosition"
+    ).value;
 
 
-    /* Supporting text */
-
-    if(supporting){
-
-        const size =
-            Math.max(
-                22,
-                parseInt(
-                    textSize.value
-                ) * .42
-            );
-
-        ctx.font =
-            `${size}px ${customFontFamily}`;
-
-        ctx.fillStyle =
-            "#ffffff";
-
-        ctx.textAlign =
-            textAlignment.value;
-
-        let x;
-
-        if(
-            textAlignment.value ===
-            "left"
-        ){
-
-            x =
-                width * .08;
-
-        }else if(
-            textAlignment.value ===
-            "right"
-        ){
-
-            x =
-                width * .92;
-
-        }else{
-
-            x =
-                width / 2;
-
-        }
+  const margin =
+    canvas.width *
+    0.03;
 
 
-        drawWrappedText(
-            supporting,
-            x,
-            height * .88,
-            width * .84,
-            size * 1.35,
-            3
-        );
-
-    }
+  let x;
+  let y;
 
 
-    /* Watermark */
+  if (
+    position ===
+    "top-left"
+  ) {
 
-    drawWatermark();
+    x =
+      margin;
 
+    y =
+      margin;
 
-    /* Carousel indicator */
-
-    if(
-        carouselEnabled.checked
-    ){
-
-        drawCarouselIndicator();
-
-    }
-
-}
+  }
 
 
-/* =========================================================
-   WRAPPED TEXT
-   ========================================================= */
+  if (
+    position ===
+    "top-right"
+  ) {
 
-function drawWrappedText(
-    text,
+    x =
+      canvas.width -
+      size -
+      margin;
+
+    y =
+      margin;
+
+  }
+
+
+  if (
+    position ===
+    "bottom-left"
+  ) {
+
+    x =
+      margin;
+
+    y =
+      canvas.height -
+      size -
+      margin;
+
+  }
+
+
+  if (
+    position ===
+    "bottom-right"
+  ) {
+
+    x =
+      canvas.width -
+      size -
+      margin;
+
+    y =
+      canvas.height -
+      size -
+      margin;
+
+  }
+
+
+  ctx.save();
+
+  ctx.globalAlpha =
+    opacity;
+
+
+  ctx.drawImage(
+    watermarkImage,
     x,
     y,
-    maxWidth,
-    lineHeight,
-    maxLines
-){
-
-    const words =
-        text.split(" ");
-
-    let line = "";
-
-    let lines = [];
+    size,
+    size
+  );
 
 
-    for(
-        let i=0;
-        i<words.length;
-        i++
-    ){
-
-        const testLine =
-            line +
-            (line ? " " : "") +
-            words[i];
-
-        const metrics =
-            ctx.measureText(
-                testLine
-            );
-
-        if(
-            metrics.width >
-            maxWidth &&
-            line
-        ){
-
-            lines.push(line);
-
-            line =
-                words[i];
-
-            if(
-                lines.length >=
-                maxLines
-            ){
-
-                break;
-
-            }
-
-        }else{
-
-            line =
-                testLine;
-
-        }
-
-    }
-
-
-    if(
-        lines.length <
-        maxLines &&
-        line
-    ){
-
-        lines.push(line);
-
-    }
-
-
-    const startY =
-        y -
-        (lines.length - 1) *
-        lineHeight /
-        2;
-
-
-    lines.forEach(
-        (lineText,index)=>{
-
-            ctx.fillText(
-                lineText,
-                x,
-                startY +
-                index *
-                lineHeight
-            );
-
-        }
-    );
+  ctx.restore();
 
 }
 
 
 /* =========================================================
-   WATERMARK
-   ========================================================= */
+   LIVE UPDATE
+========================================================= */
 
-function drawWatermark(){
-
-    if(!watermarkImage)
-        return;
-
-
-    const size =
-        parseInt(
-            watermarkSize.value
-        ) || 120;
-
-    const margin =
-        canvas.width * .035;
-
-    let x;
-    let y;
-
-
-    if(
-        watermarkPosition.value
-        === "top-left"
-    ){
-
-        x =
-            margin;
-
-        y =
-            margin;
-
-    }
-
-    else if(
-        watermarkPosition.value
-        === "top-right"
-    ){
-
-        x =
-            canvas.width -
-            size -
-            margin;
-
-        y =
-            margin;
-
-    }
-
-    else if(
-        watermarkPosition.value
-        === "bottom-left"
-    ){
-
-        x =
-            margin;
-
-        y =
-            canvas.height -
-            size -
-            margin;
-
-    }
-
-    else{
-
-        x =
-            canvas.width -
-            size -
-            margin;
-
-        y =
-            canvas.height -
-            size -
-            margin;
-
-    }
-
-
-    ctx.save();
-
-    ctx.globalAlpha =
-        parseInt(
-            watermarkOpacity.value
-        ) / 100;
-
-
-    const ratio =
-        watermarkImage.width /
-        watermarkImage.height;
-
-    let drawWidth =
-        size;
-
-    let drawHeight =
-        size /
-        ratio;
-
-
-    if(
-        drawHeight >
-        size
-    ){
-
-        drawHeight =
-            size;
-
-        drawWidth =
-            size *
-            ratio;
-
-    }
-
-
-    ctx.drawImage(
-        watermarkImage,
-        x,
-        y,
-        drawWidth,
-        drawHeight
-    );
-
-
-    ctx.restore();
-
-}
-
-
-/* =========================================================
-   CAROUSEL INDICATOR
-   ========================================================= */
-
-function drawCarouselIndicator(){
-
-    const radius =
-        Math.max(
-            5,
-            canvas.width / 180
-        );
-
-    const gap =
-        radius * 2.4;
-
-    const totalWidth =
-        radius * 2 +
-        gap * 4;
-
-
-    let startX;
-    let y;
-
-
-    if(
-        carouselPosition.value
-        === "top-left"
-    ){
-
-        startX =
-            canvas.width * .04;
-
-        y =
-            canvas.height * .05;
-
-    }
-
-    else if(
-        carouselPosition.value
-        === "top-right"
-    ){
-
-        startX =
-            canvas.width -
-            totalWidth -
-            canvas.width * .04;
-
-        y =
-            canvas.height * .05;
-
-    }
-
-    else if(
-        carouselPosition.value
-        === "bottom-left"
-    ){
-
-        startX =
-            canvas.width * .04;
-
-        y =
-            canvas.height -
-            canvas.height * .05;
-
-    }
-
-    else{
-
-        startX =
-            canvas.width -
-            totalWidth -
-            canvas.width * .04;
-
-        y =
-            canvas.height -
-            canvas.height * .05;
-
-    }
-
-
-    for(
-        let i=0;
-        i<5;
-        i++
-    ){
-
-        ctx.beginPath();
-
-        ctx.arc(
-            startX +
-            i * gap,
-            y,
-            radius,
-            0,
-            Math.PI * 2
-        );
-
-        ctx.fillStyle =
-            i === 0
-            ? "#ffffff"
-            : "rgba(255,255,255,.45)";
-
-        ctx.fill();
-
-    }
-
-}
-
-
-/* =========================================================
-   FONT UPLOAD
-   ========================================================= */
-
-fontInput.addEventListener(
-"change",
-async function(){
-
-    const file =
-        this.files[0];
-
-    if(!file)
-        return;
-
-
-    try{
-
-        const data =
-            await fileToDataURL(file);
-
-        const extension =
-            file.name
-            .split(".")
-            .pop()
-            .toLowerCase();
-
-
-        customFontFamily =
-            "UploadedFont";
-
-
-        const fontFace =
-            new FontFace(
-                customFontFamily,
-                `url(${data})`
-            );
-
-
-        await fontFace.load();
-
-        document.fonts.add(
-            fontFace
-        );
-
-
-        fontStatus.textContent =
-            "Font loaded: " +
-            file.name;
-
-
-        drawCanvas();
-
-
-        saveSettings();
-
-
-    }catch(error){
-
-        fontStatus.textContent =
-            "Could not load font.";
-
-        console.error(error);
-
-    }
-
-});
-
-
-/* =========================================================
-   WATERMARK UPLOAD
-   ========================================================= */
-
-watermarkInput.addEventListener(
-"change",
-async function(){
-
-    const file =
-        this.files[0];
-
-    if(!file)
-        return;
-
-
-    try{
-
-        const data =
-            await fileToDataURL(file);
-
-        const img =
-            new Image();
-
-
-        img.onload = function(){
-
-            watermarkImage =
-                img;
-
-            watermarkStatus.textContent =
-                "Watermark loaded: " +
-                file.name;
-
-            drawCanvas();
-
-            saveSettings();
-
-        };
-
-
-        img.src =
-            data;
-
-
-    }catch(error){
-
-        watermarkStatus.textContent =
-            "Could not load watermark.";
-
-    }
-
-});
-
-
-/* =========================================================
-   WATERMARK CONTROLS
-   ========================================================= */
-
-watermarkSize.addEventListener(
-"input",
-function(){
-
-    watermarkSizeValue.textContent =
-        this.value;
-
-    drawCanvas();
-
-    saveSettings();
-
-});
-
-
-watermarkOpacity.addEventListener(
-"input",
-function(){
-
-    watermarkOpacityValue.textContent =
-        this.value + "%";
-
-    drawCanvas();
-
-    saveSettings();
-
-});
-
-
-watermarkPosition.addEventListener(
-"change",
-function(){
-
-    drawCanvas();
-
-    saveSettings();
-
-});
-
-
-carouselPosition.addEventListener(
-"change",
-function(){
-
-    drawCanvas();
-
-    saveSettings();
-
-});
-
-
-carouselEnabled.addEventListener(
-"change",
-function(){
-
-    drawCanvas();
-
-    saveSettings();
-
-});
-
-
-/* =========================================================
-   TEXT CONTROLS
-   ========================================================= */
-
-headline.addEventListener(
+headlineInput.addEventListener(
 "input",
 drawCanvas
 );
 
-supportingText.addEventListener(
+supportingInput.addEventListener(
 "input",
 drawCanvas
 );
 
-textSize.addEventListener(
+headlineSize.addEventListener(
 "input",
 drawCanvas
 );
 
-textAlignment.addEventListener(
+textAlign.addEventListener(
 "change",
+drawCanvas
+);
+
+document.getElementById(
+"watermarkPosition"
+).addEventListener(
+"change",
+drawCanvas
+);
+
+document.getElementById(
+"watermarkSize"
+).addEventListener(
+"input",
+drawCanvas
+);
+
+document.getElementById(
+"watermarkOpacity"
+).addEventListener(
+"input",
 drawCanvas
 );
 
 
 /* =========================================================
    DOWNLOAD
-   ========================================================= */
+========================================================= */
 
 document.getElementById(
-"downloadButton"
+"downloadBtn"
 ).addEventListener(
 "click",
-function(){
+function() {
 
-    const link =
-        document.createElement("a");
+  canvas.toBlob(
+    function(blob) {
 
-    link.download =
+      const url =
+        URL.createObjectURL(
+          blob
+        );
+
+
+      const a =
+        document.createElement(
+          "a"
+        );
+
+
+      a.href =
+        url;
+
+      a.download =
         "ai-post-maker.png";
 
-    link.href =
-        canvas.toDataURL(
-            "image/png",
-            1
-        );
 
-    link.click();
+      document.body.appendChild(
+        a
+      );
+
+      a.click();
+
+      a.remove();
+
+
+      URL.revokeObjectURL(
+        url
+      );
+
+    },
+    "image/png"
+  );
 
 });
 
 
 /* =========================================================
-   LOCAL STORAGE
-   ========================================================= */
+   HTML ESCAPE
+========================================================= */
 
-function saveSettings(){
+function escapeHTML(value) {
 
-    const settings = {
-
-        watermarkPosition:
-            watermarkPosition.value,
-
-        watermarkSize:
-            watermarkSize.value,
-
-        watermarkOpacity:
-            watermarkOpacity.value,
-
-        imageSize:
-            imageSize.value,
-
-        customWidth:
-            customWidth.value,
-
-        customHeight:
-            customHeight.value,
-
-        headline:
-            headline.value,
-
-        supportingText:
-            supportingText.value,
-
-        textSize:
-            textSize.value,
-
-        textAlignment:
-            textAlignment.value,
-
-        carouselEnabled:
-            carouselEnabled.checked,
-
-        carouselPosition:
-            carouselPosition.value
-
-    };
-
-
-    localStorage.setItem(
-        "aiPostMakerSettings",
-        JSON.stringify(settings)
+  return String(value)
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
     );
 
 }
-
-
-/* =========================================================
-   LOAD SETTINGS
-   ========================================================= */
-
-function loadSettings(){
-
-    try{
-
-        const saved =
-            localStorage.getItem(
-                "aiPostMakerSettings"
-            );
-
-        if(!saved)
-            return;
-
-
-        const s =
-            JSON.parse(saved);
-
-
-        if(s.watermarkPosition)
-            watermarkPosition.value =
-                s.watermarkPosition;
-
-        if(s.watermarkSize)
-            watermarkSize.value =
-                s.watermarkSize;
-
-        if(s.watermarkOpacity)
-            watermarkOpacity.value =
-                s.watermarkOpacity;
-
-        if(s.imageSize)
-            imageSize.value =
-                s.imageSize;
-
-        if(s.customWidth)
-            customWidth.value =
-                s.customWidth;
-
-        if(s.customHeight)
-            customHeight.value =
-                s.customHeight;
-
-        if(s.headline)
-            headline.value =
-                s.headline;
-
-        if(s.supportingText)
-            supportingText.value =
-                s.supportingText;
-
-        if(s.textSize)
-            textSize.value =
-                s.textSize;
-
-        if(s.textAlignment)
-            textAlignment.value =
-                s.textAlignment;
-
-        carouselEnabled.checked =
-            !!s.carouselEnabled;
-
-        if(s.carouselPosition)
-            carouselPosition.value =
-                s.carouselPosition;
-
-
-        watermarkSizeValue.textContent =
-            watermarkSize.value;
-
-        watermarkOpacityValue.textContent =
-            watermarkOpacity.value +
-            "%";
-
-
-        customSizeBox.style.display =
-            imageSize.value === "custom"
-            ? "grid"
-            : "none";
-
-
-    }catch(error){
-
-        console.error(
-            "Settings load error:",
-            error
-        );
-
-    }
-
-}
-
-
-/* =========================================================
-   SAVE INPUT CHANGES
-   ========================================================= */
-
-[
-    imageSize,
-    customWidth,
-    customHeight,
-    headline,
-    supportingText,
-    textSize,
-    textAlignment
-].forEach(
-element => {
-
-    element.addEventListener(
-        "change",
-        saveSettings
-    );
-
-    element.addEventListener(
-        "input",
-        saveSettings
-    );
-
-});
 
 
 /* =========================================================
    INITIALIZE
-   ========================================================= */
-
-loadSettings();
+========================================================= */
 
 resizeCanvas();
 
